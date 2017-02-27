@@ -1,0 +1,84 @@
+{
+    "statusrunning"   : "70",
+    "statusflameout"  : "-30",
+    "highrpm"         : 150000,
+    "lowrpm"          : 35000,
+    "hightemp"        : 800,
+    "lowpump"         : 0.2,
+    "lowvolt"         : 7.2,
+    "tanksize"        : 2500,
+    "tankinfofrom"    : 2000,
+    "tankwarningfrom" : 1200,
+    "status" : {  
+        "-30"   : {
+            "text"  : "- ERROR -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "-10"   : {
+            "text"  : "- COOL -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "-1"    : {
+            "text"  : "- LOCK -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "0"     : {
+            "text"  : "- STOP -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "10"    : {
+            "text"  : "TH: Idle",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "20"    : {
+            "text"  : "TH: -Rel",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "25"    : {
+            "text"  : "- TEST -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "30"    : {
+            "text"  : "- START -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "40"    : {
+            "text"  : "- FIRE -",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        },
+        "70"    : {
+            "text"  : "- IDLE _",
+            "alarm" : true,
+            "audio" : "Turbine flameout.wav",
+            "stick" : "left",
+            "haptic": 4
+        }
+    }
+}

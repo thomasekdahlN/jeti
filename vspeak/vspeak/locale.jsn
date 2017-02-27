@@ -1,0 +1,58 @@
+{
+  "default":"en",
+  "cz":{
+    "appName":"VSPEAK Status -> EX-text",
+    "cfgName":"Vspeak. Settings",
+    "window1":"vspeak ECU status left",
+    "window2":"vspeak ECU status right",
+    "selectECU":"Select ECU type",
+    "selectSensor1":"vspeak status turbine left",
+    "selectSensor2":"vspeak status turbine right"
+  },
+  "en":{
+    "appName":"VSPEAK Status -> EX-text",
+    "cfgName":"Vspeak. Settings",
+    "window":"vspeak ECU status",
+    "left": "left",
+    "right": "right",
+    "selectECU":"Select ECU type",
+    "selectSensor1":"vspeak status turbine left",
+    "selectSensor2":"vspeak status turbine right"
+  },
+  "de":{
+    "appName":"VSPEAK Status -> EX-text",
+    "cfgName":"Vspeak. Settings",
+    "window1":"vspeak ECU status left",
+    "window2":"vspeak ECU status right",
+    "selectECU":"Select ECU type",
+    "selectSensor1":"vspeak status turbine left",
+    "selectSensor2":"vspeak status turbine right"
+  },
+  "fr":{
+    "appName":"VSPEAK Status -> EX-text",
+    "cfgName":"Vspeak. Settings",
+    "window1":"vspeak ECU status left",
+    "window2":"vspeak ECU status right",
+    "selectECU":"Select ECU type",
+    "selectSensor1":"vspeak status turbine left",
+    "selectSensor2":"vspeak status turbine right"
+  },
+  "es":{
+    "appName":"VSPEAK Status -> EX-text",
+    "cfgName":"Vspeak. Settings",
+    "window1":"vspeak ECU status left",
+    "window2":"vspeak ECU status right",
+    "selectECU":"Select ECU type",
+    "selectSensor1":"vspeak status turbine left",
+    "selectSensor2":"vspeak status turbine right"
+  },
+  "it":{
+    "appName":"VSPEAK Status -> EX-text",
+    "cfgName":"Vspeak. Settings",
+    "window1":"vspeak ECU status left",
+    "window2":"vspeak ECU status right",
+    "selectECU":"Select ECU type",
+    "selectSensor1":"vspeak status turbine left",
+    "selectSensor2":"vspeak status turbine right"
+  }
+}
