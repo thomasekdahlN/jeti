@@ -3,12 +3,12 @@
 vspeak lua turbine ecu status converter and alarm script v2 alfa - alfa testers and helpers wanted. PM me.
 
 Supporting:
-- JetCat (new release this week)
-- Hornet
-- Jakadofsky
-- evoJet / Pahl
-- PBS
-- Orbit
+- JetCat (new release this week) (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Hornet (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Jakadofsky (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- PBS  (config file format OK)
+- Orbit (config file format OK)
 
 Supporting a new ecu converter is as easy as adding a json configuration file.
 
