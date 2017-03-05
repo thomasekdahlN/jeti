@@ -1,9 +1,9 @@
 {
   "default":"en",
   "cz":{
-    "appName":"VSPEAK Status -> EX-text",
-    "cfgName":"Vspeak. Settings",
-    "window":"VSpeak ECU status",
+    "appName":"ECU Telemetry",
+    "cfgName":"ECU. Settings",
+    "window":"ECU status",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
@@ -14,9 +14,9 @@
     "throttleKillSwitch": "Turbine off switch"
   },
   "en":{
-    "appName":"VSPEAK Status -> EX-text",
-    "cfgName":"Vspeak. Settings",
-    "window":"VSpeak ECU status",
+    "appName":"ECU Telemetry",
+    "cfgName":"ECU. Settings",
+    "window":"ECU status",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
@@ -27,9 +27,9 @@
     "throttleKillSwitch": "Turbine off switch"
   },
   "de":{
-    "appName":"VSPEAK Status -> EX-text",
-    "cfgName":"Vspeak. Settings",
-    "window":"VSpeak ECU status",
+    "appName":"ECU Telemetry",
+    "cfgName":"ECU. Settings",
+    "window":"ECU status",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
@@ -40,9 +40,9 @@
     "throttleKillSwitch": "Turbine off switch"
   },
   "fr":{
-    "appName":"VSPEAK Status -> EX-text",
-    "cfgName":"Vspeak. Settings",
-    "window":"VSpeak ECU status",
+    "appName":"ECU Telemetry",
+    "cfgName":"ECU. Settings",
+    "window":"ECU status",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
@@ -53,9 +53,9 @@
     "throttleKillSwitch": "Turbine off switch"
   },
   "es":{
-    "appName":"VSPEAK Status -> EX-text",
-    "cfgName":"Vspeak. Settings",
-    "window":"VSpeak ECU status",
+    "appName":"ECU Telemetry",
+    "cfgName":"ECU. Settings",
+    "window":"ECU status",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
@@ -66,9 +66,9 @@
     "throttleKillSwitch": "Turbine off switch"
   },
   "it":{
-    "appName":"VSPEAK Status -> EX-text",
-    "cfgName":"Vspeak. Settings",
-    "window":"VSpeak ECU status",
+    "appName":"ECU Telemetry",
+    "cfgName":"ECU. Settings",
+    "window":"ECU status",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
