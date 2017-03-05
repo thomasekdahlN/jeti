@@ -1,6 +1,7 @@
 
 -- ############################################################################# 
--- # Vspeak ECU Status converter - Lua application for JETI DC/DS transmitters
+-- # Jeti ECU Telemetry
+-- # Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms, easy setup, very configurable, easy to setup new ecu types
 -- # Some Lua ideas copied from Jeti and TeroS
 -- #
 -- # Copyright (c) 2017, Original idea by Thomas Ekdahl (thomas@ekdahl.no) co-developed with Volker Weigt the maker of vspeak hardware.
@@ -29,9 +30,11 @@ local lang      -- read from file
 local config    -- complete turbine config object read from file with manufacturer name
 
 local sensorsAvailable  = {"..."}
-local fuellevel, rpmturbine, rpmshaft, throttle, ecuvolt, pumpvolt = 50,50,50,50 -- Sensor values is globally stored here.
+local sensorValues      = {"..."} -- Sensor values is globally stored here in a hash by sensorname as configured
 
 local ECUTypeIn         = 1
+
+-- IDEA - read all config files dunamically from folder would make it even more flexible
 local ECUTypeA = {
      [1] = 'pbs',
      [2] = 'jakadofsky',
@@ -46,7 +49,8 @@ local ECUTypeA = {
 local function setLanguage()
   -- Set language
   local lng  = system.getLocale();
-  local file = io.readall("Apps/vspeak/locale.jsn")
+  local file = io.readall("Apps/ecu/locale.jsn")
+  print(string.format("Apps/ecu/locale.jsn"))
   local obj  = json.decode(file)  
   if(obj) then
     lang = obj[lng] or obj[obj.default]
@@ -56,17 +60,17 @@ end
 --------------------------------------------------------------------
 -- Read complete turbine configuration, statuses, alarms, settings and thresholds
 local function readConfig()
-  local file = io.readall(string.format("Apps/vspeak/%s.jsn", ECUTypeA[ECUTypeIn])) -- read the correct config file
-  print(string.format("Apps/vspeak/%s.jsn", ECUTypeA[ECUTypeIn]))
+  local file = io.readall(string.format("Apps/ecu/%s.jsn", ECUTypeA[ECUTypeIn])) -- read the correct config file
+  print(string.format("Apps/ecu/%s.jsn", ECUTypeA[ECUTypeIn]))
   local obj  = json.decode(file)
   if(obj) then
     config = obj
     print(string.format("statusCodeEnableAlarm: %s", config.statusCodeEnableAlarm))
     print(string.format("statusCodeEnableAlarmText: %s", config.status[config.statusCodeEnableAlarm].text))
-    print(string.format("fueltanksize: %s", config.fuel.tanksize))
+    print(string.format("fueltanksize: %s", config.fuellevel.tanksize))
     -- for key,value in pairs(config.status) do print(key,value) end
     
-    prevFuelLevel = config.fuel.tanksize -- init full tank
+    prevFuelLevel = config.fuellevel.tanksize -- init full tank
 
   end
 end
@@ -189,16 +193,11 @@ local function readStatusSensor(statusconfig, statusSensorID)
     local StatusText    = ''
     local value         = 0 -- sensor value
     local switch
-
-    print(config.status.sensorparam)
-    print(statusconfig.sensorparam)
-
-    print(string.format("readStatusSensor: SensorID=%s, Param=%d ", statusSensorID, config.status.sensorparam))
-    --local sensor = system.getSensorByID(statusSensorID, statusconfig.sensorparam)
-    os.exit()
+    local sensor = system.getSensorByID(statusSensorID, statusconfig.sensorparam)
 
     if(sensor and sensor.valid) then
         value = string.format("%s", math.floor(sensor.value))
+        sensorValues[statusconfig.sensorname] = value
         StatusText = config.status[value].text;
 
         switch = system.getSwitchInfo(switchManualShutdown)
@@ -215,8 +214,10 @@ local function readStatusSensor(statusconfig, statusSensorID)
         -- If configured turbine status has been reached, all alarms are enabled until turned off by throttle kill switch
         if(switch and switch.value < 0) then  -- turned off by switch
             enableAlarmByState = false
+            print(string.format("enableAlarmByState = false"))
         elseif(config.statuscode.statusCodeEnableAlarm == value) then -- turn on when status is running only when switch is on
             enableAlarmByState = true
+            print(string.format("enableAlarmByState = true"))
         end
     
         -------------------------------------------------------------
@@ -253,6 +254,8 @@ local function readGenericSensor(genericConfig, statusSensorID)
 
     -- print(string.format("statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
     if(sensor and sensor.valid) then
+
+        sensorValues[genericConfig.sensorname] = sensor.value -- could be the entire sensor object if needed.
 
         if(sensor.value > genericConfig.high.value) then
             AlarmMessage(genericConfig.message, genericConfig.high.text)
@@ -304,8 +307,8 @@ local function AlarmAudio(audioconfig)
     if(audioconfig.enable) then
         -- If audio file associated with status, we play it
         if(audioconfig.file) then
-            print(string.format("/Apps/vspeak/audio/%s", audioconfig.file))
-            system.playFile(string.format("/Apps/vspeak/audio/%s", audioconfig.file),AUDIO_IMMEDIATE)
+            print(string.format("/Apps/ecu/audio/%s", audioconfig.file))
+            system.playFile(string.format("/Apps/ecu/audio/%s", audioconfig.file),AUDIO_IMMEDIATE)
         end
     end
 end
@@ -316,11 +319,13 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
 
     local sensor = system.getSensorByID(statusSensorID, fuelconfig.sensorparam)
 
-    -- print(string.format("statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
+    -- print(string.format("readFueltankSensor: statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
     if(sensor and sensor.valid) then
 
+        sensorValues[genericConfig.sensorname] = sensor.value
+
         -- Repeat at intervals from config
-        if(fuelconfig.enable and sensorvalue < prevFuelLevel) then
+        if(fuelconfig.enable and sensor.value < prevFuelLevel) then
             -- If audio file associated with status, we play it
             prevFuelLevel = prevFuelLevel - fuelconfig.interval -- Only work in intervals
             
@@ -338,7 +343,7 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
                 AlarmAudio(fuelconfig.audio)
             end
             
-            system.playNumber(sensorvalue, fuelconfig.decimals, fuelconfig.unit, fuelconfig.label)
+            system.playNumber(sensorvalue, fuelconfig.decimals, fuelconfig.unit, fuelconfig.label) -- Read out the numbers
         end
     end
 end
@@ -349,34 +354,31 @@ local function loop()
 
     -- Turbine 1
     if(statusSensor1ID > 1) then
-    
-        --config.status.StatusSensorID = statusSensor1ID
-        --print("Hello")
-        --for key,value in pairs(config.status) do print(key,value) end
-        --os.exit()
-        Status1Text = readStatusSensor(config.status)
+        Status1Text = readStatusSensor(config.status, statusSensor1ID)
         if(enableAlarmCheckbox and enableAlarmByState) then
-            readFueltankSensor(config.fuel, statusSensor1ID)
+            readFueltankSensor(config.fuellevel, statusSensor1ID)
             readGenericSensor(config.rpmturbine, statusSensor1ID)
             readGenericSensor(config.rpmshaft, statusSensor1ID)
             readGenericSensor(config.temperature, statusSensor1ID)
-            readGenericSensor(config.pump, statusSensor1ID)
-            readGenericSensor(config.battery, statusSensor1ID)
+            readGenericSensor(config.pumpvolt, statusSensor1ID)
+            readGenericSensor(config.ecuvolt, statusSensor1ID)
         end
     end
     -- Turbine 2
-    --Status2Text = readStatusSensor(statusSensor2ID, statusSensor2Pa)
+    if(statusSensor2ID > 1) then
+        Status2Text = readStatusSensor(statusSensor2ID, statusSensor2Pa)
+    end
 end
 
 ----------------------------------------------------------------------
 --
-local function VspeakStatusWindow1(width, height) 
+local function TelemetryStatusWindow1(width, height) 
     lcd.drawText(5,5,  string.format("%s", Status1Text), FONT_BIG)
 end
 
 ----------------------------------------------------------------------
 --
-local function VspeakStatusWindow2(width, height) 
+local function TelemetryStatusWindow2(width, height) 
     lcd.drawText(5,5, string.format("%s", Status2Text), FONT_BIG)
 end
 
@@ -400,10 +402,10 @@ local function init()
     print(string.format("switchManualShutdown: %s", switchManualShutdown))
 
     if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
-        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),1,VspeakStatusWindow1)
-    	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,VspeakStatusWindow2)
+        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),1,TelemetryStatusWindow1)
+    	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,TelemetryStatusWindow2)
     else
-    	system.registerTelemetry(1,string.format("%s", lang.window),1,VspeakStatusWindow1)
+    	system.registerTelemetry(1,string.format("%s", lang.window),1,TelemetryStatusWindow1)
     end
 
     system.registerTelemetry( 2, "Fuel/ECU/Voltage", 2, OnPrint)  
@@ -523,11 +525,11 @@ local function OnPrint(width, height)
   lcd.drawLine(70,36,148,36)  
  
   -- fuel - 1700 (=tankSize) ml is 0%
-  local fuelPercentage = (config.fuel.tanksize - fuel )/(config.fuel.tanksize/100)
+  local fuelPercentage = (config.fuellevel.tanksize - fuel )/(config.fuellevel.tanksize/100)
   if( fuelPercentage > 99 ) then fuelPercentage = 99 end
   if( fuelPercentage < 0 ) then fuelPercentage = 0 end
   
-  print(string.format("fuelPercentage: %s, rpm: %s ", fuelPercentage, rpm))
+  print(string.format("fuelPercentage: %s, rpm: %s ", fuelPercentage, sensorValues.turbinerpm))
   
   if( fuelPercentage > warningPercent or initAnimation ) then
     DrawFuelGauge(fuelPercentage, 1, 0)   
@@ -536,10 +538,10 @@ local function OnPrint(width, height)
   end  
 
   -- turbine
-  DrawTurbineStatus(Status1Text, rpm, 74, 0) 
+  DrawTurbineStatus(Status1Text, sensorValues.turbinerpm, 74, 0) 
 
   -- battery
-  DrawBattery(u_rc, u_ecu, 74, 37) 
+  DrawBattery(nil, sensorValues.ecuvolt, 74, 37) 
   
 end
 

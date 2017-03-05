@@ -2,6 +2,7 @@
 "statusCodeEnableAlarm" : "10",
     "rpmturbine" : {
         "sensorparam"  : 1,
+        "sensorname"   : "rpmturbine",
         "high"  : {
             "text"      : "Turbine RPM high",
             "value"     : 150000,
@@ -45,6 +46,7 @@
     },
     "rpmshaft" : {
         "sensorparam"  : 2,
+        "sensorname"   : "rpmshaft",
         "high"  : {
             "text"      : "Shaft RPM high",
             "value"     : 8000,
@@ -88,6 +90,7 @@
     },
     "temperature" : {
         "sensorparam"  : 3,
+        "sensorname"   : "temperature",
         "high"  : {
             "text"      : "Turbine RPM high",
             "value"     : 150000,
@@ -149,8 +152,9 @@
             }
         }            
     },
-    "pump" : {
+    "pumpvolt" : {
         "sensorparam"  : 4,
+        "sensorname"   : "pumpvolt",
         "high"  : {
             "text"      : "Pump volt high",
             "value"     : 2.5,
@@ -192,8 +196,9 @@
             }
         }
     },
-    "battery" : {
+    "ecuvolt" : {
         "sensorparam"  : 5,
+        "sensorname"   : "ecuvolt",
         "high"  : {
             "text"      : "ECU Battery high",
             "value"     : 9,
@@ -235,8 +240,9 @@
             }
         }
     },
-    "fuel" : {
+    "fuellevel" : {
         "sensorparam"  : 6,
+        "sensorname"   : "fuellevel",
         "tanksize"     : 2500,
         "decimals"  : 1,
         "unit"      : "l",
@@ -305,6 +311,7 @@
     },
     "status" : { 
         "sensorparam" : "7",
+        "sensorname"   : "status",
         "-30"   : {
             "text"      : "- ERROR -",
             "message"   : {
