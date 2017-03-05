@@ -1,25 +1,64 @@
-# jeti
+# jeti fw 4.2.2 firmware and vspeak 2.2 firmware required
 
-Note:
-- each turbine type has its own config file, saves memory and allows for heavy user configuration. look at the pbs.jsn example
-- We have to generate audio files for all statuses, and map the audio files in the config for each turbine- suggestion that critical statuses is male voice, and information is female (I don’t have time for this now, please do it if you have time)
-- All other turbine config files has to be changed to same format as pbs.jsn example (I don’t have time for this now, please do it if you have time)
-- All config files must have set statusrunning, statusflameout, and (alarm, audio, stick, haptic) for every turbine status (quite a big job, but will set the standard for how this is done)
+vspeak lua turbine ecu status converter and alarm script v2 alfa - alfa testers and helpers wanted. PM me.
 
-New
-- Alarms (preconfigured best practise, only enabled after turbine status has been running  and not shut off by a user selectable switch (I need this myself) to not get annoying alarms during startup. This is fully automatic
-- All negative statuses gives a message box (which is logged)
-- Possible to enable audio on each status change
-- Possible to enable alarms as defined in config file, with audio and haptic feedback
-- OnScreen alarm on all negative values
-- OnScreen alarm when turbine has started
+Supporting:
+- JetCat (new release this week) (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Hornet (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Jakadofsky (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- PBS  (config file format OK)
+- Orbit (config file format OK)
 
-- Configuration file pr turbine with advanced options pr status
-On every status
-— Textual mapping of status
-— If it should be used when alarms are enabled
-— Haptic feedback of left or right stick and type of vibration
-— Audio announcement of status
-— OnScreen announcement of alarm)
+Supporting a new ecu converter is as easy as adding a json configuration file.
 
-NOTE: This is considered beta, features not tested in real life yet.
+Only tested on DC-24.
+
+Implemented functionality in beta:
+- Separate advanced json configuration file for each ECU type (maybe for each turbine type later)
+- Possibility to read all statuses by voice
+- Possibility to turn on or off alarms globally - if you are annoyed
+- Configurable which turbine status enables alarms (to not get false alarms on startup where telemetry is not available). Defaults to alarms enabled when armed status is reached.
+- Configurable which switch turns off alarms (recommended same as throttle cut)
+- Individually configurable parameters for EVERY turbine STATUS (this is super cool and super flexible)
+-- Alarm on status: on or off
+-- Audio alarm (information in female voice, warnings in male voice), possibility to change audio file.
+-- Haptic feedback, which stick, which vibration profile, on/off
+-- Display warning. on/off - shows the status text as a warning.
+
+The usual alarms, but easier setup
+- Turbine RPM high
+- Turbine RPM low
+- Shaft RPM high
+- Shaft RPM low
+- Ecu voltage high
+- Ecu voltage low
+- Pump voltage high
+- Pump voltage low
+- Tank information
+- Tank warning
+- Tank alarm
+- Reading tank level status at configured intervals
+
+Telemetry display
+- Turbine status (and only that)
+- Reimplemented the telemetry status display code and graphics  from "ECU data display" for Orbit made by Bernd Woköck
+
+Thinking of implementing:
+- Warning if you try to shutdown turbine while it is too hot (if possible to implement)
+- Later than this: Maybe a cool graphical display of all data like xicoy GSU
+
+Help needed:
+- Translation
+- Configuration of "best practice" turbine alarms and setup for the supported ecus.
+- Generation of audio files for all statuses
+- Testing
+- Jeti Params for different ECUs (we only have to choose one sensor, we find the rest automatically by param)
+- Making videos of running system
+
+
+So the idea is that with this lua script you will get all needed turbine alarms setup in under 5 minutes (download lua script and install it- chooce ECU type, choose status telemetry sensor - you are done), with our collective best effort on defining whats the best way to have turbine alarms.
+
+For the people who love to tinker it is infinitely extensive and changeable in a easy manner in the configuration file pr ecu. But the distributed configuration file should be best practise for all others.
+
+If you have any more ideas about needs for turbine alarms, please let me know.
