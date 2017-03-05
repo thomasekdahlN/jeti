@@ -1,4 +1,5 @@
-# Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms, easy setup 
+# ECU Telemetry
+Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms, easy setup, very configurable 
 
 jeti transmitter fw 4.2.2 firmware and vspeak 2.2 firmware required
 
