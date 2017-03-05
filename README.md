@@ -64,4 +64,11 @@ So the idea is that with this lua script you will get all needed turbine alarms 
 
 For the people who love to tinker it is infinitely extensive and changeable in a easy manner in the configuration file pr ecu. But the distributed configuration file should be best practise for all others.
 
+Installation
+- copy ecu.lua and ecu folder into the Apps folder on your Jeti transmitter
+- add ecu.lua to applications
+- choose ecu type
+Then you are up and running
+
+
 If you have any more ideas about needs for turbine alarms, please let me know.
