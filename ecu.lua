@@ -13,11 +13,13 @@
 -- # V1.5 - Initial release
 -- ############################################################################# 
 
+--Low RPM, Low pump V and Low temp alarms should not be enabled before after starting.
+
 -- Locals for the application
-local statusSensor1ID,statusSensor1Pa=0,0
+local statusSensor1ID=0
 local Status1Text       = '';
 
-local statusSensor2ID,statusSensor2Pa=0,0
+local statusSensor2ID=0
 local Status2Text        
 
 local prevStatusID, prevFuelLevel, enableAudio, enableAlarmCheckbox = 0,0,0,0
@@ -30,7 +32,15 @@ local lang      -- read from file
 local config    -- complete turbine config object read from file with manufacturer name
 
 local sensorsAvailable  = {"..."}
-local sensorValues      = {"..."} -- Sensor values is globally stored here in a hash by sensorname as configured
+local sensorValues      = {
+    ["rpmturbine"]  = 100,
+    ["rpmshaft"]    = 100,
+    ["temperature"] = 100,
+    ["pumpvolt"]    = 100,
+    ["ecuvolt"]     = 100,
+    ["fuellevel"]   = 1000,
+    ["status"]      = 100,
+} -- Sensor values is globally stored here in a hash by sensorname as configured
 
 local ECUTypeIn         = 1
 
@@ -80,10 +90,7 @@ end
 local function statusSensor1Changed(value)
 
 	statusSensor1ID  = sensorsAvailable[value].id
-	statusSensor1Pa  = sensorsAvailable[value].param
-	
 	system.pSave("statusSensor1ID",  statusSensor1ID)
-	system.pSave("statusSensor1Pa",  statusSensor1Pa)
 end
 
 ----------------------------------------------------------------------
@@ -91,10 +98,7 @@ end
 local function statusSensor2Changed(value)
 
 	statusSensor2ID  = sensorsAvailable[value].id
-	statusSensor2Pa  = sensorsAvailable[value].param
-
 	system.pSave("statusSensor2ID",  statusSensor2ID)
-	system.pSave("statusSensor2Pa",  statusSensor2Pa)
 end
 
 ----------------------------------------------------------------------
@@ -141,14 +145,14 @@ local function initForm(subform)
         if(sensor.param == 0) then
             descr = sensor.label
         else
-            list[#list+1]=string.format("%s - %s [%s]",descr,sensor.label,sensor.param) -- added param for debug purposes
+            list[#list+1]=string.format("%s - %s [%s]",descr,sensor.label,sensor.param) -- added param for config purposes
             -- list[#list+1]=string.format("%s - %s [%s]",descr,sensor.label,sensor.unit) -- This is production
 
             sensorsAvailable[#sensorsAvailable+1] = sensor
-            if(sensor.id==statusSensor1ID and sensor.param==statusSensor1Pa) then
+            if(sensor.id==statusSensor1ID and sensor.param==config.status.sensorparam) then
                 curIndex1=#sensorsAvailable
             end
-            if(sensor.id==statusSensor2ID and sensor.param==statusSensor2Pa) then
+            if(sensor.id==statusSensor2ID and sensor.param==config.status.sensorparam) then
                 curIndex2=#sensorsAvailable
             end
         end
@@ -212,13 +216,13 @@ local function readStatusSensor(statusconfig, statusSensorID)
 
         -------------------------------------------------------------_
         -- If configured turbine status has been reached, all alarms are enabled until turned off by throttle kill switch
-        if(switch and switch.value < 0) then  -- turned off by switch
-            enableAlarmByState = false
-            print(string.format("enableAlarmByState = false"))
-        elseif(config.statuscode.statusCodeEnableAlarm == value) then -- turn on when status is running only when switch is on
+        --if(switch and switch.value < 0) then  -- turned off by switch
+        --enableAlarmByState = false
+        --    print(string.format("enableAlarmByState = false"))
+        --elseif(config.status.EnableAlarmAtCode == value) then -- turn on when status is running only when switch is on
             enableAlarmByState = true
-            print(string.format("enableAlarmByState = true"))
-        end
+        --    print(string.format("enableAlarmByState = true"))
+        --end
     
         -------------------------------------------------------------
         -- If user has enabled alarms, the status has an alarm, the status has changed since last time and the configured status code has been reached - sound the alarm
@@ -322,11 +326,11 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
     -- print(string.format("readFueltankSensor: statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
     if(sensor and sensor.valid) then
 
-        sensorValues[genericConfig.sensorname] = sensor.value
+        sensorValues[fuelconfig.sensorname] = sensor.value
 
         -- Repeat at intervals from config
-        if(fuelconfig.enable and sensor.value < prevFuelLevel) then
-            -- If audio file associated with status, we play it
+        if(sensor.value < prevFuelLevel) then
+
             prevFuelLevel = prevFuelLevel - fuelconfig.interval -- Only work in intervals
             
             if(sensor.value < fuelconfig.critical.value) then
@@ -353,7 +357,8 @@ end
 local function loop()
 
     -- Turbine 1
-    if(statusSensor1ID > 1) then
+    --statusSensor1ID = 1 -- only for debug
+    if(statusSensor1ID > 0) then
         Status1Text = readStatusSensor(config.status, statusSensor1ID)
         if(enableAlarmCheckbox and enableAlarmByState) then
             readFueltankSensor(config.fuellevel, statusSensor1ID)
@@ -366,7 +371,7 @@ local function loop()
     end
     -- Turbine 2
     if(statusSensor2ID > 1) then
-        Status2Text = readStatusSensor(statusSensor2ID, statusSensor2Pa)
+        --Status2Text = readStatusSensor(config.status, statusSensor2ID)
     end
 end
 
@@ -382,37 +387,6 @@ local function TelemetryStatusWindow2(width, height)
     lcd.drawText(5,5, string.format("%s", Status2Text), FONT_BIG)
 end
 
-----------------------------------------------------------------------
--- Application initialization
-local function init()
-
-	system.registerForm(1,MENU_APPS,lang.appName, initForm, keyPressed)
-
-    statusSensor1ID  = system.pLoad("statusSensor1ID", 0)
-    statusSensor1Pa  = system.pLoad("statusSensor1Pa", 0)
-    statusSensor2ID  = system.pLoad("statusSensor2ID", 0)
-    statusSensor2Pa  = system.pLoad("statusSensor2Pa", 0)
-    ECUTypeIn        = system.pLoad("ECUTypeIn", 1)
-    enableAudio      = system.pLoad("enableAudio", 0)
-    enableAlarmCheckbox   = system.pLoad("enableAlarmCheckbox", 0)
-    switchManualShutdown  = system.pLoad("switchManualShutdown")
-
-    print(string.format("enableAudio: %s", enableAudio))
-    print(string.format("enableAlarmByStates: %s", enableAlarmByStates))
-    print(string.format("switchManualShutdown: %s", switchManualShutdown))
-
-    if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
-        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),1,TelemetryStatusWindow1)
-    	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,TelemetryStatusWindow2)
-    else
-    	system.registerTelemetry(1,string.format("%s", lang.window),1,TelemetryStatusWindow1)
-    end
-
-    system.registerTelemetry( 2, "Fuel/ECU/Voltage", 2, OnPrint)  
-
-     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
-    readConfig()
-end
 
 
 local function DrawFuelGauge(percentage, ox, oy) 
@@ -482,7 +456,7 @@ local function DrawBattery(u_rc, u_ecu, ox, oy)
 
   lcd.drawText(4+ox,1+oy, "RC", FONT_MINI)  
   lcd.drawText(40+ox,1+oy, "ECU", FONT_MINI)  
-  lcd.drawText(4+ox,12+oy, string.format("%.1f%s",u_rc,"V"), FONT_BOLD)  
+  --lcd.drawText(4+ox,12+oy, string.format("%.1f%s",u_rc,"V"), FONT_BOLD)  
   lcd.drawText(40+ox,12+oy, string.format("%.1f%s",u_ecu,"V"), FONT_BOLD)  
 end
 
@@ -525,13 +499,13 @@ local function OnPrint(width, height)
   lcd.drawLine(70,36,148,36)  
  
   -- fuel - 1700 (=tankSize) ml is 0%
-  local fuelPercentage = (config.fuellevel.tanksize - fuel )/(config.fuellevel.tanksize/100)
+  local fuelPercentage = (config.fuellevel.tanksize - sensorValues.fuellevel )/(config.fuellevel.tanksize/100)
   if( fuelPercentage > 99 ) then fuelPercentage = 99 end
   if( fuelPercentage < 0 ) then fuelPercentage = 0 end
   
   print(string.format("fuelPercentage: %s, rpm: %s ", fuelPercentage, sensorValues.turbinerpm))
   
-  if( fuelPercentage > warningPercent or initAnimation ) then
+  if( sensorValues.fuellevel > config.fuellevel.warning.value or initAnimation ) then
     DrawFuelGauge(fuelPercentage, 1, 0)   
   else
     DrawFuelLow(fuelPercentage, 1, 0) 
@@ -545,6 +519,35 @@ local function OnPrint(width, height)
   
 end
 
+----------------------------------------------------------------------
+-- Application initialization
+local function init()
+
+	system.registerForm(1,MENU_APPS,lang.appName, initForm, keyPressed)
+
+    statusSensor1ID  = system.pLoad("statusSensor1ID", 0)
+    statusSensor2ID  = system.pLoad("statusSensor2ID", 0)
+    ECUTypeIn        = system.pLoad("ECUTypeIn", 1)
+    enableAudio      = system.pLoad("enableAudio", 0)
+    enableAlarmCheckbox   = system.pLoad("enableAlarmCheckbox", 0)
+    switchManualShutdown  = system.pLoad("switchManualShutdown")
+
+    print(string.format("enableAudio: %s", enableAudio))
+    print(string.format("enableAlarmByStates: %s", enableAlarmByStates))
+    print(string.format("switchManualShutdown: %s", switchManualShutdown))
+
+    if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
+        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),1,TelemetryStatusWindow1)
+    	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,TelemetryStatusWindow2)
+    else
+    	system.registerTelemetry(1,string.format("%s", lang.window),1,TelemetryStatusWindow1)
+    end
+
+    system.registerTelemetry( 2, "Fuel/ECU/Voltage", 2, OnPrint)  
+
+     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
+    readConfig()
+end
 
 ----------------------------------------------------------------------
 --

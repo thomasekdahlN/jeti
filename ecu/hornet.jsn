@@ -1,8 +1,8 @@
 {
-"statusCodeEnableAlarm" : "1",
     "rpmturbine" : {
         "sensorparam"  : 2,
         "sensorname"   : "rpmturbine",
+        "EnableAlarmAtCode" : "1",
         "high"  : {
             "text"      : "Turbine RPM high",
             "value"     : 150000,
@@ -47,6 +47,7 @@
     "rpmshaft" : {
         "sensorparam"  : 2,
         "sensorname"   : "rpmshaft",
+        "EnableAlarmAtCode" : "1",
         "high"  : {
             "text"      : "Shaft RPM high",
             "value"     : 8000,
@@ -91,6 +92,7 @@
     "temperature" : {
         "sensorparam"  : 1,
         "sensorname"   : "temperature",
+        "EnableAlarmAtCode" : "1",
         "high"  : {
             "text"      : "Turbine RPM high",
             "value"     : 150000,
@@ -199,6 +201,7 @@
     "ecuvolt" : {
         "sensorparam"  : 5,
         "sensorname"   : "ecuvolt",
+        "EnableAlarmAtCode" : "1",
         "high"  : {
             "text"      : "ECU Battery high",
             "value"     : 9,
@@ -243,6 +246,7 @@
     "fuellevel" : {
         "sensorparam"  : 6,
         "sensorname"   : "fuellevel",
+        "EnableAlarmAtCode" : "1",
         "tanksize"     : 2500,
         "decimals"  : 1,
         "unit"      : "l",
@@ -250,7 +254,7 @@
         "interval"  : 500,
         "info"   : {
             "text"      : "Information on fuel level",
-            "value"     : 6,
+            "value"     : 2500,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -258,7 +262,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Fuel level 75%.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -270,7 +274,7 @@
         },
         "warning"   : {
             "text"      : "Warning on fuel level",
-            "value"     : 6,
+            "value"     : 750,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -278,7 +282,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Fuel level 20%.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -298,7 +302,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Fuel level 5%.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -312,6 +316,7 @@
     "status" : { 
         "sensorparam" : "3",
         "sensorname"   : "status",
+        "EnableAlarmAtCode" : "1",
         "-30"   : {
             "text"      : "DEV.DELAY",
             "message"   : {
