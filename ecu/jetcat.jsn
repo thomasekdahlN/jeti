@@ -1,7 +1,8 @@
 {
-"statusCodeEnableAlarm" : "10",
+"EnableSelectedAlarmsAtStatus" : "3",
+"EnableAllAlarmsAtStatus" : "3",
     "rpmturbine" : {
-        "sensorparam"  : 1,
+        "sensorparam"  : 2,
         "sensorname"   : "rpmturbine",
         "high"  : {
             "text"      : "Turbine RPM high",
@@ -19,8 +20,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "low"   : {
@@ -39,13 +40,13 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         }
     },
     "rpmshaft" : {
-        "sensorparam"  : 2,
+        "sensorparam"  : 9,
         "sensorname"   : "rpmshaft",
         "high"  : {
             "text"      : "Shaft RPM high",
@@ -63,8 +64,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "low"   : {
@@ -83,13 +84,13 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         }
     },
     "temperature" : {
-        "sensorparam"  : 3,
+        "sensorparam"  : 1,
         "sensorname"   : "temperature",
         "high"  : {
             "text"      : "Turbine RPM high",
@@ -107,8 +108,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "low"   : {
@@ -127,8 +128,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "shutdown"   : {
@@ -147,8 +148,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         }            
     },
@@ -171,8 +172,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "low"   : {
@@ -191,8 +192,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         }
     },
@@ -215,8 +216,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "low"   : {
@@ -235,8 +236,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         }
     },
@@ -264,8 +265,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "warning"   : {
@@ -284,8 +285,8 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         },
         "critical"   : {
@@ -304,13 +305,13 @@
             "haptic"    : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
+                "stick"     : "left",
+                "vibrationProfile"   : 4
             }
         }
     },
     "status" : { 
-        "sensorparam" : "7",
+        "sensorparam" : "3",
         "-40"   : {
             "text"      : "Failure",
             "message"   : {
@@ -320,14 +321,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Failure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-32"   : {
@@ -339,14 +340,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "ECU Reboot.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-31"   : {
@@ -358,14 +359,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Clutch Failure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-30"   : {
@@ -377,14 +378,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Low Rpm.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-29"   : {
@@ -396,14 +397,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Low Rpm.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-28"   : {
@@ -415,14 +416,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Out Fuel.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-27"   : {
@@ -434,14 +435,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Pump Comm.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-26"   : {
@@ -459,8 +460,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-25"   : {
@@ -472,14 +473,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "No Pump.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-24"   : {
@@ -491,14 +492,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Over Current.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-23"   : {
@@ -510,14 +511,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "No oil.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-22"   : {
@@ -529,14 +530,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "2nd Comm.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-21"   : {
@@ -548,14 +549,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "2nd Diff.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-20"   : {
@@ -567,14 +568,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "2nd Engine Failure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-19"   : {
@@ -586,14 +587,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Rpm2 Failure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-18"   : {
@@ -605,14 +606,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Fuel Faiilure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-17"   : {
@@ -624,14 +625,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Temperature Failiure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-16"   : {
@@ -643,14 +644,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Power Failiure.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-15"   : {
@@ -662,14 +663,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Ignition Time Out.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-14"   : {
@@ -681,14 +682,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "FailSafe.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-13"   : {
@@ -700,14 +701,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "WatchDog.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-12"   : {
@@ -719,14 +720,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Glow Plug.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-11"   : {
@@ -738,14 +739,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "High Temperature Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-10"   : {
@@ -757,14 +758,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Low Temperature, Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-9"   : {
@@ -776,14 +777,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Over Temperature.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-8"   : {
@@ -795,14 +796,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Battery Low.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-7"   : {
@@ -814,14 +815,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Low-Rpm.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-6"   : {
@@ -839,8 +840,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-5"   : {
@@ -858,8 +859,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-4"   : {
@@ -877,8 +878,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-3"   : {
@@ -890,14 +891,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-2"   : {
@@ -909,14 +910,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "-1"   : {
@@ -928,14 +929,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "0"   : {
@@ -947,14 +948,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "1"   : {
@@ -972,8 +973,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "2"   : {
@@ -985,14 +986,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Off.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "3"   : {
@@ -1004,14 +1005,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Startup.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "4"   : {
@@ -1029,8 +1030,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "5"   : {
@@ -1048,8 +1049,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "6"   : {
@@ -1067,8 +1068,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "7"   : {
@@ -1086,8 +1087,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "8"   : {
@@ -1105,8 +1106,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "9"   : {
@@ -1124,8 +1125,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "10"   : {
@@ -1143,8 +1144,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "11"   : {
@@ -1162,8 +1163,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "12"   : {
@@ -1175,14 +1176,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "left",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
                  "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "13"   : {
@@ -1200,8 +1201,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "14"   : {
@@ -1219,8 +1220,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         },
         "15"   : {
@@ -1238,8 +1239,8 @@
              "haptic"    : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "stick"     : "",
-                 "vibrationProfile"   : 0
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
              }
         }
     }
