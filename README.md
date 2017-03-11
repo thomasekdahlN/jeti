@@ -1,6 +1,8 @@
 # Jeti ECU Telemetry (Beta version)
 - First versjon that actually works. A but chatty on alarms, will work on that later. Jetcat, Hornet and pbs configs checked and tested a bit.
 
+https://github.com/thomasekdahlN/jeti/blob/master/screenshots/Alarm%20Message.bmp
+
 Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration fiels. JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
 
 jeti transmitter fw 4.2.2 firmware and vspeak 2.2 firmware required
