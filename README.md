@@ -17,6 +17,8 @@ vspeak lua turbine ecu status converter and alarm script 0.9 beta - developers, 
 - Vspeak PBS  https://github.com/thomasekdahlN/jeti/blob/master/ecu/pbs.jsn
 - Orbit (config file format OK)
 
+Partial support for two turbines.
+
 Supporting a new ecu converter is as easy as adding a json configuration file and you get all the bells and whistles
 
 Only tested on DC-24.
