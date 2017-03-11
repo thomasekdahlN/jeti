@@ -13,8 +13,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -33,8 +32,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -57,8 +55,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -77,8 +74,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -101,8 +97,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -121,8 +116,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -141,8 +135,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -165,8 +158,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -185,8 +177,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -209,8 +200,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -229,8 +219,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -243,31 +232,9 @@
     "fuellevel" : {
         "sensorparam"  : 4,
         "sensorname"   : "fuellevel",
-        "tanksize"     : 2500,
         "decimals"  : 1,
         "unit"      : "l",
         "label"     : "R.volume",
-        "interval"  : 500,
-        "info"   : {
-            "text"      : "Information on fuel level",
-            "value"     : 6,
-            "message"   : {
-                "enable" : true,
-                "seconds": 5
-            },
-            "audio" : {
-                "enable"    : true,
-                "repeat"    : 1,
-                "file"      : "",
-                "playbackType": "AUDIO_IMMEDIATE"
-            },
-            "haptic"    : {
-                "enable"    : true,
-                "repeat"    : 1,
-                "stick"     : "",
-                "vibrationProfile"   : 0
-            }
-        },
         "warning"   : {
             "text"      : "Warning on fuel level",
             "value"     : 6,
@@ -278,8 +245,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -298,8 +264,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : true,
@@ -321,8 +286,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -340,8 +304,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -359,8 +322,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -378,8 +340,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -397,8 +358,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -416,8 +376,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -435,8 +394,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -454,8 +412,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -473,8 +430,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -492,8 +448,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -511,8 +466,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -530,8 +484,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -549,8 +502,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -568,8 +520,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -587,8 +538,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -606,8 +556,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -625,8 +574,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -644,8 +592,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -663,8 +610,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -682,8 +628,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -701,8 +646,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -720,8 +664,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -739,8 +682,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -758,8 +700,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -777,8 +718,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
@@ -796,8 +736,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
-                 "playbackType": "AUDIO_IMMEDIATE"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : true,
