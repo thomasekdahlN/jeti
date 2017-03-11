@@ -1,27 +1,27 @@
 # Jeti ECU Telemetry (Alfa version)
-Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms, easy setup, very configurable 
+Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration fiels. JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
 
 jeti transmitter fw 4.2.2 firmware and vspeak 2.2 firmware required
 
-vspeak lua turbine ecu status converter and alarm script v2 alfa - alfa testers and helpers wanted. PM me.
+vspeak lua turbine ecu status converter and alarm script v2 alfa - developers, testers and helpers wanted. PM me.
 
 #Supporting:
-- Vspeak JetCat (new release this week) (config file format old, needs to be reconfigured, use pbs.jsn as example)
-- Vspeak Hornet (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Vspeak JetCat (new release this week) https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
+- Vspeak Hornet https://github.com/thomasekdahlN/jeti/blob/master/ecu/hornet.jsn
 - Vspeak Jakadofsky (config file format old, needs to be reconfigured, use pbs.jsn as example)
 - Vspeak evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
-- Vspeak PBS  (config file format OK)
+- Vspeak PBS  https://github.com/thomasekdahlN/jeti/blob/master/ecu/pbs.jsn
 - Orbit (config file format OK)
 
-Supporting a new ecu converter is as easy as adding a json configuration file.
+Supporting a new ecu converter is as easy as adding a json configuration file and you get all the bells and whistles
 
 Only tested on DC-24.
 
-#Implemented functionality in beta:
-- Separate advanced json configuration file for each ECU type (maybe for each turbine type later)
+#Implemented functionality in alfa:
+- Separate advanced json configuration file for each ECU type (maybe for each turbine type later, not possible to read folders in lua yet)
 - Possibility to read all statuses by voice
-- Possibility to turn on or off alarms globally - if you are annoyed
-- Configurable which turbine status enables alarms (to not get false alarms on startup where telemetry is not available). Defaults to alarms enabled when armed status is reached.
+- Possibility to turn on or off alarms globally - if you are annoyed. Some alarms like low rpm, low pumpv, low temp are not enabled until turbine status is running (configurable), the rest of the alarms are triggered on arming the turbine (configurable)
+- Configurable which turbine status has audi alarms, haptic alarms or message alarms.
 - Configurable which switch turns off alarms (recommended same as throttle cut)
 - Individually configurable parameters for EVERY turbine STATUS (this is super cool and super flexible)
 -- Alarm on status: on or off
@@ -49,7 +49,6 @@ Telemetry display
 
 Thinking of implementing:
 - Warning if you try to shutdown turbine while it is too hot (if possible to implement)
-- Later than this: Maybe a cool graphical display of all data like xicoy GSU
 
 #Help needed:
 - Translation
