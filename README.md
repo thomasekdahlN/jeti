@@ -5,6 +5,8 @@ https://github.com/thomasekdahlN/jeti/blob/master/screenshots/Alarm%20Message.bm
 
 Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration fiels. JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
 
+NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose turbine type, sensor and kill switch - and you will have the most advanced turbine surveillance available to RC modellers today.
+
 jeti transmitter fw 4.2.2 firmware and vspeak 2.2 firmware required
 
 vspeak lua turbine ecu status converter and alarm script 0.9 beta - developers, testers and helpers wanted. PM me.
@@ -24,7 +26,7 @@ Supporting a new ecu converter is as easy as adding a json configuration file an
 Only tested on DC-24.
 
 #Implemented functionality in beta:
-- Separate advanced json configuration file for each ECU type (maybe for each turbine type later, not possible to read folders in lua yet). You do not have to edit it, standard config files for your turbine has best set up right out of the box, just choose turbine type, sensor and kill switch - and you will have the most advanced turbine surveillance available to RC modellers today.
+- Separate advanced json configuration file for each ECU type (maybe for each turbine type later, not possible to read folders in lua yet). You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose turbine type, sensor and kill switch - and you will have the most advanced turbine surveillance available to RC modellers today.
 - Possibility to read all statuses by voice
 - Possibility to turn on or off alarms globally - if you are annoyed. Some alarms like low rpm, low pumpv, low temp are not enabled until turbine status is running (configurable), the rest of the alarms are triggered on arming the turbine (configurable)
 - Configurable which turbine status has audi alarms, haptic alarms or message alarms.
