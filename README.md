@@ -37,13 +37,15 @@ Only tested on DC-24.
 
 The usual alarms, but easier setup
 - Turbine RPM high
-- Turbine RPM low
+- Turbine RPM low - only enabled after turbine has reached running status 
 - Shaft RPM high
-- Shaft RPM low
+- Shaft RPM low - only enabled after turbine has reached running status 
 - Ecu voltage high
-- Ecu voltage low
+- Ecu voltage low - only enabled after turbine has reached running status 
+- EGT high
+- EGT low - only enabled after turbine has reached running status 
 - Pump voltage high
-- Pump voltage low
+- Pump voltage low - only enabled turbine has reached running status
 - Fuel warning alarm (configured at 20% fuel level)
 - Fuel critical alarm (configured at 10% fuel level)
 - Fuel - Reading remaining 10 times pr tank (automaticially set intervals based on tanksize)
