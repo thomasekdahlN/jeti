@@ -14,7 +14,7 @@
     "throttleKillSwitch": "Turbine off switch"
   },
   "en":{
-    "appName":"ECU Telemetry",
+    "appName":"ECU Telemetry beta",
     "cfgName":"ECU. Settings",
     "window":"ECU status",
     "left": "left",
@@ -24,10 +24,10 @@
     "selectSensor2":"VSpeak status turbine right",
     "enableAudioStatus": "Enable audio status",
     "enableAlarms": "Enable alarms",
-    "throttleKillSwitch": "Turbine off switch"
+    "throttleKillSwitch": "Throttle cut switch"
   },
   "de":{
-    "appName":"ECU Telemetry",
+    "appName":"ECU Telemetry beta",
     "cfgName":"ECU. Settings",
     "window":"ECU status",
     "left": "left",
@@ -37,10 +37,10 @@
     "selectSensor2":"VSpeak status turbine right",
     "enableAudioStatus": "Enable audio status",
     "enableAlarms": "Enable alarms",
-    "throttleKillSwitch": "Turbine off switch"
+    "throttleKillSwitch": "Throttle cut switch"
   },
   "fr":{
-    "appName":"ECU Telemetry",
+    "appName":"ECU Telemetry beta",
     "cfgName":"ECU. Settings",
     "window":"ECU status",
     "left": "left",
@@ -50,10 +50,10 @@
     "selectSensor2":"VSpeak status turbine right",
     "enableAudioStatus": "Enable audio status",
     "enableAlarms": "Enable alarms",
-    "throttleKillSwitch": "Turbine off switch"
+    "throttleKillSwitch": "Throttle cut switch"
   },
   "es":{
-    "appName":"ECU Telemetry",
+    "appName":"ECU Telemetry beta",
     "cfgName":"ECU. Settings",
     "window":"ECU status",
     "left": "left",
@@ -63,10 +63,10 @@
     "selectSensor2":"VSpeak status turbine right",
     "enableAudioStatus": "Enable audio status",
     "enableAlarms": "Enable alarms",
-    "throttleKillSwitch": "Turbine off switch"
+    "throttleKillSwitch": "Throttle cut switch"
   },
   "it":{
-    "appName":"ECU Telemetry",
+    "appName":"ECU Telemetry beta",
     "cfgName":"ECU. Settings",
     "window":"ECU status",
     "left": "left",
@@ -76,6 +76,6 @@
     "selectSensor2":"VSpeak status turbine right",
     "enableAudioStatus": "Enable audio status",
     "enableAlarms": "Enable alarms",
-    "throttleKillSwitch": "Turbine off switch"
+    "throttleKillSwitch": "Throttle cut switch"
   }
 }

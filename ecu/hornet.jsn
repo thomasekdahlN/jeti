@@ -35,7 +35,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Low-Rpm.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -80,7 +80,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Low-Rpm.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -125,7 +125,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Low Temperature.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -189,7 +189,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "No Pump.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -234,7 +234,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Battery Low.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -411,7 +411,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "10"   : {
@@ -430,7 +430,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "20"   : {
@@ -449,7 +449,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "30"   : {
@@ -468,7 +468,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "31"   : {
@@ -480,14 +480,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "ignition on.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "32"   : {
@@ -506,7 +506,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "33"   : {
@@ -525,7 +525,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "34"   : {
@@ -544,7 +544,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "35"   : {
@@ -556,14 +556,14 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "ignition on.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "36"   : {
@@ -582,7 +582,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "37"   : {
@@ -601,7 +601,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "38"   : {
@@ -620,7 +620,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "40"   : {
@@ -639,7 +639,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "41"   : {
@@ -658,7 +658,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "42"   : {
@@ -677,7 +677,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "43"   : {
@@ -696,7 +696,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "44"   : {
@@ -715,7 +715,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "50"   : {
@@ -734,7 +734,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         },
         "51"   : {
@@ -753,7 +753,7 @@
                  "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
-                 "vibrationProfile"   : 0
+                 "vibrationProfile"   : 4
              }
         }
     }

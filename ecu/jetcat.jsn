@@ -1,6 +1,6 @@
 {
-"EnableSelectedAlarmsAtStatus" : "3",
-"EnableAllAlarmsAtStatus" : "3",
+"EnableSelectedAlarmsAtStatus" : "8",
+"EnableAllAlarmsAtStatus" : "8",
     "rpmturbine" : {
         "sensorparam"  : 2,
         "sensorname"   : "rpmturbine",
@@ -34,7 +34,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Low-Rpm.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -78,7 +78,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Low-Rpm.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -158,7 +158,7 @@
         "sensorname"   : "pumpvolt",
         "high"  : {
             "text"      : "Pump volt high",
-            "value"     : 2.5,
+            "value"     : 2,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -166,7 +166,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "No Pump.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -178,7 +178,7 @@
         },
         "low"   : {
             "text"      : "Pump volt low",
-            "value"     : 0.1,
+            "value"     : 0,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -186,7 +186,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "No Pump.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -202,7 +202,7 @@
         "sensorname"   : "ecuvolt",
         "high"  : {
             "text"      : "ECU Battery high",
-            "value"     : 9,
+            "value"     : 7,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -210,11 +210,11 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Battery Low.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
-                "enable"    : true,
+                "enable"    : false,
                 "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
@@ -230,7 +230,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Battery Low.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -244,7 +244,7 @@
     "fuellevel" : {
         "sensorparam"  : 6,
         "sensorname"   : "fuellevel",
-        "tanksize"     : 2500,
+        "tanksize"     : 4000,
         "decimals"  : 1,
         "unit"      : "l",
         "label"     : "R.volume",
@@ -259,7 +259,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Fuel level 75%.wav",
                 "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -279,7 +279,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Fuel level 25%.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -299,7 +299,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "",
+                "file"      : "Fuel level 10%.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
             },
             "haptic"    : {
@@ -312,6 +312,7 @@
     },
     "status" : { 
         "sensorparam" : "3",
+        "sensorname"   : "status",
         "-40"   : {
             "text"      : "Failure",
             "message"   : {
@@ -1100,11 +1101,11 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "",
+                 "file"      : "Startup.wav",
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1123,7 +1124,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1142,7 +1143,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1161,7 +1162,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1180,7 +1181,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "",
                  "vibrationProfile"   : 4
@@ -1199,7 +1200,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1218,7 +1219,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1237,7 +1238,7 @@
                  "playbackType": "AUDIO_IMMEDIATE"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4

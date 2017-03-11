@@ -25,26 +25,36 @@ local Status2Text
 local prevStatusID, prevFuelLevel, enableAudio, enableAlarmCheckbox = 0,0,0,0
 local switchManualShutdown
 
-local statusChanged        = false
-local enableSelectedAlarms, enableAllAlarms = false,false
+local enableSelectedAlarms, enableAllAlarms = true,true
 
 local lang      -- read from file
 local config    -- complete turbine config object read from file with manufacturer name
 
 local sensorsAvailable  = {"..."}
+local alarmsTriggered   = {  -- Stops alarms from repeating, but has to be reset if we want an alarm again. ToDo!!!!!
+    ["rpmturbine"]  = false,
+    ["rpmshaft"]    = false,
+    ["temperature"] = false,
+    ["pumpvolt"]    = false,
+    ["ecuvolt"]     = false,
+    ["fuellevel"]   = false,  -- in ml from ecu
+    ["fuelpercent"] = false,  -- calculated
+    ["status"]      = false,
+}
 local sensorValues      = {
-    ["rpmturbine"]  = 100,
-    ["rpmshaft"]    = 100,
-    ["temperature"] = 100,
-    ["pumpvolt"]    = 100,
-    ["ecuvolt"]     = 100,
-    ["fuellevel"]   = 1000,
-    ["status"]      = 100,
+    ["rpmturbine"]  = 0,
+    ["rpmshaft"]    = 0,
+    ["temperature"] = 0,
+    ["pumpvolt"]    = 0,
+    ["ecuvolt"]     = 0,
+    ["fuellevel"]   = 0,  -- in ml from ecu
+    ["fuelpercent"] = 0,  -- calculated
+    ["status"]      = 0,
 } -- Sensor values is globally stored here in a hash by sensorname as configured
 
 local ECUTypeIn         = 1
 
--- IDEA - read all config files dunamically from folder would make it even more flexible
+-- IDEA - read all config files dynamically from folder would make it even more flexible
 local ECUTypeA = {
      [1] = 'pbs',
      [2] = 'jakadofsky',
@@ -152,9 +162,8 @@ local function initForm(subform)
             -- list[#list+1]=string.format("%s - %s [%s]",descr,sensor.label,sensor.unit) -- This is production
 
             sensorsAvailable[#sensorsAvailable+1] = sensor
-            print(string.format("SensorID: %s=%s, param: %s=%s", sensor.id, statusSensor1ID, sensor.param, tonumber(config.status.sensorparam)))
+            --print(string.format("SensorID: %s=%s, param: %s=%s", sensor.id, statusSensor1ID, sensor.param, tonumber(config.status.sensorparam)))
             if(sensor.id==statusSensor1ID and sensor.param==tonumber(config.status.sensorparam)) then
-                print(string.format("-- YES"))
                 curIndex1=#sensorsAvailable
             end
             if(sensor.id==statusSensor2ID and sensor.param==tonumber(config.status.sensorparam)) then
@@ -198,101 +207,10 @@ end
 
 ----------------------------------------------------------------------
 -- 
-local function readStatusSensor(statusconfig, statusSensorID)
-    local StatusText    = ''
-    local value         = 0 -- sensor value
-    local switch
-    local sensor = system.getSensorByID(statusSensorID, tonumber(statusconfig.sensorparam))
-
-    if(sensor and sensor.valid) then
-        value = string.format("%s", math.floor(sensor.value))
-        sensorValues[statusconfig.sensorname] = value
-        StatusText = config.status[value].text;
-
-        switch = system.getSwitchInfo(switchManualShutdown)
-        -- print(string.format("switch: %s : %s", switch.label, switch.value))
-
-        -------------------------------------------------------------_
-        -- Check if status is changed since the last time
-        if(prevStatusID ~= value) then
-            statusChanged = true
-        end 
-        prevStatusID = value
-
-        -------------------------------------------------------------_
-        -- If configured turbine status has been reached, all alarms are enabled until turned off by throttle kill switch
-        if(switch and switch.value < 0) then  -- turned off by switch
-            enableSelectedAlarms = false
-            enableAllAlarms      = false
-           print(string.format("enableSelectedAlarms = false"))
-           print(string.format("enableAllAlarms = false"))
-        elseif(config.status.EnableSelectedAlarmsAtStatus == value) then -- turn on when status is running only when switch is on
-            enableSelectedAlarms = true
-            print(string.format("enableSelectedAlarms = true"))
-        elseif(config.status.EnableAllAlarmsAtStatus == value) then -- turn on when status is running only when switch is on
-            enableAllAlarms = true
-            print(string.format("enableAllAlarms = true"))
-        end
-    
-        -------------------------------------------------------------
-        -- If user has enabled alarms, the status has an alarm, the status has changed since last time and the configured status code has been reached - sound the alarm
-        -- This should get rid of all annoying alarms
-        if(enableAlarmCheckbox and enableSelectedAlarms and statusChanged) then
-            -- ToDo: Implement repeat of alarm
-            -- STATUS alarms
-
-            AlarmMessage(config.status[value].message, StatusText)
-        
-            AlarmHaptic(config.status[value].haptic)
-        
-            AlarmAudio(config.status[value].audio)
-        end
-
-    else 
-        StatusText = "          -- "
-    end
-
-    -- print(string.format("statusSensorID: %s, text: %s ", statusSensorID, StatusText))
-
-    return StatusText 
-end
-
-
-----------------------------------------------------------------------
--- readGenericSensor high/low value alarms
--- ToDo: These alarms will be repeated to often, how to avoid that? Second counter, repeat counter?
-
-local function readGenericSensor(genericConfig, statusSensorID)
-
-    local sensor = system.getSensorByID(statusSensorID, tonumber(genericConfig.sensorparam))
-
-    -- print(string.format("statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
-    if(sensor and sensor.valid) then
-
-        sensorValues[genericConfig.sensorname] = sensor.value -- could be the entire sensor object if needed.
-
-        if(sensor.value > genericConfig.high.value) then
-            AlarmMessage(genericConfig.message, genericConfig.high.text)
-            AlarmHaptic(genericConfig.haptic)
-            AlarmAudio(genericConfig.audio)
-            
-        elseif(sensor.value < genericConfig.low.value and enableAllAlarms) then
-        
-            --'rpmturbine, rpmshaft,temperature, pumpvolt', enableAllAlarms -- Only enable low alarms after turbine has properly started. Battery could be gvien before, but not a problem to be generic        
-            AlarmMessage(genericConfig.message, genericConfig.low.text)
-            AlarmHaptic(genericConfig.haptic)
-            AlarmAudio(genericConfig.audio)
-        end
-    end
-end
-
-
-----------------------------------------------------------------------
--- 
-local function AlarmMessage(messageconfig, StatusText)
+local function AlarmMessage(messageconfig,StatusText)
 
     if(messageconfig.enable) then
-        system.messageBox(string.format("%s", StatusText), messageconfig.seconds)
+        system.messageBox(string.format("%s", StatusText),messageconfig.seconds)
         print(string.format("messageBox: %s", StatusText))
     end    
 end
@@ -305,11 +223,11 @@ local function AlarmHaptic(hapticconfig)
     if(hapticconfig.enable) then
         -- If vibration/haptic associated with status, we vibrate
         if(hapticconfig.stick == 'left') then
-            print(string.format("Vibrate left %s", hapticconfig.vibrationProfile))
+            print(string.format("Vibrate left %s",hapticconfig.vibrationProfile))
             system.vibration(false, hapticconfig.vibrationProfile);
         end
         if(hapticconfig.stick == 'right') then
-            print(string.format("Vibrate right %s", hapticconfig.vibrationProfile))
+            print(string.format("Vibrate right %s",hapticconfig.vibrationProfile))
             system.vibration(true, hapticconfig.vibrationProfile);
         end
     end
@@ -335,10 +253,17 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
 
     local sensor = system.getSensorByID(statusSensorID, tonumber(fuelconfig.sensorparam))
 
-    -- print(string.format("readFueltankSensor: statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
+    print(string.format("readFueltankSensor: statusSensorID: %s, statusSensorPa: %s ", statusSensorID, statusSensorPa))
     if(sensor and sensor.valid) then
 
         sensorValues[fuelconfig.sensorname] = sensor.value
+
+        -- Calculate fuel percentage
+        sensorValues['fuelpercent'] = (config.fuellevel.tanksize - sensorValues['fuellevel'])/(config.fuellevel.tanksize/100)
+        if( sensorValues['fuelpercent'] > 99 ) then sensorValues['fuelpercent'] = 99 end
+        if( sensorValues['fuelpercent'] < 0 ) then sensorValues['fuelpercent'] = 0 end
+        
+        print(string.format("tanksize=%s, fuellevel=%s, fuelpercent: %s, ", config.fuellevel.tanksize, sensorValues['fuellevel'], sensorValues['fuelpercent']))
 
         -- Repeat at intervals from config
         if(sensor.value < prevFuelLevel) then
@@ -346,46 +271,126 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
             prevFuelLevel = prevFuelLevel - fuelconfig.interval -- Only work in intervals
             
             if(sensor.value < fuelconfig.critical.value) then
-                AlarmMessage(fuelconfig.critical.message, fuelconfig.critical.text)
+                AlarmMessage(fuelconfig.critical.message,fuelconfig.critical.text)
                 AlarmHaptic(fuelconfig.critical.haptic)
                 AlarmAudio(fuelconfig.critical.audio)
             elseif(sensor.value < fuelconfig.warning.value) then
-                AlarmMessage(fuelconfig.warning.message, fuelconfig.warning.text)
+                AlarmMessage(fuelconfig.warning.message,fuelconfig.warning.text)
                 AlarmHaptic(fuelconfig.warning.haptic)
                 AlarmAudio(fuelconfig.warning.audio)
             elseif(sensor.value < fuelconfig.info.value) then
-                AlarmMessage(fuelconfig.info.message, fuelconfig.info.text)
+                AlarmMessage(fuelconfig.info.message,fuelconfig.info.text)
                 AlarmHaptic(fuelconfig.info.haptic)
                 AlarmAudio(fuelconfig.info.audio)
             end
             
-            system.playNumber(sensorvalue, fuelconfig.decimals, fuelconfig.unit, fuelconfig.label) -- Read out the numbers
+            system.playNumber(sensor.value/1000, fuelconfig.decimals, fuelconfig.unit, fuelconfig.label) -- Read out the numbers (ml/1000)
         end
+    else
+        print(string.format("FuelSensor not read"))
     end
 end
 
 ----------------------------------------------------------------------
---
-local function loop()
+-- readGenericSensor high/low value alarms
+-- ToDo: These alarms will be repeated to often, how to avoid that? Second counter, repeat counter?
 
-    -- Turbine 1
-    --statusSensor1ID = 1 -- only for debug
-    if(statusSensor1ID > 0) then
-        Status1Text = readStatusSensor(config.status, statusSensor1ID)
-        if(enableAlarmCheckbox and enableAlarmByState) then
-            readFueltankSensor(config.fuellevel, statusSensor1ID)
-            readGenericSensor(config.rpmturbine, statusSensor1ID)
-            readGenericSensor(config.rpmshaft, statusSensor1ID)
-            readGenericSensor(config.temperature, statusSensor1ID)
-            readGenericSensor(config.pumpvolt, statusSensor1ID)
-            readGenericSensor(config.ecuvolt, statusSensor1ID)
+local function readGenericSensor(genericConfig, statusSensorID)
+
+    local sensor = system.getSensorByID(statusSensorID,tonumber(genericConfig.sensorparam))
+
+    --print(string.format("param: %s, genericConfig.high.text: %s, genericConfig.low.text: %s ", genericConfig.sensorname, genericConfig.high.text, genericConfig.low.text))
+    if(sensor and sensor.valid) then
+
+        sensorValues[genericConfig.sensorname] = sensor.value -- could be the entire sensor object if needed.
+
+        if(sensor.value > genericConfig.high.value and not alarmsTriggered[genericConfig.sensorname]) then
+            alarmsTriggered[genericConfig.sensorname] = true
+            AlarmMessage(genericConfig.high.message,genericConfig.high.text)
+            AlarmHaptic(genericConfig.high.haptic)
+            AlarmAudio(genericConfig.high.audio)
+            
+        elseif(sensor.value < genericConfig.low.value and enableAllAlarms and not alarmsTriggered[genericConfig.sensorname]) then
+            alarmsTriggered[genericConfig.sensorname] = true
+        
+            --'rpmturbine, rpmshaft,temperature, pumpvolt', enableAllAlarms -- Only enable low alarms after turbine has properly started. Battery could be given before, but not a problem to be generic        
+            --print(string.format("genericConfig.low.message.enable: %s", genericConfig.low.message.enable))
+            AlarmMessage(genericConfig.low.message,genericConfig.low.text)
+            AlarmHaptic(genericConfig.low.haptic)
+            AlarmAudio(genericConfig.low.audio)
         end
     end
-    -- Turbine 2
-    if(statusSensor2ID > 1) then
-        --Status2Text = readStatusSensor(config.status, statusSensor2ID)
-    end
 end
+
+
+----------------------------------------------------------------------
+-- 
+local function readStatusSensor(statusconfig, statusSensorID)
+    local StatusText    = ''
+    local statusChanged = false
+    local value         = 0 -- sensor value
+    local switch
+    local sensor = system.getSensorByID(statusSensorID, tonumber(statusconfig.sensorparam))
+
+    if(sensor and sensor.valid) then
+        value = string.format("%s", math.floor(sensor.value))
+        --print(string.format("sensorValues[%s] = %s", statusconfig.sensorname, value))
+        sensorValues[statusconfig.sensorname] = value
+        if(config.status[value] ~= nil) then 
+            StatusText = config.status[value].text;
+        else 
+            --print(string.format("InvalidStatusCode: %s", value))
+        end 
+        switch = system.getSwitchInfo(switchManualShutdown)
+        print(string.format("StatusValue: %s", value))
+        print(string.format("StatusText: %s", StatusText))
+
+        -------------------------------------------------------------_
+        -- Check if status is changed since the last time
+        if(prevStatusID ~= value) then
+            statusChanged = true
+        end 
+        prevStatusID = value
+
+        -------------------------------------------------------------_
+        -- If configured turbine status has been reached, all alarms are enabled until turned off by throttle kill switch
+        if(switch and switch.value < 0) then  -- turned off by switch
+            enableSelectedAlarms = true
+            enableAllAlarms      = true
+           print(string.format("enableSelectedAlarms = false"))
+           print(string.format("enableAllAlarms = false"))
+        elseif(config.status.EnableSelectedAlarmsAtStatus == value) then -- turn on when status is running only when switch is on
+            enableSelectedAlarms = true
+            print(string.format("enableSelectedAlarms = true"))
+        elseif(config.status.EnableAllAlarmsAtStatus == value) then -- turn on when status is running only when switch is on
+            enableAllAlarms = true
+            print(string.format("enableAllAlarms = true"))
+        end
+    
+        -------------------------------------------------------------
+        -- If user has enabled alarms, the status has an alarm, the status has changed since last time and the configured status code has been reached - sound the alarm
+        -- This should get rid of all annoying alarms
+        if(enableAlarmCheckbox and enableSelectedAlarms and statusChanged) then
+            -- ToDo: Implement repeat of alarm
+            -- STATUS alarms
+
+            AlarmMessage(config.status[value].message,StatusText)
+        
+            AlarmHaptic(config.status[value].haptic)
+        
+            AlarmAudio(config.status[value].audio)
+        end
+
+    else 
+        --print(string.format("StatusSensorNotFound: %s", value))
+        StatusText = "          -- "
+    end
+
+    -- print(string.format("statusSensorID: %s, text: %s ", statusSensorID, StatusText))
+
+    return StatusText 
+end
+
 
 ----------------------------------------------------------------------
 --
@@ -403,7 +408,7 @@ end
 
 local function DrawFuelGauge(percentage, ox, oy) 
 
-    print(string.format("DrawFuelGauge: percentage:%s", percentage))
+    --print(string.format("DrawFuelGauge: percentage:%s", percentage))
 
   -- triangle
   lcd.drawLine(6+ox,5+oy,17+ox,5+oy)
@@ -448,33 +453,21 @@ local function DrawFuelGauge(percentage, ox, oy)
   -- end	
 end
 
-local function DrawTurbineStatus(status, rpm, ox, oy) 
-
-    -- print(string.format("DrawTurbineStatus: status:%s Status1Text: %s", status, rpm))
-
+local function DrawTurbineStatus(status, ox, oy) 
     lcd.drawText(4+ox,2+oy, "Turbine", FONT_MINI)  
-  
-    if (status ~= 2 ) then
-      lcd.drawText(4+ox,15+oy, Status1Text, FONT_BOLD)  
-    --else
-      --lcd.drawText(4+ox,15+oy, string.format("%.1f",rpm), FONT_BOLD)  
-      --lcd.drawText(35+ox,19+oy, "T/min", FONT_MINI)  
-    end	  
+    lcd.drawText(4+ox,15+oy, status, FONT_BOLD)  
 end
 
-local function DrawBattery(u_rc, u_ecu, ox, oy) 
-
---print(string.format("DrawBattery: u_rc:%s u_ecu: %s", u_rc, u_ecu))
-
+local function DrawBattery(rpmturbine, u_ecu, ox, oy) 
   lcd.drawText(4+ox,1+oy, "RPM", FONT_MINI)  
   lcd.drawText(40+ox,1+oy, "ECU", FONT_MINI)  
-  --lcd.drawText(4+ox,12+oy, string.format("%.1f%s", sensorValues.rpmturbine), FONT_BOLD)  
-  lcd.drawText(40+ox,12+oy, string.format("%.1f%s",u_ecu,"V"), FONT_BOLD)  
+  lcd.drawText(4+ox,12+oy, string.format("%s",tonumber(rpmturbine)), FONT_BOLD)
+  lcd.drawText(40+ox,12+oy, string.format("%.1f%s",u_ecu,"V"), FONT_BOLD)
 end
 
-local function DrawFuelLow(fuelPercentage, ox, oy) 
+local function DrawFuelLow(ox, oy) 
 
-    print(string.format("DrawFuelLow: fuelPercentage: %s ", fuelPercentage))
+    --print(string.format("DrawFuelLow: fuelPercentage: %s ", sensorValues['fuelpercent']))
 
 
   if( system.getTime() % 2 == 0) then -- blink every second
@@ -495,8 +488,8 @@ local function DrawFuelLow(fuelPercentage, ox, oy)
   
   -- percentage and warning
   local percentX = 20
-  if( fuelPercentage < 10 ) then percentX = 23 end
-  lcd.drawText(percentX+ox,28+oy, string.format("%d%s",fuelPercentage,"%"), FONT_BOLD)  
+  if( sensorValues['fuelpercent'] < 10 ) then percentX = 23 end
+  lcd.drawText(percentX+ox,28+oy, string.format("%d%s",sensorValues['fuelpercent'],"%"), FONT_BOLD)  
   lcd.drawText(1+ox,49+oy, "Fuel Low", FONT_BOLD)  
   
 end
@@ -504,35 +497,31 @@ end
 -- Print the telemetry values
 local function OnPrint(width, height) 
 
-  print(string.format("OnPrint"))
+  --print(string.format("OnPrint"))
 
   -- field separator lines
   lcd.drawLine(70,2,70,66)  
   lcd.drawLine(70,36,148,36)  
- 
-  -- fuel - 1700 (=tankSize) ml is 0%
-  local fuelPercentage = (config.fuellevel.tanksize - sensorValues.fuellevel )/(config.fuellevel.tanksize/100)
-  if( fuelPercentage > 99 ) then fuelPercentage = 99 end
-  if( fuelPercentage < 0 ) then fuelPercentage = 0 end
   
-  print(string.format("fuelPercentage: %s, rpm: %s ", fuelPercentage, sensorValues.turbinerpm))
+  --print(string.format("fuelPercentage: %s, rpm: %s ", sensorValues['fuelpercent'], sensorValues.turbinerpm))
   
   if( sensorValues.fuellevel > config.fuellevel.warning.value or initAnimation ) then
-    DrawFuelGauge(fuelPercentage, 1, 0)   
+    DrawFuelGauge(sensorValues['fuelpercent'], 1, 0)   
   else
-    DrawFuelLow(fuelPercentage, 1, 0) 
+    DrawFuelLow(sensorValues['fuelpercent'], 1, 0) 
   end  
 
   -- turbine
-  DrawTurbineStatus(Status1Text, sensorValues.turbinerpm, 74, 0) 
+  DrawTurbineStatus(Status1Text, 74, 0) 
 
   -- battery
-  DrawBattery(nil, sensorValues.ecuvolt, 74, 37) 
+  DrawBattery(sensorValues.rpmturbine, sensorValues.ecuvolt, 74, 37) 
   
 end
 
+
 ----------------------------------------------------------------------
--- Application initialization
+-- Application initialization. Has to be the second last function so all other functions is initialized
 local function init()
 
 	system.registerForm(1,MENU_APPS,lang.appName, initForm, keyPressed)
@@ -545,8 +534,8 @@ local function init()
     switchManualShutdown  = system.pLoad("switchManualShutdown")
 
     print(string.format("enableAudio: %s", enableAudio))
-    print(string.format("enableAlarmByStates: %s", enableAlarmByStates))
-    print(string.format("switchManualShutdown: %s", switchManualShutdown))
+    --print(string.format("enableAlarmByStates: %s", enableAlarmByStates))
+    --print(string.format("switchManualShutdown: %s", switchManualShutdown))
 
     if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
         system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),1,TelemetryStatusWindow1)
@@ -562,6 +551,30 @@ local function init()
 end
 
 ----------------------------------------------------------------------
+-- Loop has to be the last function, so every other function is initialized
+local function loop()
+
+    -- Turbine 1
+    if(statusSensor1ID ~= 0) then
+        Status1Text = readStatusSensor(config.status,statusSensor1ID)
+        readFueltankSensor(config.fuellevel,statusSensor1ID)
+        readGenericSensor(config.rpmturbine,statusSensor1ID)
+        readGenericSensor(config.rpmshaft,statusSensor1ID)
+        readGenericSensor(config.temperature,statusSensor1ID)
+        readGenericSensor(config.pumpvolt,statusSensor1ID)
+        readGenericSensor(config.ecuvolt,statusSensor1ID)
+    end
+    
+    -- Print all sensor values
+    for key,value in pairs(sensorValues) do print(key,value) end
+    
+    -- Turbine 2
+    if(statusSensor2ID ~= 0) then
+        Status2Text = readStatusSensor(config.status,statusSensor2ID)
+    end
+end
+
+----------------------------------------------------------------------
 --
 setLanguage()
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='1.5', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.8', name=lang.appName}
