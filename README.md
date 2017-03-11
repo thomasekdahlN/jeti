@@ -27,15 +27,15 @@ Only tested on DC-24.
 
 #Implemented functionality in beta:
 - Separate advanced json configuration file for each ECU type (maybe for each turbine type later, not possible to read folders in lua yet). You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose turbine type, sensor and kill switch - and you will have the most advanced turbine surveillance available to RC modellers today.
-- Possibility to read all statuses by voice
+- Possibility to read all statuses by voice (not as alarms, but as information i.e. during startup)
 - Possibility to turn on or off alarms globally - if you are annoyed. Some alarms like low rpm, low pumpv, low temp are not enabled until turbine status is running (configurable), the rest of the alarms are triggered on arming the turbine (configurable)
 - Configurable which turbine status has audi alarms, haptic alarms or message alarms.
 - Configurable which switch turns off alarms (recommended same as throttle cut)
-- Individually configurable parameters for EVERY turbine STATUS (this is super cool and super flexible)
--- Alarm on status: on or off
--- Audio alarm (information in female voice, warnings in male voice), possibility to change audio file.
--- Haptic feedback, which stick, which vibration profile, on/off
--- Display warning. on/off - shows the status text as a warning.
+- Status - Individually configurable parameters for EVERY turbine STATUS (this is super cool and super flexible)
+- Status alarms only given on status change
+- Status - Audio alarm (information in female voice, warnings in male voice), possibility to change audio file. Configurable.
+- Status - Haptic feedback, which stick, which vibration profile, on/off. Configurable.
+- Status - Display warning. on/off - shows the status text as a warning. Configurable.
 
 The usual alarms, but easier setup
 - Turbine RPM high
