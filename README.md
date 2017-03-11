@@ -44,12 +44,11 @@ The usual alarms, but easier setup
 - Ecu voltage low
 - Pump voltage high
 - Pump voltage low
-- Tank information
--- Tank warning alarm (configured at 20% fuel level)
--- Tank critical alarm (configured at 10% fuel level)
--- Reading remaining fuel 10 times pr tank (automaticially set intervals based on tanksize)
--- Automatic reading of tanksize from ECU (shown in telemetry window)
--- = Zero configuration neccessary to have very advanced information and alarms on tank level
+- Fuel warning alarm (configured at 20% fuel level)
+- Fuel critical alarm (configured at 10% fuel level)
+- Fuel - Reading remaining 10 times pr tank (automaticially set intervals based on tanksize)
+- Fuel - Automatic reading of tanksize from ECU (shown in telemetry window)
+- = Fuel = Zero configuration neccessary to have very advanced information and alarms on tank level
 Alarms will be repeated at most every 25 second if error condition is sustained
 
 Telemetry display
