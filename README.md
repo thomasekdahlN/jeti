@@ -49,6 +49,7 @@ Telemetry display
 
 Thinking of implementing:
 - Warning if you try to shutdown turbine while it is too hot (if possible to implement)
+- Sound volume control connected to warnings and critical alarms
 
 #Help needed:
 - Translation
