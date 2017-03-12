@@ -397,7 +397,45 @@ end
 --
 local function TelemetryStatusWindow1(width, height) 
     --lcd.drawText(5,5,  string.format("%s", Status1Text), FONT_BIG)
-    lcd.drawText(5,5, string.format("Tanksize: %.1f%s",tonumber(config.fuellevel.tanksize/1000), "L"), FONT_BOLD)
+    local xcg1  = 5
+    local xcg2  = tonumber((width / 2))
+    local yc    = tonumber((height / 3) + 20)
+    local diam  = tonumber((height / 2) - 10)
+    
+    print(string.format("width: %s, height: %s", width, height))
+
+    -- lcd.drawText(5,5, string.format("Tanksize: %.1f%s",tonumber(config.fuellevel.tanksize/1000), "L"), FONT_BOLD)
+    
+    lcd.drawText(5,2, string.format("RPM"), FONT_NORMAL)
+    lcd.drawCircle(xcg1,yc,diam)
+
+    lcd.drawText(width/2,2, string.format("TEMP"), FONT_NORMAL)    
+    lcd.drawCircle(xcg2,yc,diam)
+    
+    rpmgauge = lcd.loadImage("Apps/ecu/img/rpmgauge.png")
+    tempgauge = lcd.loadImage("Apps/ecu/img/tempgauge.png")
+
+    if(rpmgauge) then
+        lcd.drawImage(xcg1, 18, rpmgauge)
+    end
+
+    if(tempgauge) then
+        lcd.drawImage(xcg2, 18, tempgauge)
+    end
+
+    -- Calculate the x position of the needle in the gauge
+    rpmpercent  = (sensorValues.rpmturbine)  / (config.rpmturbine.high.value  / 10000) -- to get fractional numbers
+    temppercent = (sensorValues.temperature) / (config.temperature.high.value / 10000) -- to get fractional numbers
+
+    rpmx    = xcg1 + (rpmgauge.width  * rpmpercent) 
+    tempx   = xcg2 + (tempgauge.width * temppercent)
+    -- Draw the lines for the gauge, or just reload with images with better quality gauges?
+    lcd.drawLine(xcg1+(rpmgauge.width)/2,rpmgauge.height+5, rpmx,18)
+
+    lcd.drawLine(xcg2+(tempgauge.width)/2,tempgauge.height+5, tempx,18)
+
+
+    --os.exit()
 end
 
 ----------------------------------------------------------------------
@@ -550,13 +588,13 @@ local function init()
     --print(string.format("switchManualShutdown: %s", switchManualShutdown))
 
     if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
-        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),1,TelemetryStatusWindow1)
+        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),2,TelemetryStatusWindow1)
     	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,TelemetryStatusWindow2)
     else
-    	system.registerTelemetry(1,string.format("%s", lang.window),1,TelemetryStatusWindow1)
+    	system.registerTelemetry(1,string.format("%s", lang.window),2,TelemetryStatusWindow1)
     end
 
-    system.registerTelemetry( 2, "Fuel/ECU/Voltage", 2, OnPrint)  
+    system.registerTelemetry( 2, "Fuel/ECU/RPM", 2, OnPrint)  
 
      ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     readConfig()
