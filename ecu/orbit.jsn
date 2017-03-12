@@ -1,5 +1,6 @@
 {
-"statusCodeEnableAlarm" : "10",
+    "EnableSelectedAlarmsAtStatus" : "8",
+    "EnableAllAlarmsAtStatus" : "8",
     "rpmturbine" : {
         "sensorparam"  : 3,
         "sensorname"   : "rpmturbine",
