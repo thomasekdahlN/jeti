@@ -56,7 +56,7 @@ The usual alarms, but easier setup
 Alarms will be repeated at most every 25 second if error condition is sustained
 
 Telemetry display visual
-- Fuel gauge, RPM, CU volt and status double window  from "ECU data display" for Orbit made by Bernd Woköck
+- Fuel gauge, RPM, ECU volt and status double window  from "ECU data display" for Orbit made by Bernd Woköck
 - Experimental RPM and TEMP gauge (very cool, but not tested)
 
 Thinking of implementing:
