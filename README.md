@@ -55,9 +55,9 @@ The usual alarms, but easier setup
 - = Fuel = Zero configuration neccessary to have very advanced information and alarms on tank level
 Alarms will be repeated at most every 25 second if error condition is sustained
 
-Telemetry display
-- Turbine status (and only that)
-- Reimplemented the telemetry status display code and graphics  from "ECU data display" for Orbit made by Bernd Woköck
+Telemetry display visual
+- Fuel gauge, RPM, CU volt and status double window  from "ECU data display" for Orbit made by Bernd Woköck
+- Experimental RPM and TEMP gauge (very cool, but not tested)
 
 Thinking of implementing:
 - Warning if you try to shutdown turbine while it is too hot (if possible to implement)
