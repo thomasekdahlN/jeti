@@ -60,11 +60,11 @@ local ECUTypeA = {
 local function setLanguage()
   -- Set language
   local lng  = system.getLocale();
-  local file = io.readall("Apps/ecu/locale.jsn")
-  print(string.format("Apps/ecu/locale.jsn"))
+  local file = io.readall(string.format("Apps/ecu/locale/%s.jsn", lng))
+  print(string.format(string.format("Apps/ecu/locale/%s.jsn", lng)))
   local obj  = json.decode(file)  
   if(obj) then
-    lang = obj[lng] or obj[obj.default]
+    lang = obj
   end
 end
 
