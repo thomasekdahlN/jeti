@@ -14,7 +14,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "Over rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -89,7 +89,7 @@
         "sensorparam"  : 1,
         "sensorname"   : "temperature",
         "high"  : {
-            "text"      : "Turbine RPM high",
+            "text"      : "Turbine temperature high",
             "value"     : 150000,
             "message"   : {
                 "enable" : true,
@@ -98,7 +98,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "Over temperature.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -108,7 +108,7 @@
             }
         },
         "low"   : {
-            "text"      : "Turbine RPM low",
+            "text"      : "Turbine temperature low",
             "value"     : 150000,
             "message"   : {
                 "enable" : true,
@@ -117,7 +117,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "Low temperature.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -701,7 +701,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Low Temperature, Off.wav"
+                 "file"      : "Low temperature off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -719,7 +719,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Over Temperature.wav"
+                 "file"      : "Over temperature.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -773,7 +773,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Over rpm.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -791,7 +791,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "ACC slow.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -809,7 +809,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "ACC  time out.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -827,7 +827,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Off.wav"
+                 "file"      : "Manual Off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -845,7 +845,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Off.wav"
+                 "file"      : "Auto Off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -863,7 +863,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Off.wav"
+                 "file"      : "RC off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -881,7 +881,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Off.wav"
+                 "file"      : "RC off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -899,7 +899,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Slow down.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -917,7 +917,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Off.wav"
+                 "file"      : "Switch off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -935,7 +935,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Startup.wav"
+                 "file"      : "Standby start.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -953,7 +953,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Pre-Heat1.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -971,7 +971,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Pre-Heat2.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -989,7 +989,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Ignite.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -1025,7 +1025,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Startup.wav"
+                 "file"      : ""
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1043,7 +1043,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Kerosin full.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1061,7 +1061,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Accelerate.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1079,7 +1079,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Stabelize.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1097,12 +1097,12 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "left"
+                 "file"      : "Learn LO.wav"
              },
              "haptic"    : {
                  "enable"    : false,
                  "repeat"    : 1,
-                 "stick"     : "",
+                 "stick"     : "left",
                  "vibrationProfile"   : 4
              }
         },
@@ -1115,7 +1115,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Run.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1133,7 +1133,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Speed Control.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1151,7 +1151,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Rpm 2 Ctrl.wav"
              },
              "haptic"    : {
                  "enable"    : false,

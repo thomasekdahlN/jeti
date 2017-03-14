@@ -15,7 +15,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "Over rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -92,7 +92,7 @@
         "sensorname"   : "temperature",
         "EnableAlarmAtCode" : "1",
         "high"  : {
-            "text"      : "Turbine RPM high",
+            "text"      : "Turbine temperature high",
             "value"     : 150000,
             "message"   : {
                 "enable" : true,
@@ -101,7 +101,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "Over temperature.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -111,7 +111,7 @@
             }
         },
         "low"   : {
-            "text"      : "Turbine RPM low",
+            "text"      : "Turbine temperature low",
             "value"     : 150000,
             "message"   : {
                 "enable" : true,
@@ -401,7 +401,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Slow down.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -419,7 +419,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Standby start.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -455,7 +455,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Pre-Heat1.wav"
              },
              "haptic"    : {
                  "enable"    : false,

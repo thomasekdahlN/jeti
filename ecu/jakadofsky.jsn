@@ -311,23 +311,277 @@
     },
     "status" : { 
         "sensorparam" : "7",
-        #########################################################################
-        #Have to convert to new status format here, look at pbs.jsn for examples.
+        "sensorname"   : "status",
+        "-30"   : {
+            "text"      : "- ERROR -",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "-20"   : {
+            "text"      : "TH: -off",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "-10"   : {
+            "text"      : "TH: cool",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "-1"   : {
+            "text"      : "TH: lock",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "0"   : {
+            "text"      : "TH: stop",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "10"   : {
+            "text"      : "TH: run-",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "20"   : {
+            "text"      : "TH: rel-",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "25"   : {
+            "text"      : "TH: glow",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "30"   : {
+            "text"      : "TH: spin",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "40"   : {
+            "text"      : "TH: fire",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "45"   : {
+            "text"      : "TH: ignt",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
 
-        {
-    "-30"   :  "- ERROR -",
-    "-20"   :  "TH: -off",
-    "-10"   :  "TH: cool",
-    "-1":   "TH: lock",
-    "0":    "TH: stop",
-    "10":   "TH: run-",
-    "20":   "TH: rel-",
-    "25":   "TH: glow",
-    "30":   "TH: spin",
-    "40":   "TH: fire",
-    "45":   "TH: ignt",
-    "50":   "TH: heat",
-    "60":   "TH: acce",
-    "65":   "TH: cal.",
-    "70":   "TH: idel"
+        "50"   : {
+            "text"      : "TH: heat",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "60"   : {
+            "text"      : "TH: acce",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "65"   : {
+            "text"      : "TH: cal.",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        },
+        "70"   : {
+            "text"      : "TH: idel",
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+             },
+             "audio" : {
+                 "enable"    : true,
+                 "repeat"    : 1,
+                 "file"      : "Failure.wav"
+             },
+             "haptic"    : {
+                 "enable"    : false,
+                 "repeat"    : 1,
+                 "stick"     : "left",
+                 "vibrationProfile"   : 4
+             }
+        }
+    }
 }

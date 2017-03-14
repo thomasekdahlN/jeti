@@ -43,17 +43,8 @@ local sensorValues      = {
     ["status"]      = 0,
 } -- Sensor values is globally stored here in a hash by sensorname as configured
 
-local ECUTypeIn         = 1
-
--- IDEA - read all config files dynamically from folder would make it even more flexible
-local ECUTypeA = {
-     [1] = 'pbs',
-     [2] = 'jakadofsky',
-     [3] = 'hornet',
-     [4] = 'jetcat',
-     [5] = 'evojet',
-     [6] = 'orbit',
-}
+local ECUconfig = "jetcat.jsn"  -- the config file chosen
+local ECUconfigA  = {"..."}     -- Array with all available config fiels
 
 --------------------------------------------------------------------
 -- Configure language settings
@@ -61,7 +52,7 @@ local function setLanguage()
   -- Set language
   local lng  = system.getLocale();
   local file = io.readall(string.format("Apps/ecu/locale/%s.jsn", lng))
-  print(string.format(string.format("Apps/ecu/locale/%s.jsn", lng)))
+  print(string.format(string.format("#Apps/ecu/locale/%s.jsn#", lng)))
   local obj  = json.decode(file)  
   if(obj) then
     lang = obj
@@ -69,20 +60,34 @@ local function setLanguage()
 end
 
 --------------------------------------------------------------------
+-- Read all config files an put it in a table to be shown in user interface
+local function setConfigFileChoices()
+
+    for name, filetype, size in dir("Apps/ecu/") do
+        print(name, filetype, size)
+        if(filetype ~= 'folder') then
+            table.insert(ECUconfigA, name)
+        end
+    end
+end
+
+--------------------------------------------------------------------
 -- Read complete turbine configuration, statuses, alarms, settings and thresholds
 local function readConfig()
-  local file = io.readall(string.format("Apps/ecu/%s.jsn", ECUTypeA[ECUTypeIn])) -- read the correct config file
-  print(string.format("Apps/ecu/%s.jsn", ECUTypeA[ECUTypeIn]))
-  local obj  = json.decode(file)
-  if(obj) then
-    config = obj
-    print(string.format("EnableSelectedAlarmsAtStatus: %s", config.EnableSelectedAlarmsAtStatus))
-    print(string.format("EnableSelectedAlarmsAtStatus: %s", config.status[config.EnableSelectedAlarmsAtStatus].text))
-    print(string.format("EnableAllAlarmsAtStatus: %s", config.EnableAllAlarmsAtStatus))
-    print(string.format("EnableAllAlarmsAtStatus: %s", config.status[config.EnableAllAlarmsAtStatus].text))
-    config.fuellevel.tanksize = 0 -- Just init variable, will be calculated automatically.
-    -- for key,value in pairs(config.status) do print(key,value) end    
-  end
+    local file = io.readall(string.format("Apps/ecu/%s", ECUconfig)) -- read the correct config file
+    print(string.format("#Apps/ecu/%s#", ECUconfig))
+    if(file) then
+        local obj  = json.decode(file)
+        if(obj) then
+          config = obj
+          --print(string.format("EnableSelectedAlarmsAtStatus: %s", config.EnableSelectedAlarmsAtStatus))
+          print(string.format("EnableSelectedAlarmsAtStatus: %s", config.status[config.EnableSelectedAlarmsAtStatus].text))
+          --print(string.format("EnableAllAlarmsAtStatus: %s", config.EnableAllAlarmsAtStatus))
+          print(string.format("EnableAllAlarmsAtStatus: %s", config.status[config.EnableAllAlarmsAtStatus].text))
+          config.fuellevel.tanksize = 0 -- Just init variable, will be calculated automatically.
+          -- for key,value in pairs(config.status) do print(key,value) end    
+        end
+    end
 end
 
 ----------------------------------------------------------------------
@@ -103,9 +108,9 @@ end
 
 ----------------------------------------------------------------------
 --
-local function ECUTypeChanged(value)
-    ECUTypeIn  = value --The value is local to this function and not global to script, hence it must be set explicitly.
-	system.pSave("ECUTypeIn",  ECUTypeIn)
+local function ECUconfigChanged(value)
+    ECUconfig  = ECUconfigA[value] --The value is local to this function and not global to script, hence it must be set explicitly.
+	system.pSave("ECUconfig",  ECUconfig)
 	readConfig() -- reload statuses if they are changed
 end
 
@@ -139,7 +144,7 @@ local function initForm(subform)
     sensorsAvailable = {}
     local available = system.getSensors();
     local list={}
-    local curIndex1, curIndex2=-1,-1
+    local curIndex1, curIndex2, curIndex3=-1,1,1
     local descr = ""
     for index,sensor in ipairs(available) do 
         if(sensor.param == 0) then
@@ -159,9 +164,15 @@ local function initForm(subform)
         end
     end
 
+    for index, config in ipairs(ECUconfigA) do 
+        if(config == ECUconfig) then
+            curIndex3 = index
+        end
+    end
+
     form.addRow(2)
     form.addLabel({label=lang.selectECU, width=200})
-    form.addSelectbox(ECUTypeA, ECUTypeIn, true, ECUTypeChanged)
+    form.addSelectbox(ECUconfigA, curIndex3, true, ECUconfigChanged)
 
     form.addRow(2)
     form.addLabel({label=lang.selectSensor1, width=200})
@@ -183,6 +194,8 @@ local function initForm(subform)
     form.addLabel({label=lang.throttleKillSwitch, width=200})
     form.addInputbox(switchManualShutdown,true, function(value) switchManualShutdown=value; system.pSave("switchManualShutdown",value) end ) 
 
+    local mem = collectgarbage("count")
+    print("Mem: ", count)
 end
 
 
@@ -210,11 +223,11 @@ local function AlarmHaptic(hapticconfig)
     if(hapticconfig.enable) then
         -- If vibration/haptic associated with status, we vibrate
         if(hapticconfig.stick == 'left') then
-            print(string.format("Vibrate left %s",hapticconfig.vibrationProfile))
+            --print(string.format("Vibrate left %s",hapticconfig.vibrationProfile))
             system.vibration(false, hapticconfig.vibrationProfile);
         end
         if(hapticconfig.stick == 'right') then
-            print(string.format("Vibrate right %s",hapticconfig.vibrationProfile))
+            --print(string.format("Vibrate right %s",hapticconfig.vibrationProfile))
             system.vibration(true, hapticconfig.vibrationProfile);
         end
     end
@@ -253,7 +266,7 @@ local function initFuelStatistics()
     if( sensorValues['fuelpercent'] > 99 ) then sensorValues['fuelpercent'] = 99 end
     if( sensorValues['fuelpercent'] < 0 ) then sensorValues['fuelpercent'] = 0 end
     
-    print(string.format("tanksize=%s, fuellevel=%s, fuelpercent: %s, ", config.fuellevel.tanksize, sensorValues['fuellevel'], sensorValues['fuelpercent']))
+    --print(string.format("tanksize=%s, fuellevel=%s, fuelpercent: %s, ", config.fuellevel.tanksize, sensorValues['fuellevel'], sensorValues['fuelpercent']))
 end
 
 ----------------------------------------------------------------------
@@ -340,8 +353,8 @@ local function readStatusSensor(statusconfig, statusSensorID)
             StatusText = config.status[value].text;
         end 
         switch = system.getSwitchInfo(switchManualShutdown)
-        print(string.format("StatusValue: %s", value))
-        print(string.format("StatusText: %s", StatusText))
+        --print(string.format("StatusValue: %s", value))
+        --print(string.format("StatusText: %s", StatusText))
 
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
@@ -537,10 +550,10 @@ local function OnPrint(width, height)
   lcd.drawLine(70,2,70,66)  
   lcd.drawLine(70,36,148,36)  
   
-  if( sensorValues['fuelpercent'] > config.fuellevel.warning.value) then
-    DrawFuelGauge(sensorValues['fuelpercent'], 1, 0)   
+  if( sensorValues.fuelpercent > config.fuellevel.warning.value) then
+    DrawFuelGauge(sensorValues.fuelpercent, 1, 0)   
   else
-    DrawFuelLow(sensorValues['fuelpercent'], 1, 0) 
+    DrawFuelLow(sensorValues.fuelpercent, 1, 0) 
   end  
 
   -- turbine
@@ -578,23 +591,23 @@ local function init()
 
     statusSensor1ID  = system.pLoad("statusSensor1ID", 0)
     statusSensor2ID  = system.pLoad("statusSensor2ID", 0)
-    ECUTypeIn        = system.pLoad("ECUTypeIn", 1)
+    ECUconfig        = system.pLoad("ECUconfig", 1)
     enableAudio      = system.pLoad("enableAudio", 0)
     enableAlarmCheckbox   = system.pLoad("enableAlarmCheckbox", 0)
     switchManualShutdown  = system.pLoad("switchManualShutdown")
 
-    print(string.format("enableAudio: %s", enableAudio))
+    --print(string.format("enableAudio: %s", enableAudio))
     --print(string.format("enableAlarmByStates: %s", enableAlarmByStates))
     --print(string.format("switchManualShutdown: %s", switchManualShutdown))
 
     if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
-        system.registerTelemetry(1,string.format("%s %s", lang.window, lang.left),2,TelemetryStatusWindow1)
+        system.registerTelemetry(1,string.format("%s %s", lang.window1, lang.left),2,TelemetryStatusWindow1)
     	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,TelemetryStatusWindow2)
     else
-    	system.registerTelemetry(1,string.format("%s", lang.window),2,TelemetryStatusWindow1)
+    	system.registerTelemetry(1,string.format("%s", lang.window1),2,TelemetryStatusWindow1)
     end
 
-    system.registerTelemetry( 2, "Fuel/ECU/RPM", 2, OnPrint)  
+    system.registerTelemetry( 2, lang.window2, 2, OnPrint)  
 
      ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     readConfig()
@@ -616,7 +629,7 @@ local function loop()
     end
     
     -- Print all sensor values
-    for key,value in pairs(sensorValues) do print(key,value) end
+    --for key,value in pairs(sensorValues) do print(key,value) end
     
     -- Turbine 2
     if(statusSensor2ID ~= 0) then
@@ -630,4 +643,5 @@ end
 ----------------------------------------------------------------------
 --
 setLanguage()
+setConfigFileChoices()
 return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.8', name=lang.appName}
