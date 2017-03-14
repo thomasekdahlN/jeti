@@ -18,7 +18,7 @@ vspeak lua turbine ecu status converter and alarm script 0.9 beta - developers, 
 - Vspeak evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
 - Vspeak PBS  https://github.com/thomasekdahlN/jeti/blob/master/ecu/pbs.jsn
 - Orbit (config file format OK)
-- Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config.
+- Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config. Confiog files are read dynamically from ecu folder.
 Partial support for two turbines.
 
 Supporting a new ecu converter is as easy as adding a json configuration file and you get all the bells and whistles
