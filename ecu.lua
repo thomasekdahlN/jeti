@@ -57,6 +57,7 @@ local function setLanguage()
   if(obj) then
     lang = obj
   end
+  collectgarbage()
 end
 
 --------------------------------------------------------------------
@@ -64,7 +65,7 @@ end
 local function setConfigFileChoices()
 
     for name, filetype, size in dir("Apps/ecu/") do
-        print(name, filetype, size)
+        --print(name, filetype, size)
         if(filetype ~= 'folder') then
             table.insert(ECUconfigA, name)
         end
@@ -74,20 +75,23 @@ end
 --------------------------------------------------------------------
 -- Read complete turbine configuration, statuses, alarms, settings and thresholds
 local function readConfig()
+    print("Mem before config: ", collectgarbage("count"))
     local file = io.readall(string.format("Apps/ecu/%s", ECUconfig)) -- read the correct config file
-    print(string.format("#Apps/ecu/%s#", ECUconfig))
+    print(string.format("Loading config: Apps/ecu/%s#", ECUconfig))
     if(file) then
         local obj  = json.decode(file)
         if(obj) then
           config = obj
           --print(string.format("EnableSelectedAlarmsAtStatus: %s", config.EnableSelectedAlarmsAtStatus))
-          print(string.format("EnableSelectedAlarmsAtStatus: %s", config.status[config.EnableSelectedAlarmsAtStatus].text))
+          --print(string.format("EnableSelectedAlarmsAtStatus: %s", config.status[config.EnableSelectedAlarmsAtStatus].text))
           --print(string.format("EnableAllAlarmsAtStatus: %s", config.EnableAllAlarmsAtStatus))
-          print(string.format("EnableAllAlarmsAtStatus: %s", config.status[config.EnableAllAlarmsAtStatus].text))
+          --print(string.format("EnableAllAlarmsAtStatus: %s", config.status[config.EnableAllAlarmsAtStatus].text))
           config.fuellevel.tanksize = 0 -- Just init variable, will be calculated automatically.
           -- for key,value in pairs(config.status) do print(key,value) end    
         end
     end
+    collectgarbage()
+    print("Mem after config: ", collectgarbage("count"))
 end
 
 ----------------------------------------------------------------------
@@ -169,6 +173,8 @@ local function initForm(subform)
             curIndex3 = index
         end
     end
+    collectgarbage()
+
 
     form.addRow(2)
     form.addLabel({label=lang.selectECU, width=200})
@@ -194,8 +200,8 @@ local function initForm(subform)
     form.addLabel({label=lang.throttleKillSwitch, width=200})
     form.addInputbox(switchManualShutdown,true, function(value) switchManualShutdown=value; system.pSave("switchManualShutdown",value) end ) 
 
-    local mem = collectgarbage("count")
-    print("Mem: ", count)
+    collectgarbage()
+    print("Mem after GUI: ", collectgarbage("count"))
 end
 
 
@@ -611,6 +617,8 @@ local function init()
 
      ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     readConfig()
+    collectgarbage()
+    print("Init finished: ", collectgarbage("count"))
 end
 
 ----------------------------------------------------------------------
