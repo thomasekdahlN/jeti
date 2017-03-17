@@ -1,7 +1,7 @@
 {
 "statusCodeEnableAlarm" : "10",
     "rpmturbine" : {
-        "sensorparam"  : 1,
+        "sensorparam"  : 2,
         "sensorname"   : "rpmturbine",
         "high"  : {
             "text"      : "Turbine RPM high",
@@ -45,7 +45,7 @@
         }
     },
     "rpmshaft" : {
-        "sensorparam"  : 2,
+        "sensorparam"  : 9,
         "sensorname"   : "rpmshaft",
         "high"  : {
             "text"      : "Shaft RPM high",
@@ -89,7 +89,7 @@
         }
     },
     "temperature" : {
-        "sensorparam"  : 3,
+        "sensorparam"  : 1,
         "sensorname"   : "temperature",
         "high"  : {
             "text"      : "Turbine RPM high",
@@ -310,7 +310,7 @@
         }
     },
     "status" : { 
-        "sensorparam" : "7",
+        "sensorparam" : "10",
         #########################################################################
         #Have to convert to new status format here, look at pbs.jsn for examples.
         {
