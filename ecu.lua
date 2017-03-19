@@ -371,12 +371,12 @@ local function readStatusSensor(statusconfig, statusSensorID)
 
         -------------------------------------------------------------_
         -- If configured turbine status has been reached, all alarms are enabled until turned off by throttle kill switch
-        if(config.status.EnableSelectedAlarmsAtStatus == value) then -- turn on when status is running only when switch is on
+        if(tonumber(config.status.EnableSelectedAlarmsAtStatus) == tonumber(value)) then -- turn on when status is running only when switch is on
             enableSelectedAlarms = true
             print(string.format("enableSelectedAlarms = true"))
         end
         
-        if(config.status.EnableAllAlarmsAtStatus == value) then -- turn on when status is running only when switch is on
+        if(tonumber(config.status.EnableAllAlarmsAtStatus) == tonumber(value)) then -- turn on when status is running only when switch is on
             enableAllAlarms = true
             print(string.format("enableAllAlarms = true"))
         end
