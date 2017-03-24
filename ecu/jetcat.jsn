@@ -1,12 +1,12 @@
 {
-"EnableSelectedAlarmsAtStatus" : "8",
-"EnableAllAlarmsAtStatus" : "8",
+"EnableSelectedAlarmsAtStatus" : "4",
+"EnableAllAlarmsAtStatus" : "0",
     "rpmturbine" : {
         "sensorparam"  : 2,
         "sensorname"   : "rpmturbine",
         "high"  : {
             "text"      : "Turbine RPM high",
-            "value"     : 150000,
+            "value"     : 180000,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -25,7 +25,7 @@
         },
         "low"   : {
             "text"      : "Turbine RPM low",
-            "value"     : 150000,
+            "value"     : 50000,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -90,18 +90,18 @@
         "sensorname"   : "temperature",
         "high"  : {
             "text"      : "Turbine temperature high",
-            "value"     : 150000,
+            "value"     : 750,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
             },
             "audio" : {
-                "enable"    : true,
+                "enable"    : false,
                 "repeat"    : 1,
                 "file"      : "Over temperature.wav"
             },
             "haptic"    : {
-                "enable"    : true,
+                "enable"    : false,
                 "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
@@ -109,7 +109,7 @@
         },
         "low"   : {
             "text"      : "Turbine temperature low",
-            "value"     : 150000,
+            "value"     : 150,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -128,7 +128,7 @@
         },
         "shutdown"   : {
             "text"      : "Shutdown temperature reached",
-            "value"     : 100,
+            "value"     : 10,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -193,7 +193,7 @@
         "sensorname"   : "ecuvolt",
         "high"  : {
             "text"      : "ECU Battery high",
-            "value"     : 7,
+            "value"     : 8,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -201,7 +201,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "Battery Low.wav"
+                "file"      : ""
             },
             "haptic"    : {
                 "enable"    : false,
@@ -268,7 +268,7 @@
                 "file"      : "Fuel level 10%.wav"
             },
             "haptic"    : {
-                "enable"    : true,
+                "enable"    : false,
                 "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
