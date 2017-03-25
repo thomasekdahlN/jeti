@@ -1,6 +1,4 @@
 {
-"EnableSelectedAlarmsAtStatus" : "4",
-"EnableAllAlarmsAtStatus" : "0",
     "rpmturbine" : {
         "sensorparam"  : 2,
         "sensorname"   : "rpmturbine",
@@ -33,7 +31,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "Low-Rpm.wav"
+                "file"      : "Low rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -56,7 +54,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "Over rpm shaft.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -75,7 +73,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "Low-Rpm.wav"
+                "file"      : "Low shaft rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -159,7 +157,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "No Pump.wav"
+                "file"      : "High pump voltage.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -178,7 +176,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "No Pump.wav"
+                "file"      : "Low pump voltage.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -201,7 +199,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : ""
+                "file"      : "High ecu voltage.wav"
             },
             "haptic"    : {
                 "enable"    : false,
@@ -220,7 +218,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "Battery Low.wav"
+                "file"      : "Low ecu voltage.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -237,7 +235,7 @@
         "unit"      : "l",
         "label"     : "R.volume",
         "warning"   : {
-            "text"      : "Warning on fuel level",
+            "text"      : "Warning fuellevel",
             "value"     : 20,
             "message"   : {
                 "enable" : true,
@@ -256,7 +254,7 @@
             }
         },
         "critical"   : {
-            "text"      : "Critical low on fuel",
+            "text"      : "Critical fuellevel",
             "value"     : 10,
             "message"   : {
                 "enable" : true,
@@ -268,9 +266,9 @@
                 "file"      : "Fuel level 10%.wav"
             },
             "haptic"    : {
-                "enable"    : false,
+                "enable"    : true,
                 "repeat"    : 1,
-                "stick"     : "left",
+                "stick"     : "right",
                 "vibrationProfile"   : 4
             }
         }
@@ -305,7 +303,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "ECU Reboot.wav"
+                 "file"      : "ECU reboot.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -323,7 +321,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Clutch Failure.wav"
+                 "file"      : "Clutch failure.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -341,7 +339,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Low Rpm.wav"
+                 "file"      : "Low rpm.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -359,7 +357,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Low Rpm.wav"
+                 "file"      : "Low rpm.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -377,7 +375,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Out Fuel.wav"
+                 "file"      : "Out fuel.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -395,7 +393,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Pump Comm.wav"
+                 "file"      : "Pump comm.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -431,7 +429,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "No Pump.wav"
+                 "file"      : "No pump.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -449,7 +447,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Over Current.wav"
+                 "file"      : "Over current.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -539,7 +537,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Rpm2 Failure.wav"
+                 "file"      : "Rpm2 failure.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -557,7 +555,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Fuel Faiilure.wav"
+                 "file"      : "Fuel failure.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -575,7 +573,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Temperature Failiure.wav"
+                 "file"      : "Temperature failure.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -593,7 +591,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Power Failiure.wav"
+                 "file"      : "Power failure.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -611,7 +609,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Ignition Time Out.wav"
+                 "file"      : "Ignition time out"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -629,7 +627,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "FailSafe.wav"
+                 "file"      : "Failsafe.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -647,7 +645,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "WatchDog.wav"
+                 "file"      : "Watchdog.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -665,7 +663,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Glow Plug.wav"
+                 "file"      : "Glow plug.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -683,7 +681,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "High Temperature Off.wav"
+                 "file"      : "High temperature off.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -755,7 +753,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Low-Rpm.wav"
+                 "file"      : "Low rpm.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -809,7 +807,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "ACC  time out.wav"
+                 "file"      : "ACC time out.wav"
              },
              "haptic"    : {
                  "enable"    : true,
@@ -827,10 +825,10 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Manual Off.wav"
+                 "file"      : "Manual off.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -845,10 +843,10 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Auto Off.wav"
+                 "file"      : "Auto off.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -866,7 +864,7 @@
                  "file"      : "RC off.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -884,7 +882,7 @@
                  "file"      : "RC off.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -902,7 +900,7 @@
                  "file"      : "Slow down.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -920,7 +918,7 @@
                  "file"      : "Switch off.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -938,7 +936,7 @@
                  "file"      : "Standby start.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -953,10 +951,10 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Pre-Heat1.wav"
+                 "file"      : "Preheat1.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -971,10 +969,10 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Pre-Heat2.wav"
+                 "file"      : "Preheat2.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -992,7 +990,7 @@
                  "file"      : "Ignite.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1007,10 +1005,10 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Ramp delay.wav"
              },
              "haptic"    : {
-                 "enable"    : true,
+                 "enable"    : false,
                  "repeat"    : 1,
                  "stick"     : "left",
                  "vibrationProfile"   : 4
@@ -1025,7 +1023,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : ""
+                 "file"      : "Main fuel start.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1133,7 +1131,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Speed Control.wav"
+                 "file"      : "Speed control.wav"
              },
              "haptic"    : {
                  "enable"    : false,
@@ -1151,7 +1149,7 @@
              "audio" : {
                  "enable"    : true,
                  "repeat"    : 1,
-                 "file"      : "Rpm 2 Ctrl.wav"
+                 "file"      : "Rpm2 ctrl.wav"
              },
              "haptic"    : {
                  "enable"    : false,

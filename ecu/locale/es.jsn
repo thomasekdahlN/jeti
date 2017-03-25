@@ -5,9 +5,9 @@
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU type",
-    "selectSensor1":"VSpeak status turbine left",
-    "selectSensor2":"VSpeak status turbine right",
+    "selectSensor1":"ECU status turbine left",
+    "selectSensor2":"ECU status turbine right",
     "enableAudioStatus": "Enable audio status",
     "enableAlarms": "Enable alarms",
-    "throttleKillSwitch": "Throttle cut switch"
+    "alarmOffSwitch": "Alarms of switch"
 }
