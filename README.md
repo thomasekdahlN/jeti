@@ -1,5 +1,5 @@
 # Jeti ECU Telemetry (Beta version)
-This versionm actually works pretty good - impressive functionality for the future of turbine telemettry. Jetcat and Hornet config files almost complete with adjusted setup.
+This version actually works pretty good - impressive functionality for the future of turbine telemettry. Jetcat and Hornet config files almost complete with adjusted setup.
 
 https://github.com/thomasekdahlN/jeti/blob/master/screenshots/Alarm%20Message.bmp
 
