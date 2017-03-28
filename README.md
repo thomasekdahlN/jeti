@@ -1,7 +1,9 @@
 # Jeti ECU Telemetry (Beta version)
-This version actually works pretty good - impressive functionality for the future of turbine telemettry. Jetcat and Hornet config files almost complete with adjusted setup.
+This version actually works pretty good - impressive functionality for the future of turbine telemetry. Jetcat and Hornet config files almost complete with adjusted setup.
 
-https://github.com/thomasekdahlN/jeti/blob/master/screenshots/Alarm%20Message.bmp
+![Alt text](/thomasekdahlN/jeti/tree/master/screenshots/Alarm Shaft RPM low.png?raw=true "Optional Title")
+![Alt text](/thomasekdahlN/jeti/tree/master/screenshots/Flight logg - preheat status.png?raw=true "Optional Title")
+
 
 Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration files if you need to (default setup should be enough for most people). JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
 
