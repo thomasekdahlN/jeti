@@ -1,8 +1,8 @@
 {
     "appName":"ECU Telemetry (beta)",
     "cfgName":"ECU. Settings",
-    "window1":"FUEL and status gauge",
-    "window2":"RPM and TEMP gauge",
+    "window1":"RPM and TEMP gauge",
+    "window2":"FUEL, status, volt",
     "left": "left",
     "right": "right",
     "selectECU":"Select ECU config",

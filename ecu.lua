@@ -479,10 +479,10 @@ end
 
 
 ----------------------------------------------------------------------
-local function DrawBattery(rpmturbine, u_ecu, ox, oy) 
-  lcd.drawText(4+ox,1+oy, "RPM", FONT_MINI)  
+local function DrawBattery(u_pump, u_ecu, ox, oy) 
+  lcd.drawText(4+ox,1+oy, "PUMP", FONT_MINI)  
   lcd.drawText(40+ox,1+oy, "ECU", FONT_MINI)  
-  lcd.drawText(4+ox,12+oy, string.format("%s",tonumber(rpmturbine)), FONT_BOLD)
+  lcd.drawText(4+ox,12+oy,  string.format("%.1f%s",u_pump,"V"), FONT_BOLD)
   lcd.drawText(40+ox,12+oy, string.format("%.1f%s",u_ecu,"V"), FONT_BOLD)
 end
 
@@ -533,7 +533,7 @@ local function OnPrint(width, height)
   DrawTurbineStatus(Status1Text, 74, 0) 
 
   -- battery
-  DrawBattery(sensorValues.rpmturbine, sensorValues.ecuvolt, 74, 37)
+  DrawBattery(sensorValues.pumpvolt, sensorValues.ecuvolt, 74, 37)
   
 end
 
