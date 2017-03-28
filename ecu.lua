@@ -591,7 +591,7 @@ local function init()
 
     system.registerTelemetry( 2, lang.window2, 2, OnPrint)  
 
-     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
+    ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     readConfig()
     collectgarbage()
     print("Init finished: ", collectgarbage("count"))
