@@ -1,7 +1,7 @@
 # Jeti ECU Telemetry (Beta version)
 This version actually works pretty good - impressive functionality for the future of turbine telemetry. Jetcat and Hornet config files almost complete with adjusted setup.
 
-![Alt text](https://raw.github.com/thomasekdahlN/jeti/tree/master/screenshots/Alarm%20Shaft%20RPM%20low.png?raw=true "Optional Title")
+![Alt text](/thomasekdahlN/jeti/tree/master/screenshots/Alarm%20Shaft%20RPM%20low.png?raw=true "Optional Title")
 ![Alt text](https://raw.github.com/thomasekdahlN/jeti/tree/master/screenshots/Flight%20logg%20-%20preheat%20status.png?raw=true "Optional Title")
 
 
