@@ -630,4 +630,4 @@ end
 --
 setLanguage()
 setConfigFileChoices()
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.8', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.9', name=lang.appName}

@@ -23,7 +23,7 @@
         },
         "low"   : {
             "text"      : "Turbine RPM low",
-            "value"     : 45000,
+            "value"     : 43000,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -167,7 +167,7 @@
             }
         },
         "low"   : {
-            "text"      : "Pump volt low",
+            "text"      : "Flameout",
             "value"     : 0.2,
             "message"   : {
                 "enable" : true,
@@ -176,7 +176,7 @@
             "audio" : {
                 "enable"    : true,
                 "repeat"    : 1,
-                "file"      : "Low pump voltage.wav"
+                "file"      : "Flameout.wav"
             },
             "haptic"    : {
                 "enable"    : true,
