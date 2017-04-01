@@ -22,7 +22,7 @@ local Status1Text       = ''
 local statusSensor2ID=0
 local Status2Text       
 
-local enableAlarm = false 
+local enableAlarm, sensorsOnline = false, false
 
 local prevStatusID, prevFuelLevel = 0,0
 local alarmOffSwitch
@@ -52,6 +52,17 @@ local sensorValues      = {
     ["fuellevel"]   = 0,  -- in ml from ecu
     ["fuelpercent"] = 0,  -- calculated
     ["status"]      = 0,
+} -- Sensor values is globally stored here in a hash by sensorname as configured
+
+local sensorsOnlineArray = {
+    ["rpmturbine"]  = false,
+    ["rpmshaft"]    = false,
+    ["temperature"] = false,
+    ["pumpvolt"]    = false,
+    ["ecuvolt"]     = false,
+    ["fuellevel"]   = false,  -- in ml from ecu
+    ["fuelpercent"] = false,  -- calculated
+    ["status"]      = false,
 } -- Sensor values is globally stored here in a hash by sensorname as configured
 
 local ECUconfig = "jetcat.jsn"  -- the config file chosen
@@ -259,7 +270,10 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
 
     if(sensor and sensor.valid) then
 
-        sensorValues[fuelconfig.sensorname] = sensor.value
+        sensorValues[fuelconfig.sensorname]       = sensor.value
+        sensorsOnlineArray[fuelconfig.sensorname] = true
+        sensorsOnline = true
+
         initFuelStatistics() -- Important
 
         -- Repeat fuel level audio at intervals
@@ -287,7 +301,10 @@ local function readFueltankSensor(fuelconfig, statusSensorID)
             end
         end
     else
-        -- print(string.format("FuelSensor not read"))
+        sensorsOnlineArray[fuelconfig.sensorname] = false
+        sensorValues[fuelconfig.sensorname] = 0
+        sensorValues.fuelpercent            = 0
+        sensorsOnline = true
     end
 end
 
@@ -302,7 +319,9 @@ local function readGenericSensor(genericConfig, statusSensorID)
     --print(string.format("param: %s, genericConfig.high.text: %s, genericConfig.low.text: %s ", genericConfig.sensorname, genericConfig.high.text, genericConfig.low.text))
     if(sensor and sensor.valid) then
 
-        sensorValues[genericConfig.sensorname] = sensor.value -- could be the entire sensor object if needed.
+        sensorValues[genericConfig.sensorname]          = sensor.value -- could be the entire sensor object if needed.
+        sensorsOnlineArray[genericConfig.sensorname] = true
+        sensorsOnline = true
 
         -- We only enable the low alarms after they have passed the low threshold
         if(sensor.value > genericConfig.low.value and not alarmLowValuePassed[genericConfig.sensorname]) then
@@ -324,6 +343,10 @@ local function readGenericSensor(genericConfig, statusSensorID)
                 end
             end
         end
+    else
+        sensorsOnlineArray[genericConfig.sensorname] = false
+        sensorValues[genericConfig.sensorname] = -1
+        sensorsOnline = false
     end
 end
 
@@ -339,6 +362,8 @@ local function readStatusSensor(statusconfig, statusSensorID)
     if(sensor and sensor.valid) then
         value = string.format("%s", math.floor(sensor.value))
         sensorValues[statusconfig.sensorname] = value
+        sensorsOnlineArray[statusconfig.sensorname] = true
+        sensorsOnline = true
 
         if(config.status[value] ~= nil) then 
             StatusText = config.status[value].text;
@@ -362,6 +387,10 @@ local function readStatusSensor(statusconfig, statusSensorID)
              end
          end
     else 
+        sensorsOnlineArray[statusconfig.sensorname] = false
+        sensorValues[statusconfig.sensorname] = -1
+        sensorsOnline = false
+
         StatusText = "          -- "
     end
 
@@ -552,6 +581,13 @@ function resetAlarmCounter()
             ["status"]      = false,
         }    
     end
+
+    for sensor,value in pairs(sensorsOnlineArray) do 
+        if(not value) then
+            --sensorsOnline = false
+        end
+        --print(key,value) 
+    end
 end
 
 ----------------------------------------------------------------------
@@ -574,6 +610,11 @@ end
 local function init()
 
     resetAlarmCounter()
+
+    if(not sensorsOnline) then 
+        system.messageBox('ECU: Offline', 10)
+        system.playFile("/Apps/ecu/audio/ECU reboot.wav",AUDIO_IMMEDIATE)
+    end
 
 	system.registerForm(1,MENU_APPS,lang.appName, initForm, keyPressed)
 

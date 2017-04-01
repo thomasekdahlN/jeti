@@ -1,13 +1,14 @@
 {
     "appName":"ECU Telemetry beta",
     "cfgName":"ECU. Settings",
-    "window":"ECU status",
-    "left": "left",
-    "right": "right",
-    "selectECU":"Select ECU type",
-    "selectSensor1":"ECU status turbine left",
-    "selectSensor2":"ECU status turbine right",
-    "enableAudioStatus": "Enable audio status",
-    "enableAlarms": "Enable alarms",
-    "alarmOffSwitch": "Alarms of switch"
+    "window1":"FUEL und Status Anzeige",
+    "window2":"RPM und TEMP Anzeige",
+    "left": "links",
+    "right": "rechts",
+    "selectECU":"Auswahl ECU Typ",
+    "selectSensor1":"ECU Status Turbine links",
+    "selectSensor2":"ECU Status Turbine rechts",
+    "enableAudioStatus": "aktiviere Audio Status",
+    "enableAlarms": "aktiviere Alarme",
+    "alarmOffSwitch": "Alarme AUS Schalter"
 }
