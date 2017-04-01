@@ -1,7 +1,10 @@
 # Jeti ECU Telemetry (Beta version)
-This version actually works pretty good - impressive functionality for the future of turbine telemettry. Jetcat and Hornet config files almost complete with adjusted setup.
+This version actually works pretty good - impressive functionality for the future of turbine telemetry. Jetcat and Hornet config files almost complete with adjusted setup.
 
-https://github.com/thomasekdahlN/jeti/blob/master/screenshots/Alarm%20Message.bmp
+![alarm low turbine rpm](https://cloud.githubusercontent.com/assets/26059207/24415858/273dfeda-13e3-11e7-92b5-ad4401d8df2e.png)
+![alarm shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/24415859/2740a720-13e3-11e7-9f60-ebc5e7bf4caf.png)
+![flight logg - preheat status](https://cloud.githubusercontent.com/assets/26059207/24415857/273beb2c-13e3-11e7-81fc-fb2c122ca378.png)
+![status preheat1 x 2](https://cloud.githubusercontent.com/assets/26059207/24415860/27438602-13e3-11e7-8b7e-fb559c49e5e9.png)
 
 Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration files if you need to (default setup should be enough for most people). JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
 
@@ -12,11 +15,11 @@ jeti transmitter fw 4.2.2 firmware required
 vspeak lua turbine ecu status converter and alarm script 0.9 beta - developers, testers and helpers wanted. PM me.
 
 #Supporting:
-- Vspeak 2.2 JetCat (very good) https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
-- Vspeak 2.2 Hornet (very good) https://github.com/thomasekdahlN/jeti/blob/master/ecu/hornet.jsn
-- Vspeak 2.2 Jakadofsky (config file format old, needs to be reconfigured, use pbs.jsn as example)
-- Vspeak 2.2 evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
-- Vspeak 2.2 PBS  https://github.com/thomasekdahlN/jeti/blob/master/ecu/pbs.jsn
+- Vspeak FW 1.0 JetCat (very good) https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
+- Vspeak FW 2.2 Hornet (very good) https://github.com/thomasekdahlN/jeti/blob/master/ecu/hornet.jsn
+- Vspeak FW 2.1 Jakadofsky (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Vspeak FW 2.1 evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
+- Vspeak FW 1.1 PBS  https://github.com/thomasekdahlN/jeti/blob/master/ecu/pbs.jsn
 - Orbit (config file format OK)
 - Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config. Confiog files are read dynamically from ecu folder.
 Partial support for two turbines.
@@ -63,6 +66,8 @@ Telemetry display visual
 Thinking of implementing:
 - Warning if you try to shutdown turbine while it is too hot (if possible to implement)
 - Sound volume control connected to warnings and critical alarms
+- How to handle suddenly unavailable sensors (telemetry lost or ECu without power)
+- Any alarms that should be enabled even when shut down?
 
 #Help needed:
 - Translation
