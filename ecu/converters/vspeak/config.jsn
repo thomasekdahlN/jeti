@@ -1,0 +1,21 @@
+"rpm" : {
+    "param"  : 2
+},
+"rpm2" : {
+    "param"  : 9
+},
+"egt" : {
+    "param"  : 1
+},
+"pumpv" : {
+    "param"  : 4
+},
+"ecuv" : {
+    "param"  : 5
+},
+"fuel" : {
+    "param"  : 6
+},
+"status" : { 
+    "param" : "3"
+}
