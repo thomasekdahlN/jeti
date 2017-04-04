@@ -1,10 +1,12 @@
 # Jeti ECU Telemetry (Beta version)
 This version actually works pretty good - impressive functionality for the future of turbine telemetry. Jetcat and Hornet config files almost complete with adjusted setup.
 
-![alarm low turbine rpm](https://cloud.githubusercontent.com/assets/26059207/24415858/273dfeda-13e3-11e7-92b5-ad4401d8df2e.png)
-![alarm shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/24415859/2740a720-13e3-11e7-9f60-ebc5e7bf4caf.png)
-![flight logg - preheat status](https://cloud.githubusercontent.com/assets/26059207/24415857/273beb2c-13e3-11e7-81fc-fb2c122ca378.png)
-![status preheat1 x 2](https://cloud.githubusercontent.com/assets/26059207/24415860/27438602-13e3-11e7-8b7e-fb559c49e5e9.png)
+![alarm shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/24649940/f58155b8-1928-11e7-94e5-781be6503be5.png)
+![flightlogg - accelerate](https://cloud.githubusercontent.com/assets/26059207/24649945/f82cd2c4-1928-11e7-91c7-1f2dba43faac.jpg)
+![flightogg - keros full](https://cloud.githubusercontent.com/assets/26059207/24649948/fb132074-1928-11e7-9d7e-8c54485448e0.jpg)
+![normal - runreg4](https://cloud.githubusercontent.com/assets/26059207/24649952/fda3b114-1928-11e7-889e-91476eb2ab75.jpg)
+![status - keros full](https://cloud.githubusercontent.com/assets/26059207/24649955/fff2e55c-1928-11e7-9ca3-790427c19f9d.jpg)
+
 
 Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration files if you need to (default setup should be enough for most people). JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
 
