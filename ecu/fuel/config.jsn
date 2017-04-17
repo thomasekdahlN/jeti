@@ -1,0 +1,45 @@
+{
+    "sensorname": "fuellevel",
+    "tanksize" : 0,
+    "decimals"  : 1,
+    "unit"      : "l",
+    "label"     : "R.volume",
+    "warning"   : {
+        "text"      : "Warning fuellevel",
+        "value"     : 20,
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+        },
+        "audio" : {
+            "enable"    : true,
+            "repeat"    : 1,
+            "file"      : "Fuel level 20%.wav"
+        },
+        "haptic"    : {
+            "enable"    : true,
+            "repeat"    : 1,
+            "stick"     : "left",
+            "vibrationProfile"   : 4
+        }
+    },
+    "critical"   : {
+        "text"      : "Critical fuellevel",
+        "value"     : 10,
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+        },
+        "audio" : {
+            "enable"    : true,
+            "repeat"    : 1,
+            "file"      : "Fuel level 10%.wav"
+        },
+        "haptic"    : {
+            "enable"    : true,
+            "repeat"    : 1,
+            "stick"     : "right",
+            "vibrationProfile"   : 4
+        }
+    }
+}

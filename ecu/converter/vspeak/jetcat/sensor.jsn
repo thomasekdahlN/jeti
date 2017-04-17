@@ -1,0 +1,11 @@
+{
+    "egt"       : "1",
+    "rpm"       : "2",
+    "status"    : "3",
+    "pumpv"     : "4",
+    "ecuv"      : "5",
+    "fuellevel" : "6",
+    "throttle"  : "7",
+    "speed"     : "8",
+    "rpm2"      : "9"
+}

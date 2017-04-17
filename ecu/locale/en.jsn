@@ -1,14 +1,16 @@
 {
     "appName":"ECU Telemetry (beta)",
     "cfgName":"ECU. Settings",
-    "window1":"RPM and TEMP gauge",
-    "window2":"FUEL, status, volt",
+    "window1":"ECU: Fuel, status, volt",
+    "window2":"ECU: Battery, RPM, EGT",
+    "window3":"ECU: RPM and TEMP gauge",
     "left": "left",
     "right": "right",
-    "selectECU":"Select ECU config",
-    "selectSensor1":"ECU status turbine left",
-    "selectSensor2":"ECU status turbine right",
-    "enableAudioStatus": "Enable audio status",
-    "enableAlarms": "Enable alarms",
+    "selectConverterType":"ECU converter type",
+    "selectTurbineType":"Turbine manufacturer",
+    "selectTurbineConfig":"Turbine config",
+    "selectBatteryConfig":"Battery type",
+    "selectLeftTurbineSensor":"ECU status turbine left",
+    "selectRightTurbineSensor":"ECU status turbine right",
     "alarmOffSwitch": "Alarms of switch"
 }

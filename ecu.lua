@@ -1,4 +1,3 @@
-
 -- ############################################################################# 
 -- # Jeti ECU Telemetry
 -- # Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms, easy setup, very configurable, easy to setup new ecu types
@@ -10,177 +9,151 @@
 -- # License: Share alike                                       
 -- # Can be used and changed non commercial, but feel free to send us changes back to be incorporated in the main code.
 -- #                       
--- # V1.5 - Initial release
+-- # 0.9 - Initial release
 -- ############################################################################# 
 
---Low RPM, Low pump V and Low temp alarms should not be enabled before after starting.
+local loadh      = require "library/loadhelper"
+local tableh     = require "library/tablehelper"
+local alarmh     = require "library/alarmhelper"
+local sensorh    = require "library/sensorhelper"
+--local fake       = require "library/fakesensor"
+local telemetry1 = require "ecu/library/telemetry_window1"
+local telemetry2 = require "ecu/library/telemetry_window2"
+
+-- Globals to be accessible also from libraries
+config          = {"..."} -- Complete turbine config object dynamically assembled
+sensorT         = {"..."} -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
+sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one or more sensors offline
 
 -- Locals for the application
-local statusSensor1ID=0
-local Status1Text       = ''
-
-local statusSensor2ID=0
-local Status2Text       
-
-local enableAlarm, sensorsOnline = false, false
-
+local enableAlarm                 = false
 local prevStatusID, prevFuelLevel = 0,0
 local alarmOffSwitch
 
-local lang      -- read from file
-local config    -- complete turbine config object read from file with manufacturer name
+local lang              = {"..."} -- read from file
 
-local sensorsAvailable  = {"..."}
 local alarmsTriggered   = {"..."} -- true on the alarm triggered, used to not repeat alarms to often
+
 local alarmLowValuePassed = { -- enables alarms that has passed the low treshold, to not get alarms before turbine is running properly. Status alarms, high alarms, fuel alarms , and ecu voltage alarms is always enabled.
-    ["rpmturbine"]  = false,
-    ["rpmshaft"]    = false,
-    ["temperature"] = false,
-    ["pumpvolt"]    = false,
-    ["ecuvolt"]     = true,
-    ["fuellevel"]   = true,  -- in ml from ecu
-    ["fuelpercent"] = true,  -- calculated
-    ["status"]      = true,
+    rpm         = false,
+    rpm2        = false,
+    egt         = false,
+    pumpv       = false,
+    ecuv        = true,
+    ecupercent  = true,
+    fuellevel   = true,  -- in ml from ecu
+    fuelpercent = true,  -- calculated
+    status      = true
 }
 
-local sensorValues      = {
-    ["rpmturbine"]  = 0,
-    ["rpmshaft"]    = 0,
-    ["temperature"] = 0,
-    ["pumpvolt"]    = 0,
-    ["ecuvolt"]     = 0,
-    ["fuellevel"]   = 0,  -- in ml from ecu
-    ["fuelpercent"] = 0,  -- calculated
-    ["status"]      = 0,
-} -- Sensor values is globally stored here in a hash by sensorname as configured
+local SensorT               = {"..."}   -- Array with all available sensor (for making menu)
+local SensorID              = 0
 
-local sensorsOnlineArray = {
-    ["rpmturbine"]  = false,
-    ["rpmshaft"]    = false,
-    ["temperature"] = false,
-    ["pumpvolt"]    = false,
-    ["ecuvolt"]     = false,
-    ["fuellevel"]   = false,  -- in ml from ecu
-    ["fuelpercent"] = false,  -- calculated
-    ["status"]      = false,
-} -- Sensor values is globally stored here in a hash by sensorname as configured
+local ConverterTypeTable    = {"..."}   -- Array with all available turbine types
+local ConverterType         = "vspeak"  -- the turbine type chosen
 
-local ECUconfig = "jetcat.jsn"  -- the config file chosen
-local ECUconfigA  = {"..."}     -- Array with all available config fiels
+local TurbineTypeTable      = {"..."}   -- Array with all available turbine types
+local TurbineType           = "jetcat"  -- the turbine type chosen
+
+local TurbineConfigTable    = {"..."}   -- Array with all available config fields
+local TurbineConfig         = "generic"  -- the turbine config file chosen
+
+local BatteryConfigTable    = {"..."}   -- Array with all available battery configs
+local BatteryConfig         = "life-2s"  -- the battery config file chosen
 
 --------------------------------------------------------------------
--- Configure language settings
-local function setLanguage()
-  -- Set language
-  local lng  = system.getLocale();
-  local file = io.readall(string.format("Apps/ecu/locale/%s.jsn", lng))
-  print(string.format(string.format("#Apps/ecu/locale/%s.jsn#", lng)))
-  lang  = json.decode(file)  
-  if(not lang) then
-     print(string.format(string.format("Unable to load: Apps/ecu/locale/%s.jsn#", lng)))
-  end
-  collectgarbage()
-end
+-- Read the config file for a spesific turbine, this is the first config that has to be run
+local function loadConfig()
+    -- Load main turbine config    
+    config      = loadh.fileJson(string.format(string.format("Apps/ecu/turbine/%s/%s.jsn", TurbineType, TurbineConfig)))
 
---------------------------------------------------------------------
--- Read all config files an put it in a table to be shown in user interface
-local function setConfigFileChoices()
+    -- Generic config loading adding to default turbine config
+    config.ecuv      = loadh.fileJson(string.format("Apps/ecu/batterypack/%s.jsn", BatteryConfig))
+    config.fuellevel = loadh.fileJson("Apps/ecu/fuel/config.jsn")
+    config.status    = loadh.fileJson(string.format("Apps/ecu/status/%s.jsn", TurbineType))
+    config.converter = {"..."} 
+    config.converter.statusmap = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/status.jsn", ConverterType, TurbineType))
+    config.converter.sensormap = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/sensor.jsn", ConverterType, TurbineType))
+end 
 
-    for name, filetype, size in dir("Apps/ecu") do
-        if(string.sub(name, -3, -1) == "jsn" and string.sub(name, 1, 1) ~= ".") then
-            table.insert(ECUconfigA, name)
-        end
-    end
-end
-
---------------------------------------------------------------------
--- Read complete turbine configuration, statuses, alarms, settings and thresholds
-local function readConfig()
-    -- print("Mem before config: ", collectgarbage("count"))
-    local file = io.readall(string.format("Apps/ecu/%s", ECUconfig)) -- read the correct config file
-    print(string.format("Loading config: Apps/ecu/%s#", ECUconfig))
-    if(file) then
-        config  = json.decode(file)
-        if(config) then
-          config.fuellevel.tanksize = 0 -- Just init variable, will be calculated automatically.
-        else
-            print(string.format("Unable to load: Apps/ecu/%s#", ECUconfig))
-        end
-    end
-    collectgarbage()
-    print("Mem after config: ", collectgarbage("count"))
+----------------------------------------------------------------------
+--
+local function ConverterTypeChanged(value)
+    ConverterType  = ConverterTypeTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
+    print(string.format("ConverterTypeSave %s = %s", value, ConverterType))
+    system.pSave("ConverterType",  ConverterType)
+    TurbineTypeTable    = tableh.fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType))
 end
 
 ----------------------------------------------------------------------
+--
+local function TurbineTypeChanged(value)
+    TurbineType  = TurbineTypeTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
+    system.pSave("TurbineType", TurbineType)
+    TurbineConfigTable  = tableh.fromFiles(string.format("Apps/ecu/turbine/%s", TurbineType))
+end
+
+----------------------------------------------------------------------
+--
+local function TurbineConfigChanged(value)
+    TurbineConfig  = TurbineConfigTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
+    system.pSave("TurbineConfig", TurbineConfig)
+    loadConfig() -- reload after config change
+end
+
+----------------------------------------------------------------------
+--
+local function BatteryConfigChanged(value)
+    BatteryConfig  = BatteryConfigTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
+    system.pSave("BatteryConfig", BatteryConfig)
+    loadConfig() -- reload after config change
+end
+
+--------------------------------------------------------------------
 -- Store settings when changed by user
-local function statusSensor1Changed(value)
+local function SensorChanged(value)
+	SensorID  = SensorT[value].id
+	system.pSave("SensorID",  SensorID)
 
-	statusSensor1ID  = sensorsAvailable[value].id
-	system.pSave("statusSensor1ID",  statusSensor1ID)
+    -- Try to auto detect sensor from params later, to drop one menu element
+    -- ECUconverter  = ECUconverterA[value]
+    -- system.pSave("ECUconverter",  ECUconverter)
 end
 
 ----------------------------------------------------------------------
 --
-local function statusSensor2Changed(value)
-
-	statusSensor2ID  = sensorsAvailable[value].id
-	system.pSave("statusSensor2ID",  statusSensor2ID)
-end
-
-----------------------------------------------------------------------
---
-local function ECUconfigChanged(value)
-    ECUconfig  = ECUconfigA[value] --The value is local to this function and not global to script, hence it must be set explicitly.
-	system.pSave("ECUconfig",  ECUconfig)
-	readConfig() -- reload statuses if they are changed
-end
-----------------------------------------------------------------------
--- Draw the main form (Application inteface)
 local function initForm(subform)
-
-    -- saves memory to only init list in GUI mode
-    sensorsAvailable = {}
-    local available = system.getSensors();
-    local list={}
-    local curIndex1, curIndex2, curIndex3=-1,1,1
-    local descr = ""
-    for index,sensor in ipairs(available) do 
-        if(sensor.param == 0) then
-            descr = sensor.label
-        else
-            list[#list+1]=string.format("%s - %s [%s]",descr,sensor.label,sensor.param) -- added param for config purposes
-            -- list[#list+1]=string.format("%s - %s [%s]",descr,sensor.label,sensor.unit) -- This is production
-
-            sensorsAvailable[#sensorsAvailable+1] = sensor
-            --print(string.format("SensorID: %s=%s, param: %s=%s", sensor.id, statusSensor1ID, sensor.param, tonumber(config.status.sensorparam)))
-            if(sensor.id==statusSensor1ID and sensor.param==tonumber(config.status.sensorparam)) then
-                curIndex1=#sensorsAvailable
-            end
-            if(sensor.id==statusSensor2ID and sensor.param==tonumber(config.status.sensorparam)) then
-                curIndex2=#sensorsAvailable
-            end
-        end
-    end
-
-    for index, config in ipairs(ECUconfigA) do 
-        if(config == ECUconfig) then
-            curIndex3 = index
-        end
-    end
+    -- make all the dynamic menu items
+    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, BatteryConfigIndex, SensorIndex = 1,1,1,1,1
+    local SensorMenuT = {"..."}
+    SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorTable(SensorID)
     collectgarbage()
 
+    ConverterTypeTable, ConverterTypeIndex  = tableh.fromDirectory("Apps/ecu/converter", ConverterType)
+    TurbineTypeTable,   TurbineTypeIndex    = tableh.fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType), TurbineType)
+    TurbineConfigTable, TurbineConfigIndex  = tableh.fromFiles(string.format("Apps/ecu/turbine/%s", TurbineType), TurbineConfig)
+    BatteryConfigTable, BatteryConfigIndex  = tableh.fromFiles("Apps/ecu/batterypack", BatteryConfig)
+    collectgarbage()
 
     form.addRow(2)
-    form.addLabel({label=lang.selectECU, width=200})
-    form.addSelectbox(ECUconfigA, curIndex3, true, ECUconfigChanged)
+    form.addLabel({label=lang.selectConverterType, width=200})
+    form.addSelectbox(ConverterTypeTable, ConverterTypeIndex, true, ConverterTypeChanged)
 
     form.addRow(2)
-    form.addLabel({label=lang.selectSensor1, width=200})
-    form.addSelectbox(list, curIndex1, true, statusSensor1Changed)
+    form.addLabel({label=lang.selectTurbineType, width=200})
+    form.addSelectbox(TurbineTypeTable, TurbineTypeIndex, true, TurbineTypeChanged)
 
     form.addRow(2)
-    form.addLabel({label=lang.selectSensor2, width=200})
-    form.addSelectbox(list, curIndex2, true, statusSensor2Changed)
+    form.addLabel({label=lang.selectTurbineConfig, width=200})
+    form.addSelectbox(TurbineConfigTable, TurbineConfigIndex, true, TurbineConfigChanged)
+
+    form.addRow(2)
+    form.addLabel({label=lang.selectBatteryConfig, width=200})
+    form.addSelectbox(BatteryConfigTable, BatteryConfigIndex, true, BatteryConfigChanged)
+
+    form.addRow(2)
+    form.addLabel({label=lang.selectLeftTurbineSensor, width=200})
+    form.addSelectbox(SensorMenuT, SensorMenuIndex, true, SensorChanged)
 
     form.addRow(2)
     form.addLabel({label=lang.alarmOffSwitch, width=200})
@@ -193,8 +166,11 @@ local function initForm(subform)
         form.addLabel({label="Alarms: off"})
     end
 
+    form.addRow(1)
+    form.addLabel({label=string.format("ECU converter: %s",ConverterType)})
+
     collectgarbage()
-    -- print("Mem after GUI: ", collectgarbage("count"))
+    print("Mem after GUI: ", collectgarbage("count"))
 end
 
 
@@ -205,106 +181,56 @@ local function keyPressed(key)
 end
 
 ----------------------------------------------------------------------
--- 
-local function AlarmMessage(messageconfig,StatusText)
-
-    if(messageconfig.enable) then
-        system.messageBox(string.format("ECU: %s", StatusText),messageconfig.seconds)
-    end    
-end
-
-
-----------------------------------------------------------------------
--- 
-local function AlarmHaptic(hapticconfig)
-
-    if(hapticconfig.enable) then
-        -- If vibration/haptic associated with status, we vibrate
-        if(hapticconfig.stick == 'left') then
-            system.vibration(false, hapticconfig.vibrationProfile);
-        end
-        if(hapticconfig.stick == 'right') then
-            system.vibration(true, hapticconfig.vibrationProfile);
-        end
-    end
-end
-
-
-----------------------------------------------------------------------
--- 
-local function AlarmAudio(audioconfig)
-
-    if(audioconfig.enable) then
-        -- If audio file associated with status, we play it
-        if(audioconfig.file) then
-            system.playFile(string.format("/Apps/ecu/audio/%s", audioconfig.file),AUDIO_IMMEDIATE)
-        end
-    end
-end
-
-----------------------------------------------------------------------
 -- Calculates: config.fuellevel.tanksize and config.fuellevel.interval and fuelpercent
-local function initFuelStatistics()
+local function initFuelStatistics(tmpConfig)
 
-    if(config.fuellevel.tanksize < 100) then
-        -- Automatic calculations done on the first run after we read the sensor value.
-       
-        config.fuellevel.tanksize = sensorValues[config.fuellevel.sensorname]
-        config.fuellevel.interval = config.fuellevel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-        --print(string.format("config.fuellevel.tanksize: %s", config.fuellevel.tanksize))
-        --print(string.format("config.fuellevel.interval: %s", config.fuellevel.interval))
+    if(config.fuellevel.tanksize < 50) then
+
+        -- Init: Automatic calculations done on the first run after we read the sensor value.
+        config.fuellevel.tanksize = sensorT[tmpConfig.sensorname].sensor.max -- new
+        config.fuellevel.interval = config.fuellevel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
         prevFuelLevel = config.fuellevel.tanksize - config.fuellevel.interval -- init full tank reporting, but do not start before next interval
     end 
     
     -- Calculate fuel percentage
-    sensorValues.fuelpercent = (sensorValues.fuellevel/config.fuellevel.tanksize) * 100
-    
-    -- print(string.format("tanksize=%s, fuellevel=%s, fuelpercent: %s, ", config.fuellevel.tanksize, sensorValues.fuellevel, sensorValues.fuelpercent))
+    sensorT[tmpConfig.sensorname].percent = (sensorT[tmpConfig.sensorname].sensor.value / config.fuellevel.tanksize) * 100
 end
 
 ----------------------------------------------------------------------
 --
-local function readFueltankSensor(fuelconfig, statusSensorID)
+local function processFueltank(tmpConfig, tmpSensorID)
 
-    local sensor = system.getSensorByID(statusSensorID, tonumber(fuelconfig.sensorparam))
+    if(sensorT[tmpConfig.sensorname].sensor and sensorT[tmpConfig.sensorname].sensor.valid) then
 
-    if(sensor and sensor.valid) then
-
-        sensorValues[fuelconfig.sensorname]       = sensor.value
-        sensorsOnlineArray[fuelconfig.sensorname] = true
-        sensorsOnline = true
-
-        initFuelStatistics() -- Important
+        initFuelStatistics(tmpConfig) -- Important
 
         -- Repeat fuel level audio at intervals
-        if(sensor.value < prevFuelLevel) then
-            prevFuelLevel = prevFuelLevel - fuelconfig.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
-            system.playNumber(sensor.value/1000, fuelconfig.decimals, fuelconfig.unit, fuelconfig.label) -- Read out the numbers (ml/1000)
+        if(sensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel) then
+            prevFuelLevel = prevFuelLevel - tmpConfig.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
+            system.playNumber(sensorT[tmpConfig.sensorname].sensor.value / 1000, tmpConfig.decimals, tmpConfig.unit, tmpConfig.label) -- Read out the numbers (ml/1000)
         end
         
         -- Check for alarm thresholds
         if(enableAlarm) then
-            if(not alarmsTriggered[fuelconfig.sensorname]) then
-                if(sensorValues.fuelpercent < fuelconfig.critical.value) then
-                    alarmsTriggered[fuelconfig.sensorname] = true
-                    AlarmMessage(genericConfig.high.message,string.format("%s (%s < %s)", fuelconfig.critical.text, sensorValues.fuelpercent, fuelconfig.critical.value))
-                    AlarmHaptic(fuelconfig.critical.haptic)
-                   AlarmAudio(fuelconfig.critical.audio)
+            if(not alarmsTriggered[tmpConfig.sensorname]) then
+                if(sensorT[tmpConfig.sensorname].percent < tmpConfig.critical.value) then
+
+                    alarmsTriggered[tmpConfig.sensorname] = true
+                    alarmh.Message(tmpConfig.critical.message,string.format("%s (%s < %s)", tmpConfig.critical.text, sensorT[tmpConfig.sensorname].percent, tmpConfig.critical.value))
+                    alarmh.Haptic(tmpConfig.critical.haptic)
+                    alarmh.Audio(tmpConfig.critical.audio)
             
-                elseif(sensorValues.fuelpercent < fuelconfig.warning.value) then
-                    alarmsTriggered[fuelconfig.sensorname] = true
-                    AlarmMessage(genericConfig.high.message,string.format("%s (%s < %s)", fuelconfig.warning.text, sensorValues.fuelpercent, fuelconfig.warning.value))
-                    AlarmMessage(fuelconfig.warning.message,fuelconfig.warning.text)
-                   AlarmHaptic(fuelconfig.warning.haptic)
-                   AlarmAudio(fuelconfig.warning.audio)
+                elseif(sensorT[tmpConfig.sensorname].percent < tmpConfig.warning.value) then
+
+                    alarmsTriggered[tmpConfig.sensorname] = true
+                    alarmh.Message(tmpConfig.warning.message,string.format("%s (%s < %s)", tmpConfig.warning.text, sensorT[tmpConfig.sensorname].percent, tmpConfig.warning.value))
+                    alarmh.Haptic(tmpConfig.warning.haptic)
+                    alarmh.Audio(tmpConfig.warning.audio)
                  end
             end
         end
     else
-        sensorsOnlineArray[fuelconfig.sensorname] = false
-        sensorValues[fuelconfig.sensorname] = 0
-        sensorValues.fuelpercent            = 0
-        sensorsOnline = true
+        sensorT[tmpConfig.sensorname].percent = 0
     end
 end
 
@@ -312,281 +238,83 @@ end
 -- readGenericSensor high/low value alarms
 -- ToDo: These alarms will be repeated to often, how to avoid that? Second counter, repeat counter?
 
-local function readGenericSensor(genericConfig, statusSensorID)
+local function processGeneric(tmpConfig, tmpSensorID)
 
-    local sensor = system.getSensorByID(statusSensorID,tonumber(genericConfig.sensorparam))
-
-    --print(string.format("param: %s, genericConfig.high.text: %s, genericConfig.low.text: %s ", genericConfig.sensorname, genericConfig.high.text, genericConfig.low.text))
-    if(sensor and sensor.valid) then
-
-        sensorValues[genericConfig.sensorname]          = sensor.value -- could be the entire sensor object if needed.
-        sensorsOnlineArray[genericConfig.sensorname] = true
-        sensorsOnline = true
+    if(sensorT[tmpConfig.sensorname].sensor and sensorT[tmpConfig.sensorname].sensor.valid) then
 
         -- We only enable the low alarms after they have passed the low threshold
-        if(sensor.value > genericConfig.low.value and not alarmLowValuePassed[genericConfig.sensorname]) then
-            alarmLowValuePassed[genericConfig.sensorname] = true;
+        if(sensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
+            alarmLowValuePassed[tmpConfig.sensorname] = true;
         end
+
+        -- calculate percentage
+        sensorT[tmpConfig.sensorname].percent = ((sensorT[tmpConfig.sensorname].sensor.value - tmpConfig.low.value) / (tmpConfig.high    .value - tmpConfig.low.value)) * 100
+
         if(enableAlarm) then
-            if(not alarmsTriggered[genericConfig.sensorname]) then 
-                if(sensor.value > genericConfig.high.value) then
-                    alarmsTriggered[genericConfig.sensorname] = true
-                    AlarmMessage(genericConfig.high.message,string.format("%s (%s > %s)", genericConfig.high.text, sensor.value, genericConfig.high.value))
-                    AlarmHaptic(genericConfig.high.haptic)
-                    AlarmAudio(genericConfig.high.audio)
+            if(not alarmsTriggered[tmpConfig.sensorname]) then 
+                if(sensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
+                    alarmsTriggered[tmpConfig.sensorname] = true
+                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, sensor.value, tmpConfig.high.value))
+                    alarmh.Haptic(tmpConfig.high.haptic)
+                    alarmh.Audio(tmpConfig.high.audio)
             
-                elseif(sensor.value < genericConfig.low.value and alarmLowValuePassed[genericConfig.sensorname]) then
-                    alarmsTriggered[genericConfig.sensorname] = true
-                    AlarmMessage(genericConfig.high.message,string.format("%s (%s < %s)", genericConfig.low.text, sensor.value, genericConfig.low.value))
-                    AlarmHaptic(genericConfig.low.haptic)
-                    AlarmAudio(genericConfig.low.audio)
+                elseif(sensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
+                    alarmsTriggered[tmpConfig.sensorname] = true
+                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, sensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
+                    alarmh.Haptic(tmpConfig.low.haptic)
+                    alarmh.Audio(tmpConfig.low.audio)
                 end
             end
         end
-    else
-        sensorsOnlineArray[genericConfig.sensorname] = false
-        sensorValues[genericConfig.sensorname] = -1
-        sensorsOnline = false
     end
 end
 
 ----------------------------------------------------------------------
 -- 
-local function readStatusSensor(statusconfig, statusSensorID)
-    local StatusText    = ''
+local function processStatus(tmpConfig, tmpSensorID)
     local statusChanged = false
-    local value         = 0 -- sensor value
+    local statusint     = 0 -- sensor statusid
     local switch
-    local sensor = system.getSensorByID(statusSensorID, tonumber(statusconfig.sensorparam))
+    local statuscode  = ''
 
-    if(sensor and sensor.valid) then
-        value = string.format("%s", math.floor(sensor.value))
-        sensorValues[statusconfig.sensorname] = value
-        sensorsOnlineArray[statusconfig.sensorname] = true
-        sensorsOnline = true
+    if(sensorT[tmpConfig.sensorname].sensor and sensorT[tmpConfig.sensorname].sensor.valid) then
+        statusint    = string.format("%s", math.floor(sensorT[tmpConfig.sensorname].sensor.value))
+        statuscode  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
 
-        if(config.status[value] ~= nil) then 
-            StatusText = config.status[value].text;
+        if(config.status[statuscode] ~= nil) then 
+            sensorT[tmpConfig.sensorname].text = config.status[statuscode].text;
         end
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
-        if(prevStatusID ~= value) then
-            print(string.format("Status changed %s != %s", prevStatusID, value))
+        if(prevStatusID ~= statuscode) then
+            print(string.format("statusint %s", statusint))
+            print(string.format("Status changed %s != %s", prevStatusID, statuscode))
             statusChanged = true
         end 
-        prevStatusID = value
+        prevStatusID = statuscode
         -------------------------------------------------------------
         -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
         -- This should get rid of all annoying alarms
         if(statusChanged) then
+            alarmh.Message(config.status[statuscode].message, sensorT[tmpConfig.sensorname].text) -- we always show a message that will be logged on status changed
             if(enableAlarm) then
                 -- ToDo: Implement repeat of alarm
-                AlarmMessage(config.status[value].message,StatusText)
-                AlarmHaptic(config.status[value].haptic)
-                AlarmAudio(config.status[value].audio)
+                alarmh.Haptic(config.status[statuscode].haptic)
+                alarmh.Audio(config.status[statuscode].audio)
              end
          end
     else 
-        sensorsOnlineArray[statusconfig.sensorname] = false
-        sensorValues[statusconfig.sensorname] = -1
-        sensorsOnline = false
-
-        StatusText = "          -- "
+        sensorT[tmpConfig.sensorname].text = "          -- "
     end
-
-    -- print(string.format("statusSensorID: %s, text: %s ", statusSensorID, StatusText))
-
-    return StatusText 
-end
-
-
-----------------------------------------------------------------------
---
-local function TelemetryStatusWindow1(width, height) 
-    --lcd.drawText(5,5,  string.format("%s", Status1Text), FONT_BIG)
-    local xcg1  = 5
-    local xcg2  = tonumber((width / 2))
-    local yc    = tonumber((height / 3) + 20)
-    local diam  = tonumber((height / 2) - 10)
-    
-    -- print(string.format("width: %s, height: %s", width, height))
-
-    -- lcd.drawText(5,5, string.format("Tanksize: %.1f%s",tonumber(config.fuellevel.tanksize/1000), "L"), FONT_BOLD)
-    
-    lcd.drawText(5,2, string.format("RPM"), FONT_NORMAL)
-    lcd.drawCircle(xcg1,yc,diam)
-
-    lcd.drawText(width/2,2, string.format("TEMP"), FONT_NORMAL)    
-    lcd.drawCircle(xcg2,yc,diam)
-    
-    rpmgauge = lcd.loadImage("Apps/ecu/img/rpmgauge.png")
-    tempgauge = lcd.loadImage("Apps/ecu/img/tempgauge.png")
-
-    if(rpmgauge) then
-        lcd.drawImage(xcg1, 18, rpmgauge)
-    end
-
-    if(tempgauge) then
-        lcd.drawImage(xcg2, 18, tempgauge)
-    end
-
-    -- Calculate the x position of the needle in the gauge
-    --print(string.format(string.format("sensorValues.rpmturbine: %s", sensorValues.rpmturbine)))
-    --print(string.format(string.format("config.rpmturbine.high.value: %s", config.rpmturbine.high.value)))
-    local rpmpercent  = (sensorValues.rpmturbine)  / (config.rpmturbine.high.value  / 10000) -- to get fractional numbers
-
-    --print(string.format(string.format("sensorValues.temperature: %s", sensorValues.temperature)))
-    --print(string.format(string.format("config.temperature.high.value: %s", config.temperature.high.value)))
-    local temppercent = (sensorValues.temperature) / (config.temperature.high.value / 10000) -- to get fractional numbers
-
-    local rpmx    = xcg1 + (rpmgauge.width  * rpmpercent) 
-    local tempx   = xcg2 + (tempgauge.width * temppercent)
-    -- Draw the lines for the gauge, or just reload with images with better quality gauges?
-    lcd.drawLine(xcg1+(rpmgauge.width)/2,rpmgauge.height+5, rpmx,18)
-
-    lcd.drawLine(xcg2+(tempgauge.width)/2,tempgauge.height+5, tempx,18)
-
-
-    --os.exit()
-end
-
-----------------------------------------------------------------------
---
-local function TelemetryStatusWindow2(width, height) 
-    lcd.drawText(5,5, string.format("%s", Status2Text), FONT_BIG)
-end
-
-----------------------------------------------------------------------
-local function DrawFuelGauge(percentage, ox, oy) 
-
-    -- triangle
-    lcd.drawLine(6+ox,5+oy,17+ox,5+oy)
-    lcd.drawLine(17+ox,5+oy,17+ox,63+oy)
-    lcd.drawLine(17+ox,63+oy,14+ox,63+oy)
-    lcd.drawLine(14+ox,63+oy,6+ox,5+oy)
-    
-    -- gas station symbol
-    lcd.drawRectangle(51+ox,31+oy,5,9)  
-    lcd.drawLine(52+ox,34+oy,54+ox,34+oy)
-    lcd.drawLine(50+ox,39+oy,56+ox,39+oy)
-    lcd.drawLine(57+ox,31+oy,59+ox,33+oy)
-    lcd.drawLine(59+ox,33+oy,59+ox,37+oy)
-    lcd.drawPoint(58+ox,38+oy)  
-    lcd.drawLine(57+ox,38+oy,57+ox,35+oy)  
-    lcd.drawPoint(56+ox,35+oy)  
-    lcd.drawText(51+ox,2+oy, "F", FONT_MINI)  
-    lcd.drawText(51+ox,54+oy, "F", FONT_MINI)  
-  
-    -- fuel bar 
-    lcd.drawRectangle (21+ox,53+oy,25,11)  -- lowest bar segment
-    lcd.drawRectangle (21+ox,41+oy,25,11)  
-    lcd.drawRectangle (21+ox,29+oy,25,11)  
-    lcd.drawRectangle (21+ox,17+oy,25,11)  
-    lcd.drawRectangle (21+ox,5+oy,25,11)   -- uppermost bar segment
-    
-    -- calc bar chart values
-    local nSolidBar = math.floor( percentage / 20 )
-    local nFracBar = (percentage - nSolidBar * 20) / 20  -- 0.0 ... 1.0 for fractional bar
-    local i
-    -- solid bars
-    for i=0, nSolidBar - 1, 1 do 
-      lcd.drawFilledRectangle (21+ox,53-i*12+oy,25,11) 
-    end  
-    --  fractional bar
-    local y = math.floor( 53-nSolidBar*12+(1-nFracBar)*11 + 0.5)
-    lcd.drawFilledRectangle (21+ox,y+oy,25,11*nFracBar) 
-
-    --lcd.drawText(4+ox,15+oy, config.fuellevel.tanksize, FONT_BOLD)
-    --lcd.drawText(1+ox,49+oy, string.format("Fulltank: %.1f",tonumber(config.fuellevel.tanksize/1000)), FONT_BOLD)
-end
-
-----------------------------------------------------------------------
-local function DrawTurbineStatus(status, ox, oy) 
-    lcd.drawText(4+ox,2+oy, "Turbine", FONT_MINI)  
-    lcd.drawText(4+ox,15+oy, status, FONT_BOLD)  
-end
-
-
-----------------------------------------------------------------------
-local function DrawBattery(u_pump, u_ecu, ox, oy) 
-  lcd.drawText(4+ox,1+oy, "PUMP", FONT_MINI)  
-  lcd.drawText(40+ox,1+oy, "ECU", FONT_MINI)  
-  lcd.drawText(4+ox,12+oy,  string.format("%.1f%s",u_pump,"V"), FONT_BOLD)
-  lcd.drawText(40+ox,12+oy, string.format("%.1f%s",u_ecu,"V"), FONT_BOLD)
-end
-
-----------------------------------------------------------------------
-local function DrawFuelLow(ox, oy) 
-
-  if( system.getTime() % 2 == 0) then -- blink every second
-    -- triangle
-	lcd.drawLine(6+ox,47+oy,32+ox,3+oy)
-	lcd.drawLine(32+ox,3+oy,60+ox,47+oy)
-	lcd.drawLine(60+ox,47+oy,6+ox,47+oy)
-
-	lcd.drawLine(7+ox,47+oy,33+ox,3+oy)
-	lcd.drawLine(33+ox,3+oy,61+ox,47+oy)
-	lcd.drawLine(61+ox,46+oy,6+ox,46+oy)
-
-	lcd.drawLine(8+ox,47+oy,34+ox,3+oy)
-	lcd.drawLine(34+ox,3+oy,62+ox,47+oy)
-	lcd.drawLine(62+ox,46+oy,8+ox,46+oy)
-	lcd.drawText(31+ox,10+oy, "!", FONT_BIG)  
-  end  
-  
-  -- percentage and warning
-  local percentX = 20
-  if( sensorValues.fuelpercent < 10 ) then percentX = 23 end
-  lcd.drawText(percentX+ox,28+oy, string.format("%d%s",sensorValues.fuelpercent,"%"), FONT_BOLD)  
-  lcd.drawText(1+ox,49+oy, "Fuel Low", FONT_BOLD)  
-  
-end
-
-----------------------------------------------------------------------
--- Print the telemetry values
-local function OnPrint(width, height) 
-  -- field separator lines
-  lcd.drawLine(70,2,70,66)  
-  lcd.drawLine(70,36,148,36)  
-  
-  --print(string.format("config.fuellevel.warning.value: %s",config.fuellevel.warning.value))
-  --print(string.format("sensorValues.fuelpercent: %s",sensorValues.fuelpercent))
-
-  if( sensorValues.fuelpercent > config.fuellevel.warning.value) then
-    DrawFuelGauge(sensorValues.fuelpercent, 1, 0)   
-  else
-    DrawFuelLow(sensorValues.fuelpercent, 1, 0) 
-  end  
-
-  -- turbine
-  DrawTurbineStatus(Status1Text, 74, 0) 
-
-  -- battery
-  DrawBattery(sensorValues.pumpvolt, sensorValues.ecuvolt, 74, 37)
-  
 end
 
 ----------------------------------------------------------------------
 -- Resets alarms so they will be triggered again every 30 seconds
 function resetAlarmCounter()
     if(system.getTime() % 30 == 0) then
-        alarmsTriggered   = {  -- 
-            ["rpmturbine"]  = false,
-            ["rpmshaft"]    = false,
-            ["temperature"] = false,
-            ["pumpvolt"]    = false,
-            ["ecuvolt"]     = false,
-            ["fuellevel"]   = false,  -- in ml from ecu
-            ["fuelpercent"] = false,  -- calculated
-            ["status"]      = false,
-        }    
-    end
-
-    for sensor,value in pairs(sensorsOnlineArray) do 
-        if(not value) then
-            --sensorsOnline = false
+        for name,value in pairs(alarmsTriggered) do 
+            alarmsTriggered[name] = false
         end
-        --print(key,value) 
     end
 end
 
@@ -606,34 +334,60 @@ local function enableAlarmCheck()
 end
 
 ----------------------------------------------------------------------
+-- Read and map all sensors to names instead of param values for easier processing
+local function readParamsFromSensor(tmpSensorID)
+
+    local countSensorsValid = 0
+    local countSensors      = 0
+
+    for tmpSensorName, tmpSensorParam in pairs(config.converter.sensormap) do
+        --print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tmpSensorParam))
+        countSensors = countSensors + 1
+        sensorT[tmpSensorName] = {"..."} -- Have to have an empty array before assigning to it.
+        sensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
+
+        if(sensorT[tmpSensorName].sensor and sensorT[tmpSensorName].sensor.valid) then
+            countSensorsValid = countSensorsValid + 1
+        else 
+            sensorT[tmpSensorName].sensor.value = 0
+        end
+    end
+
+    --print(string.format("configured: %s valid: %s", #config.converter.sensormap, countSensorsValid))
+    if(countSensorsValid == countSensors) then
+        sensorsOnline   = 1
+
+    elseif(sensorsOnline == 1) then -- Only trigger if all sensors has been online
+        -- If the valid number of sensors is not equal to the configured number of sensors, the ECU is somehow offline
+        -- Will only trigger again if it goes online again and then offline again. Will not repeat.
+        print(string.format("SensorsOffline: %s valid: %s", countSensors, countSensorsValid))
+        sensorsOnline   = -1
+        system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 10)
+        system.playFile("/Apps/ecu/audio/ECU reboot.wav",AUDIO_IMMEDIATE)
+        system.vibration(false, 4);
+    end
+end
+
+----------------------------------------------------------------------
 -- Application initialization. Has to be the second last function so all other functions is initialized
 local function init()
+    -- Load translation files  
+    system.registerForm(1,MENU_APPS,lang.appName, initForm, keyPressed)
 
-    resetAlarmCounter()
-
-    if(not sensorsOnline) then 
-        system.messageBox('ECU: Offline', 10)
-        system.playFile("/Apps/ecu/audio/ECU reboot.wav",AUDIO_IMMEDIATE)
-    end
-
-	system.registerForm(1,MENU_APPS,lang.appName, initForm, keyPressed)
-
-    statusSensor1ID   = system.pLoad("statusSensor1ID", 0)
-    statusSensor2ID   = system.pLoad("statusSensor2ID", 0)
-    ECUconfig         = system.pLoad("ECUconfig", 1)
+    SensorID          = system.pLoad("SensorID", 0)
+    ConverterType     = system.pLoad("ConverterType", "vspeak")
+    TurbineType       = system.pLoad("TurbineType", "jetcat")
+    TurbineConfig     = system.pLoad("TurbineConfig", "generic")
+    BatteryConfig     = system.pLoad("BatteryConfig", "life-2s")
     alarmOffSwitch    = system.pLoad("alarmOffSwitch")
 
-    if(statusSensor2ID > 0) then -- Then we have two turbines, and give the telemetry windows name left and right
-        system.registerTelemetry(1,string.format("%s %s", lang.window1, lang.left),2,TelemetryStatusWindow1)
-    	--system.registerTelemetry(2,string.format("%s %s", lang.window, lang.right),1,TelemetryStatusWindow2)
-    else
-    	system.registerTelemetry(1,string.format("%s", lang.window1),2,TelemetryStatusWindow1)
-    end
+    -- read all the config files
+    loadConfig()
 
-    system.registerTelemetry( 2, lang.window2, 2, OnPrint)  
+    system.registerTelemetry(1, string.format("%s", lang.window2),2,telemetry2.window)
+    system.registerTelemetry(2, lang.window1, 2, telemetry1.window)  
 
     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
-    readConfig()
     collectgarbage()
     print("Init finished: ", collectgarbage("count"))
 end
@@ -642,33 +396,23 @@ end
 -- Loop has to be the last function, so every other function is initialized
 local function loop()
 
-    enableAlarmCheck()
+    --fake.makeSensorValues()
 
-    -- Turbine 1
-    if(statusSensor1ID ~= 0) then
-        Status1Text = readStatusSensor(config.status,statusSensor1ID)
-        readFueltankSensor(config.fuellevel,statusSensor1ID)
-        readGenericSensor(config.rpmturbine,statusSensor1ID)
-        readGenericSensor(config.rpmshaft,statusSensor1ID)
-        readGenericSensor(config.temperature,statusSensor1ID)
-        readGenericSensor(config.pumpvolt,statusSensor1ID)
-        readGenericSensor(config.ecuvolt,statusSensor1ID)
+    if(SensorID ~= 0) then
+        resetAlarmCounter()
+        enableAlarmCheck()
+        readParamsFromSensor(SensorID)
+
+        processStatus(config.status, SensorID)
+        processFueltank(config.fuellevel, SensorID)
+        processGeneric(config.rpm,   SensorID)
+        processGeneric(config.rpm2,  SensorID)
+        processGeneric(config.egt,   SensorID)
+        processGeneric(config.pumpv, SensorID)
+        processGeneric(config.ecuv,  SensorID)
     end
-    
-    -- Print all sensor values
-    --for key,value in pairs(sensorValues) do print(key,value) end
-    
-    -- Turbine 2
-    if(statusSensor2ID ~= 0) then
-        -- Status2Text = readStatusSensor(config.status,statusSensor2ID)
-    end
-    
-    -- reset alarms
-    resetAlarmCounter() -- Stops alarms from repeating
 end
 
-----------------------------------------------------------------------
---
-setLanguage()
-setConfigFileChoices()
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.9', name=lang.appName}
+lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
+
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.93', name=lang.appName}

@@ -1,0 +1,19 @@
+// Not finished config
+{
+    "sensorname": "status",
+    "-30"   : "- ERROR -",
+    "-20"   : "TH: -off",
+    "-10"   : "TH: cool",
+    "-1"    : "TH: lock",
+    "0"     : "TH: stop",
+    "10"    : "TH: run-",
+    "20"    : "TH: rel-",
+    "25"    : "TH: glow",
+    "30"    : "TH: spin",
+    "40"    : "TH: fire",
+    "45"    : "TH: ignt",
+    "50"    : "TH: heat",
+    "60"    : "TH: acce",
+    "65"    : "TH: cal.",
+    "70"    : "TH: idel"
+}

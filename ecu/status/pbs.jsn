@@ -1,0 +1,183 @@
+{
+    "sensorname": "status",
+    "- ERROR -"   : {
+        "text"      : "- ERROR -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- COOL -"   : {
+        "text"  : "- COOL -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- LOCK -"    : {
+        "text"  : "- LOCK -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- STOP -"     : {
+        "text"  : "- STOP -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: Idle"    : {
+        "text"  : "TH: Idle",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Idle.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: -Rel"    : {
+        "text"  : "TH: -Rel",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- TEST -"    : {
+        "text"  : "- TEST -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- START -"    : {
+        "text"  : "- START -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Startup.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- FIRE -"    : {
+        "text"  : "- FIRE -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "- IDLE _"    : {
+        "text"  : "- IDLE _",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Idle.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    }
+}

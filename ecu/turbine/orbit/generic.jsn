@@ -1,0 +1,162 @@
+{
+    "rpm" : {
+        "high"  : {
+            "text"      : "Turbine RPM high",
+            "value"     : 150000,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        },
+        "low"   : {
+            "text"      : "Turbine RPM low",
+            "value"     : 150000,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        }
+    },
+    "rpm2" : {
+        "high"  : {
+            "text"      : "Shaft RPM high",
+            "value"     : 8000,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        },
+        "low"   : {
+            "text"      : "Shaft RPM low",
+            "value"     : 1000,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        }
+    },
+    "egt" : {
+        "high"  : {
+            "text"      : "Turbine RPM high",
+            "value"     : 150000,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        },
+        "low"   : {
+            "text"      : "Turbine RPM low",
+            "value"     : 150000,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        }
+    },
+    "pumpv" : {
+        "high"  : {
+            "text"      : "Pump volt high",
+            "value"     : 2.5,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        },
+        "low"   : {
+            "text"      : "Pump volt low",
+            "value"     : 0.1,
+            "message"   : {
+                "enable" : true,
+                "seconds": 5
+            },
+            "audio" : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "file"      : ""
+            },
+            "haptic"    : {
+                "enable"    : true,
+                "repeat"    : 1,
+                "stick"     : "",
+                "vibrationProfile"   : 0
+            }
+        }
+    }
+}
