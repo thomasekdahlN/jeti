@@ -1,49 +1,49 @@
 # Jeti ECU Telemetry (Beta version)
-This version actually works pretty good - impressive functionality for the future of turbine telemetry. Jetcat and Hornet config files almost complete with adjusted setup.
+Jeti Advanced ECU LUA Script. Easy setup based on best practise, advanced alarms that are silent until really needed and very configurable from configuration files if you need to (default best practise setup should be enough for most people).
+
+NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and kill switch - and you will probably have the most advanced turbine surveilance available to RC turbine models today.
+
+Only works on Jeti DC-24 with FW 4.22. Jeti DS/DC-16 and DC/DS-14 has to little memory available (and I cant test it since I have a DC-24)
+
+![alarm - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081407/87552642-234a-11e7-897d-e4f2ae4de45f.jpg)
+![gui - configuration](https://cloud.githubusercontent.com/assets/26059207/25081408/875af9a0-234a-11e7-8c05-8a3d246c3d4a.jpg)
+![alarm - rc off](https://cloud.githubusercontent.com/assets/26059207/25081412/8a63e396-234a-11e7-821d-f0bab51e141d.jpg)
+![alarm - shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/25081413/8a64ccf2-234a-11e7-8d4c-b7ea80fa20b6.jpg)
+![display - ecu battery and fuel indicators](https://cloud.githubusercontent.com/assets/26059207/25081414/8a7c2f32-234a-11e7-832a-1a6286d56952.jpg)
+![display - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081415/8a7fcb42-234a-11e7-8dcd-ee8d33662952.jpg)
 
 ![alarm shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/24649940/f58155b8-1928-11e7-94e5-781be6503be5.png)
-![flightlogg - accelerate](https://cloud.githubusercontent.com/assets/26059207/24649945/f82cd2c4-1928-11e7-91c7-1f2dba43faac.jpg)
 ![flightogg - keros full](https://cloud.githubusercontent.com/assets/26059207/24649948/fb132074-1928-11e7-9d7e-8c54485448e0.jpg)
 ![normal - runreg4](https://cloud.githubusercontent.com/assets/26059207/24649952/fda3b114-1928-11e7-889e-91476eb2ab75.jpg)
 ![status - keros full](https://cloud.githubusercontent.com/assets/26059207/24649955/fff2e55c-1928-11e7-9ca3-790427c19f9d.jpg)
 
 
-Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms that are silent until really needed, easy setup and very configurable from configuration files if you need to (default setup should be enough for most people). JetCat example configuration file: https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
-
-NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose turbine type, sensor and kill switch - and you will have the most advanced turbine surveillance available to RC modellers today.
-
-jeti transmitter fw 4.2.2 firmware required
-
-vspeak lua turbine ecu status converter and alarm script 0.9 beta - developers, testers and helpers wanted. PM me.
+vspeak lua turbine ecu status converter and alarm script 0.93 beta - developers, testers and helpers wanted. PM me.
 
 #Supporting:
-- Vspeak FW 1.0 JetCat (very good) https://github.com/thomasekdahlN/jeti/blob/master/ecu/jetcat.jsn
-- Vspeak FW 2.2 Hornet (very good) https://github.com/thomasekdahlN/jeti/blob/master/ecu/hornet.jsn
-- Vspeak FW 2.1 Jakadofsky (config file format old, needs to be reconfigured, use pbs.jsn as example)
-- Vspeak FW 2.1 evoJet / Pahl  (config file format old, needs to be reconfigured, use pbs.jsn as example)
-- Vspeak FW 1.1 PBS  https://github.com/thomasekdahlN/jeti/blob/master/ecu/pbs.jsn
-- Orbit (config file format OK)
-- Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config. Confiog files are read dynamically from ecu folder.
-Partial support for two turbines.
+- Vspeak FW 1.0 JetCat https://github.com/thomasekdahlN/jeti/blob/master/ecu/turbine/jetcat/generic.jsn
+- Vspeak FW 2.2 Hornet https://github.com/thomasekdahlN/jeti/blob/master/ecu/turbine/hornet/generic.jsn
+- Vspeak FW 2.1 Jakadofsky https://github.com/thomasekdahlN/jeti/blob/master/ecu/turbine/jacadofsky/generic.jsn
+- Vspeak FW 2.1 evoJet / Pahl https://github.com/thomasekdahlN/jeti/blob/master/ecu/turbine/evojet/generic.jsn
+- Vspeak FW 1.1 PBS https://github.com/thomasekdahlN/jeti/blob/master/ecu/turbine/pbs/generic.jsn
+- Orbit https://github.com/thomasekdahlN/jeti/blob/master/ecu/turbine/orbit/generic.jsn
+- Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config. Config files are read dynamically from ecu folder.
 
-Supporting a new ecu converter is as easy as adding a json configuration file and you get all the bells and whistles
+Supporting a new ecu converter is as easy as adding some json configuration files and you get all the bells and whistles
 
-Only works on Jeti DC-24. Jeti DS/DC-16 and DC/DS-14 has to little memory available (and I cant test it since I have a DC-24)
-
-#Implemented functionality in beta:
-- Separate advanced json configuration file for each ECU type (or for each turbine type if you want. You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose turbine type, sensor and alarms off switch - and you will have the most advanced turbine surveillance available to RC modellers today.
-- Possibility to read all ECU statuses by voice (not as alarms, but as information i.e. during startup)
+#Turbine status functionality:
+- Configurable which ECU statuses to be read by voice, shown on the display and logged to the flight logg and vibrate
 - All alarms enabled with one switch (recommed to use the same switch as throttle cut for turbine, then alarms are on when turbine is armed)
-- Some alarms like low rpm, low rpm2, low pumpvolt, low temp are not enabled until the low threshold is exceeded. This makes for no annoying low alarms before turbine is running, but they will also be shut off by the global switch.
-- Configurable which turbine status has audio alarms, haptic alarms or message alarms.
-- Status - Individually configurable parameters for EVERY turbine STATUS (this is super cool and super flexible)
 - Status alarms only given on status change
+- Configurable which turbine status has audio alarms, haptic alarms or message alarms.
+- Status - Individually configurable parameters for EVERY turbine STATUS
 - Status - Audio alarm (information in female voice, warnings in male voice), possibility to change audio file. Configurable.
 - Status - Haptic feedback, which stick, which vibration profile, on/off. Configurable.
 - Status - Display warning. on/off - shows the status text as a warning. Will also log the turbien status to the normal Jeti flight log (this is super cool). Configurable.
 - 91 audio files included with all statuses and alarms
 
-The usual alarms, but easier setup
+The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
+- Some alarms like low rpm, low rpm2, low pumpvolt, low temp are not enabled until the low threshold is exceeded. This makes for no annoying low alarms before turbine is running, but they will also be shut off by the global switch.
 - Turbine RPM high
 - Turbine RPM low - only enabled after RPM has exceeded Turbine RPM low
 - Shaft RPM high
@@ -56,20 +56,32 @@ The usual alarms, but easier setup
 - Pump voltage low - only enabled after Pump voltage has exceeded Pump voltage low
 - Fuel warning alarm (configured at 20% fuel level)
 - Fuel critical alarm (configured at 10% fuel level)
-- Fuel - Audio messaage with remaining fuellevel 10 times pr tank (automaticially set intervals based on tanksize)
+- Fuel - Audio messaage with remaining fuellevel 10 times pr tank (automaticially set intervals based on tanksize read from ECU)
 - Fuel - Automatic reading of tanksize from ECU (shown in telemetry window)
 - = Fuel = Zero configuration neccessary to have very advanced information and alarms on tank level
+- Calculates  percentages from the interval between high and low config values)
 Alarms will be repeated every 30 second if error condition is sustained
 
+Other alarms
+- Monitors that all sensors are online and gives a offline alarm (due to converter not working, ecu not working or ecu without power). will only sound once pr offline incidence.
+
+Configuration possibilities
+- Separate configuration file for each ECU converter type (sensor mapping and status mapping to common format)
+- Separate configuration file for each Turbine type with best practise configuration.
+- Separate configuration file for each Turbine types statuses with best practise configuration.
+- Separate configuration file for each BatteryPack type with best practise configuration. (2s-lipo, 3s-lipo, 2s-life, 3s-life, 2-s-a123, 3s-a123)
+- Separate configuration file for fuellevel setup with best practise configuration.
+
 Telemetry display visual
-- Fuel gauge, RPM, ECU volt and status double window  from "ECU data display" for Orbit made by Bernd Woköck
-- Experimental RPM and TEMP gauge (very cool, but not tested)
+- Fuel gauge, pump volt, ECU volt and status double window , code borrowed from "ECU data display" for Orbit made by Bernd Woköck
+- Battery gauge, RPM, RPM2, EGT and status double window , code borrowed from "ECU data display" for Orbit made by Bernd Woköck
+- Experimental RPM and TEMP round gauge (very cool, but not tested)
 
 Thinking of implementing:
 - Warning if you try to shutdown turbine while it is too hot (if possible to implement)
 - Sound volume control connected to warnings and critical alarms
-- How to handle suddenly unavailable sensors (telemetry lost or ECu without power)
 - Any alarms that should be enabled even when shut down?
+- Even smarter battery monitoring based on lookup tables on voltages and percent left (p.t it only calculates battery percentages from the interval between high and low values)
 
 #Help needed:
 - Translation
@@ -85,10 +97,15 @@ So the idea is that with this lua script you will get all needed turbine alarms 
 For the people who love to tinker it is infinitely extensive and changeable in a easy manner in the configuration file pr ecu. But the distributed configuration file should be best practise for all others.
 
 #Installation
-- copy ecu.lua and ecu folder into the Apps folder on your Jeti transmitter
+- copy ecu.lua, ecu folder and library folder, into the Apps folder on your Jeti transmitter
 - add ecu.lua to applications
-- choose ecu type
-Then you are up and running
+- choose ecu converter type
+- choose turbine manufacturer type
+- choose turbine type
+- choose battery pack type
+- choose kill switch
+
+Then you are up and running with the most advanced ecu monitoring available today
 
 
 If you have any more ideas about needs for turbine alarms, please let me know.
