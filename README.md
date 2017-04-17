@@ -3,6 +3,8 @@ Jeti Advanced ECU LUA Script. Easy setup based on best practise, advanced alarms
 
 NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and kill switch - and you will probably have the most advanced turbine surveilance available to RC turbine models today.
 
+Now supports vspeak ecu converter (my personal favorite ECU converter), jetcat ecu converter. Digitech ecu converter support coming very soon.
+
 Only works on Jeti DC-24 with FW 4.22. Jeti DS/DC-16 and DC/DS-14 has to little memory available (and I cant test it since I have a DC-24)
 
 ![alarm - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081407/87552642-234a-11e7-897d-e4f2ae4de45f.jpg)
