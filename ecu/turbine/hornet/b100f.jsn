@@ -10,12 +10,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "Over rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -29,12 +27,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "Low rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -51,12 +47,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "Over rpm shaft.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -70,12 +64,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "Low shaft rpm.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -92,12 +84,10 @@
             },
             "audio" : {
                 "enable"    : false,
-                "repeat"    : 1,
                 "file"      : "Over temperature.wav"
             },
             "haptic"    : {
                 "enable"    : false,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -111,12 +101,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "Low temperature.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -133,12 +121,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "High pump voltage.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }
@@ -152,12 +138,10 @@
             },
             "audio" : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "file"      : "Flameout.wav"
             },
             "haptic"    : {
                 "enable"    : true,
-                "repeat"    : 1,
                 "stick"     : "left",
                 "vibrationProfile"   : 4
             }

@@ -53,17 +53,23 @@ local function DrawText(ox, oy)
   lcd.drawText(35+ox,1+oy, "NOW", FONT_MINI)  
   lcd.drawText(70+ox,1+oy, "MAX", FONT_MINI)  
 
-  lcd.drawText(4+ox, vs*1+oy, 'RPM', FONT_MINI)
-  lcd.drawText(35+ox,vs*1+oy, string.format("%s%s",math.floor(sensorT.rpm.sensor.value/1000),"K"), FONT_MINI)
-  lcd.drawText(70+ox,vs*1+oy, string.format("%s%s",math.floor(sensorT.rpm.sensor.max/1000),"K"), FONT_MINI)
+  if(sensorT.rpm.sensor) then
+    lcd.drawText(4+ox, vs*1+oy, 'RPM', FONT_MINI)
+    lcd.drawText(35+ox,vs*1+oy, string.format("%s%s",math.floor(sensorT.rpm.sensor.value/1000),"K"), FONT_MINI)
+    lcd.drawText(70+ox,vs*1+oy, string.format("%s%s",math.floor(sensorT.rpm.sensor.max/1000),"K"), FONT_MINI)
+  end
 
-  lcd.drawText(4+ox, vs*2+oy, 'RPM2', FONT_MINI)
-  lcd.drawText(35+ox,vs*2+oy, string.format("%s",sensorT.rpm2.sensor.value), FONT_MINI)
-  lcd.drawText(70+ox,vs*2+oy, string.format("%s",sensorT.rpm2.sensor.max), FONT_MINI)
-
-  lcd.drawText(4+ox, vs*3+oy, 'EGT', FONT_MINI)
-  lcd.drawText(35+ox,vs*3+oy, string.format("%s%s",sensorT.egt.sensor.value,"C"), FONT_MINI)
-  lcd.drawText(70+ox,vs*3+oy, string.format("%s%s",sensorT.egt.sensor.max,"C"), FONT_MINI)
+  if(sensorT.rpm2.sensor) then
+    lcd.drawText(4+ox, vs*2+oy, 'RPM2', FONT_MINI)
+    lcd.drawText(35+ox,vs*2+oy, string.format("%s",sensorT.rpm2.sensor.value), FONT_MINI)
+    lcd.drawText(70+ox,vs*2+oy, string.format("%s",sensorT.rpm2.sensor.max), FONT_MINI)
+  end
+  
+  if(sensorT.egt.sensor) then
+    lcd.drawText(4+ox, vs*3+oy, 'EGT', FONT_MINI)
+    lcd.drawText(35+ox,vs*3+oy, string.format("%s%s",sensorT.egt.sensor.value,"C"), FONT_MINI)
+    lcd.drawText(70+ox,vs*3+oy, string.format("%s%s",sensorT.egt.sensor.max,"C"), FONT_MINI)
+  end
 end
 
 ----------------------------------------------------------------------
@@ -75,8 +81,10 @@ function telemetry_window2.window(width, height)
       lcd.drawLine(45,2,45,66)  
       --lcd.drawLine(70,36,148,36)  
  
-      DrawGauge(sensorT.ecuv.percent, 1, 0)
-      
+      if(sensorT.ecuv.sensor) then
+        DrawGauge(sensorT.ecuv.percent, 1, 0)
+      end
+
       -- turbine
       DrawText(50, 0)
 

@@ -4,6 +4,5 @@
     "status"    : "3",
     "pumpv"     : "4",
     "ecuv"      : "5",
-    "fuellevel" : "6",
-    "throttle"  : "7"
+    "fuellevel" : "6"
 }

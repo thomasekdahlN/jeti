@@ -15,9 +15,12 @@ local loadhelper = {}
 --------------------------------------------------------------------
 -- Load generic fuel config 
 function loadhelper.fileJson(filename)
-    -- print("Mem before config: ", collectgarbage("count"))
     local structure
     local file = io.readall(filename)
+
+    collectgarbage()
+    print("fileJson: %s - mem %s ", filename, collectgarbage("count"))
+
     if(file) then
           structure = json.decode(file)
         if(structure) then
@@ -28,8 +31,6 @@ function loadhelper.fileJson(filename)
     else
         print(string.format("File not found: %s", filename))
     end
-    collectgarbage()
-    print(string.format("%s - mem: %s", filename, collectgarbage("count")))
 end 
 
 return loadhelper

@@ -16,9 +16,7 @@ local loadh      = require "library/loadhelper"
 local tableh     = require "library/tablehelper"
 local alarmh     = require "library/alarmhelper"
 local sensorh    = require "library/sensorhelper"
---local fake       = require "library/fakesensor"
 local telemetry1 = require "ecu/library/telemetry_window1"
-local telemetry2 = require "ecu/library/telemetry_window2"
 
 -- Globals to be accessible also from libraries
 config          = {"..."} -- Complete turbine config object dynamically assembled
@@ -76,8 +74,6 @@ local function loadConfig()
 
     -- Generic config loading adding to default turbine config
     config.ecuv      = loadh.fileJson(string.format("Apps/ecu/batterypack/%s.jsn", BatteryConfig))
-    config.fuellevel = loadh.fileJson("Apps/ecu/fuel/config.jsn")
-    config.status    = loadh.fileJson(string.format("Apps/ecu/status/%s.jsn", TurbineType))
     config.converter = {"..."} 
     config.converter.statusmap = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/status.jsn", ConverterType, TurbineType))
     config.converter.sensormap = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/sensor.jsn", ConverterType, TurbineType))
@@ -119,8 +115,8 @@ end
 --------------------------------------------------------------------
 -- Store settings when changed by user
 local function SensorChanged(value)
-	SensorID  = SensorT[value].id
-	system.pSave("SensorID",  SensorID)
+    SensorID  = SensorT[value].id
+    system.pSave("SensorID",  SensorID)
 
     -- Try to auto detect sensor from params later, to drop one menu element
     -- ECUconverter  = ECUconverterA[value]
@@ -185,60 +181,6 @@ end
 -- Re-init correct form if navigation buttons are pressed
 local function keyPressed(key)
     form.reinit(1)
-end
-
-----------------------------------------------------------------------
--- Calculates: config.fuellevel.tanksize and config.fuellevel.interval and fuelpercent
-local function initFuelStatistics(tmpConfig)
-
-    if(config.fuellevel.tanksize < 50) then
-
-        -- Init: Automatic calculations done on the first run after we read the sensor value.
-        config.fuellevel.tanksize = sensorT[tmpConfig.sensorname].sensor.value -- new or max?
-        config.fuellevel.interval = config.fuellevel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-        prevFuelLevel = config.fuellevel.tanksize - config.fuellevel.interval -- init full tank reporting, but do not start before next interval
-    end 
-    
-    -- Calculate fuel percentage
-    sensorT[tmpConfig.sensorname].percent = (sensorT[tmpConfig.sensorname].sensor.value / config.fuellevel.tanksize) * 100
-end
-
-----------------------------------------------------------------------
---
-local function processFueltank(tmpConfig, tmpSensorID)
-
-    if(sensorT[tmpConfig.sensorname].sensor.valid) then
-
-        initFuelStatistics(tmpConfig) -- Important
-
-        -- Repeat fuel level audio at intervals
-        if(sensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel) then
-            prevFuelLevel = prevFuelLevel - tmpConfig.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
-            system.playNumber(prevFuelLevel / 1000, tmpConfig.decimals, tmpConfig.unit, tmpConfig.label) -- Read out the numbers from the interval, not the value - to get better clearity
-        end
-        
-        -- Check for alarm thresholds
-        if(enableAlarm) then
-            if(not alarmsTriggered[tmpConfig.sensorname]) then
-                if(sensorT[tmpConfig.sensorname].percent < tmpConfig.critical.value) then
-
-                    alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.critical.message,string.format("%s (%s < %s)", tmpConfig.critical.text, sensorT[tmpConfig.sensorname].percent, tmpConfig.critical.value))
-                    alarmh.Haptic(tmpConfig.critical.haptic)
-                    alarmh.Audio(tmpConfig.critical.audio)
-            
-                elseif(sensorT[tmpConfig.sensorname].percent < tmpConfig.warning.value) then
-
-                    alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.warning.message,string.format("%s (%s < %s)", tmpConfig.warning.text, sensorT[tmpConfig.sensorname].percent, tmpConfig.warning.value))
-                    alarmh.Haptic(tmpConfig.warning.haptic)
-                    alarmh.Audio(tmpConfig.warning.audio)
-                 end
-            end
-        end
-    else
-        sensorT[tmpConfig.sensorname].percent = 0
-    end
 end
 
 ----------------------------------------------------------------------
@@ -307,11 +249,9 @@ local function processStatus(tmpConfig, tmpSensorID)
         -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
         -- This should get rid of all annoying alarms
         if(statusChanged) then
-            alarmh.Message(config.status[statuscode].message, sensorT[tmpConfig.sensorname].text) -- we always show a message that will be logged on status changed
+            system.messageBox(string.format("ECU : %s", statuscode), 4)
             if(enableAlarm) then
-                -- ToDo: Implement repeat of alarm
-                alarmh.Haptic(config.status[statuscode].haptic)
-                alarmh.Audio(config.status[statuscode].audio)
+                system.playFile(string.format("/Apps/ecu/audio/%s.wav", statuscode),AUDIO_IMMEDIATE)
              end
          end
     else 
@@ -406,9 +346,8 @@ local function init()
 
     -- read all the config files
     loadConfig()
+    system.registerTelemetry(1, string.format("%s", lang.window1),2,telemetry1.window)
 
-    system.registerTelemetry(1, string.format("%s", lang.window2),2,telemetry2.window)
-    system.registerTelemetry(2, lang.window1, 2, telemetry1.window)  
 
     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     collectgarbage()
@@ -427,7 +366,6 @@ local function loop()
         readParamsFromSensor(SensorID)
 
         -- All converters has these sensors
-        processFueltank(config.fuellevel, SensorID)
         processGeneric(config.rpm,   SensorID)
         processGeneric(config.egt,   SensorID)
         processGeneric(config.pumpv, SensorID)
@@ -444,5 +382,5 @@ local function loop()
 end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
-
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.95', name=lang.appName}
+collectgarbage()
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.92', name=string.format("16 %s", lang.appName)}
