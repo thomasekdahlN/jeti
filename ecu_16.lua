@@ -20,8 +20,16 @@ local telemetry1 = require "ecu/library/telemetry_window1"
 
 -- Globals to be accessible also from libraries
 config          = {"..."} -- Complete turbine config object dynamically assembled
-sensorT         = {"..."} -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
 sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one or more sensors offline
+SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
+    rpm         = {"..."},
+    rpm2        = {"..."},
+    egt         = {"..."},
+    pumpv       = {"..."},
+    ecuv        = {"..."},
+    fuellevel   = {"..."},  -- in ml from ecu
+    status      = {"..."}
+}
 
 -- Locals for the application
 local enableAlarm                 = false
@@ -40,16 +48,6 @@ local alarmLowValuePassed = { -- enables alarms that has passed the low treshold
     ecuv        = true,
     fuellevel   = true,  -- in ml from ecu
     status      = true
-}
-
-local SensorT = {    -- Array with all sensors and their values, also calculated .percent and .text
-    rpm         = {"..."},
-    rpm2        = {"..."},
-    egt         = {"..."},
-    pumpv       = {"..."},
-    ecuv        = {"..."},
-    fuellevel   = {"..."},  -- in ml from ecu
-    status      = {"..."}
 }
 
 local SensorID              = 0
