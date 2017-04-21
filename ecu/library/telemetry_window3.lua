@@ -42,13 +42,13 @@ function telemetry_window3.window(width, height)
       end
 
       -- Calculate the x position of the needle in the gauge
-      --print(string.format(string.format("sensorT.rpm.sensor.value: %s", sensorT.rpm.sensor.value)))
+      --print(string.format(string.format("SensorT.rpm.sensor.value: %s", SensorT.rpm.sensor.value)))
       --print(string.format(string.format("config.rpm.high.value: %s", config.rpm.high.value)))
-      local rpmpercent  = (sensorT.rpm.sensor.value)  / (config.rpm.high.value  / 10000) -- to get fractional numbers
+      local rpmpercent  = (SensorT.rpm.sensor.value)  / (config.rpm.high.value  / 10000) -- to get fractional numbers
 
-      --print(string.format(string.format("sensorT.egt.sensor.value: %s", sensorT.egt.sensor.value)))
+      --print(string.format(string.format("SensorT.egt.sensor.value: %s", SensorT.egt.sensor.value)))
       --print(string.format(string.format("config.egt.high.value: %s", config.egt.high.value)))
-      local temppercent = (sensorT.egt.sensor.value) / (config.egt.high.value / 10000) -- to get fractional numbers
+      local temppercent = (SensorT.egt.sensor.value) / (config.egt.high.value / 10000) -- to get fractional numbers
 
       local rpmx    = xcg1 + (rpmgauge.width  * rpmpercent) 
       local tempx   = xcg2 + (tempgauge.width * temppercent)

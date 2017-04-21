@@ -87,8 +87,8 @@ local function DrawFuelLow(ox, oy)
   
   -- percentage and warning
   local percentX = 20
-  if( sensorT.fuellevel.percent < 10 ) then percentX = 23 end
-  lcd.drawText(percentX+ox,28+oy, string.format("%d%s",sensorT.fuellevel.percent,"%"), FONT_BOLD)  
+  if( SensorT.fuellevel.percent < 10 ) then percentX = 23 end
+  lcd.drawText(percentX+ox,28+oy, string.format("%d%s",SensorT.fuellevel.percent,"%"), FONT_BOLD)  
   lcd.drawText(1+ox,49+oy, "Low", FONT_BOLD)  
   
 end
@@ -102,21 +102,21 @@ function telemetry_window1.window(width, height)
       lcd.drawLine(45,2,45,66)  
       lcd.drawLine(45,36,148,36)  
 
-      if(sensorT.fuellevel.sensor) then
-        if(sensorT.fuellevel.percent > config.fuellevel.warning.value) then
-          DrawFuelGauge(sensorT.fuellevel.percent, 1, 0)   
+      if(SensorT.fuellevel.sensor) then
+        if(SensorT.fuellevel.percent > config.fuellevel.warning.value) then
+          DrawFuelGauge(SensorT.fuellevel.percent, 1, 0)   
         else
-          DrawFuelLow(sensorT.fuellevel.percent, 1, 0) 
+          DrawFuelLow(SensorT.fuellevel.percent, 1, 0) 
         end
       end
 
       -- turbine
-      if(sensorT.status.sensor) then
-        DrawTurbineStatus(sensorT.status.text, 50, 0)
+      if(SensorT.status.sensor) then
+        DrawTurbineStatus(SensorT.status.text, 50, 0)
       end
 
       -- battery
-      DrawBattery(sensorT.pumpv.sensor.value, sensorT.ecuv.sensor.value, 50, 37)
+      DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
     else
         lcd.drawText(5,5, 'OFFLINE', FONT_MAXI)
     end

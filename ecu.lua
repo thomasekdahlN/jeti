@@ -23,15 +23,17 @@ local telemetry2 = require "ecu/library/telemetry_window2"
 -- Globals to be accessible also from libraries
 config          = {"..."} -- Complete turbine config object dynamically assembled
 sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one or more sensors offline
-SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
+--SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
+
+SensorT = {
     rpm         = {"..."},
     rpm2        = {"..."},
     egt         = {"..."},
     pumpv       = {"..."},
     ecuv        = {"..."},
-    fuellevel   = {"..."},  -- in ml from ecu
+    fuellevel   = {"..."},
     status      = {"..."}
-}
+ }
 
 -- Locals for the application
 local enableAlarm                 = false
@@ -191,25 +193,25 @@ local function initFuelStatistics(tmpConfig)
     if(config.fuellevel.tanksize < 50) then
 
         -- Init: Automatic calculations done on the first run after we read the sensor value.
-        config.fuellevel.tanksize = sensorT[tmpConfig.sensorname].sensor.value -- new or max?
+        config.fuellevel.tanksize = SensorT[tmpConfig.sensorname].sensor.value -- new or max?
         config.fuellevel.interval = config.fuellevel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
         prevFuelLevel = config.fuellevel.tanksize - config.fuellevel.interval -- init full tank reporting, but do not start before next interval
     end 
     
     -- Calculate fuel percentage
-    sensorT[tmpConfig.sensorname].percent = (sensorT[tmpConfig.sensorname].sensor.value / config.fuellevel.tanksize) * 100
+    SensorT[tmpConfig.sensorname].percent = (SensorT[tmpConfig.sensorname].sensor.value / config.fuellevel.tanksize) * 100
 end
 
 ----------------------------------------------------------------------
 --
 local function processFueltank(tmpConfig, tmpSensorID)
 
-    if(sensorT[tmpConfig.sensorname].sensor.valid) then
+    if(SensorT[tmpConfig.sensorname].sensor.valid) then
 
         initFuelStatistics(tmpConfig) -- Important
 
         -- Repeat fuel level audio at intervals
-        if(sensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel) then
+        if(SensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel) then
             prevFuelLevel = prevFuelLevel - tmpConfig.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
             system.playNumber(prevFuelLevel / 1000, tmpConfig.decimals, tmpConfig.unit, tmpConfig.label) -- Read out the numbers from the interval, not the value - to get better clearity
         end
@@ -217,24 +219,24 @@ local function processFueltank(tmpConfig, tmpSensorID)
         -- Check for alarm thresholds
         if(enableAlarm) then
             if(not alarmsTriggered[tmpConfig.sensorname]) then
-                if(sensorT[tmpConfig.sensorname].percent < tmpConfig.critical.value) then
+                if(SensorT[tmpConfig.sensorname].percent < tmpConfig.critical.value) then
 
                     alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.critical.message,string.format("%s (%s < %s)", tmpConfig.critical.text, sensorT[tmpConfig.sensorname].percent, tmpConfig.critical.value))
+                    alarmh.Message(tmpConfig.critical.message,string.format("%s (%s < %s)", tmpConfig.critical.text, SensorT[tmpConfig.sensorname].percent, tmpConfig.critical.value))
                     alarmh.Haptic(tmpConfig.critical.haptic)
                     alarmh.Audio(tmpConfig.critical.audio)
             
-                elseif(sensorT[tmpConfig.sensorname].percent < tmpConfig.warning.value) then
+                elseif(SensorT[tmpConfig.sensorname].percent < tmpConfig.warning.value) then
 
                     alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.warning.message,string.format("%s (%s < %s)", tmpConfig.warning.text, sensorT[tmpConfig.sensorname].percent, tmpConfig.warning.value))
+                    alarmh.Message(tmpConfig.warning.message,string.format("%s (%s < %s)", tmpConfig.warning.text, SensorT[tmpConfig.sensorname].percent, tmpConfig.warning.value))
                     alarmh.Haptic(tmpConfig.warning.haptic)
                     alarmh.Audio(tmpConfig.warning.audio)
                  end
             end
         end
     else
-        sensorT[tmpConfig.sensorname].percent = 0
+        SensorT[tmpConfig.sensorname].percent = 0
     end
 end
 
@@ -246,27 +248,27 @@ local function processGeneric(tmpConfig, tmpSensorID)
 
     print(string.format("sensorname : %s",tmpConfig.sensorname))
 
-    if(sensorT[tmpConfig.sensorname].sensor.valid) then
+    if(SensorT[tmpConfig.sensorname].sensor.valid) then
 
         -- We only enable the low alarms after they have passed the low threshold
-        if(sensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
+        if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
             alarmLowValuePassed[tmpConfig.sensorname] = true;
         end
 
         -- calculate percentage
-        sensorT[tmpConfig.sensorname].percent = ((sensorT[tmpConfig.sensorname].sensor.value - tmpConfig.low.value) / (tmpConfig.high    .value - tmpConfig.low.value)) * 100
+        SensorT[tmpConfig.sensorname].percent = ((SensorT[tmpConfig.sensorname].sensor.value - tmpConfig.low.value) / (tmpConfig.high    .value - tmpConfig.low.value)) * 100
 
         if(enableAlarm) then
             if(not alarmsTriggered[tmpConfig.sensorname]) then 
-                if(sensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
+                if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
                     alarmsTriggered[tmpConfig.sensorname] = true
                     alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, sensor.value, tmpConfig.high.value))
                     alarmh.Haptic(tmpConfig.high.haptic)
                     alarmh.Audio(tmpConfig.high.audio)
             
-                elseif(sensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
+                elseif(SensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
                     alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, sensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
+                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
                     alarmh.Haptic(tmpConfig.low.haptic)
                     alarmh.Audio(tmpConfig.low.audio)
                 end
@@ -283,14 +285,14 @@ local function processStatus(tmpConfig, tmpSensorID)
     local switch
     local statuscode  = ''
 
-    if(sensorT[tmpConfig.sensorname].sensor.valid) then
-        statusint    = string.format("%s", math.floor(sensorT[tmpConfig.sensorname].sensor.value))
+    if(SensorT[tmpConfig.sensorname].sensor.valid) then
+        statusint    = string.format("%s", math.floor(SensorT[tmpConfig.sensorname].sensor.value))
         statuscode  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
 
         if(config.status[statuscode] ~= nil) then 
-            sensorT[tmpConfig.sensorname].text = config.status[statuscode].text;
+            SensorT[tmpConfig.sensorname].text = config.status[statuscode].text;
         else
-            sensorT[tmpConfig.sensorname].text = '';
+            SensorT[tmpConfig.sensorname].text = '';
         end
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
@@ -304,7 +306,7 @@ local function processStatus(tmpConfig, tmpSensorID)
         -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
         -- This should get rid of all annoying alarms
         if(statusChanged) then
-            alarmh.Message(config.status[statuscode].message, sensorT[tmpConfig.sensorname].text) -- we always show a message that will be logged on status changed
+            alarmh.Message(config.status[statuscode].message, SensorT[tmpConfig.sensorname].text) -- we always show a message that will be logged on status changed
             if(enableAlarm) then
                 -- ToDo: Implement repeat of alarm
                 alarmh.Haptic(config.status[statuscode].haptic)
@@ -312,7 +314,7 @@ local function processStatus(tmpConfig, tmpSensorID)
              end
          end
     else 
-        sensorT[tmpConfig.sensorname].text = "          -- "
+        SensorT[tmpConfig.sensorname].text = "          -- "
     end
 end
 
@@ -349,27 +351,27 @@ local function readParamsFromSensor(tmpSensorID)
     local countSensors      = 0
 
     for tmpSensorName, tmpSensorParam in pairs(config.converter.sensormap) do
-        if(tmpSensorParam > 0) then
-            --print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tmpSensorParam))
-            sensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
+        if(tonumber(tmpSensorParam) > 0) then
+            print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tonumber(tmpSensorParam)))
+            SensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
 
-            if(sensorT[tmpSensorName].sensor) then
+            if(SensorT[tmpSensorName].sensor) then
                 countSensors = countSensors + 1
 
-                if(sensorT[tmpSensorName].sensor.valid) then
+                if(SensorT[tmpSensorName].sensor.valid) then
                     countSensorsValid = countSensorsValid + 1
                 else 
                     -- The sensor exist, but is not valid yet.
-                    sensorT[tmpSensorName].sensor.value = 0
-                    sensorT[tmpSensorName].percent      = 0
+                    SensorT[tmpSensorName].sensor.value = 0
+                    SensorT[tmpSensorName].percent      = 0
                 end
             else
                 -- The sensor does not exist, ignore it. (not counting, no values)
             end
         else 
             -- Parm is zero, so this sensor does not exist for this converter, we fake it with zero values.
-            sensorT[tmpSensorName].sensor.value = 0
-            sensorT[tmpSensorName].percent      = 0
+            SensorT[tmpSensorName].sensor.value = 0
+            SensorT[tmpSensorName].percent      = 0
         end
     end
 
@@ -431,10 +433,10 @@ local function loop()
         processGeneric(config.ecuv,  SensorID)
 
         -- Check if converter has these sensor before processing them, since the availibility varies
-        if(sensorT.status.sensor) then
+        if(SensorT.status.sensor) then
             processStatus(config.status, SensorID)
         end
-        if(sensorT.rpm2.sensor) then
+        if(SensorT.rpm2.sensor) then
             processGeneric(config.rpm2,  SensorID)
         end
     end

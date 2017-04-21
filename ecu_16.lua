@@ -189,27 +189,27 @@ local function processGeneric(tmpConfig, tmpSensorID)
 
     print(string.format("sensorname : %s",tmpConfig.sensorname))
 
-    if(sensorT[tmpConfig.sensorname].sensor.valid) then
+    if(SensorT[tmpConfig.sensorname].sensor.valid) then
 
         -- We only enable the low alarms after they have passed the low threshold
-        if(sensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
+        if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
             alarmLowValuePassed[tmpConfig.sensorname] = true;
         end
 
         -- calculate percentage
-        sensorT[tmpConfig.sensorname].percent = ((sensorT[tmpConfig.sensorname].sensor.value - tmpConfig.low.value) / (tmpConfig.high    .value - tmpConfig.low.value)) * 100
+        SensorT[tmpConfig.sensorname].percent = ((SensorT[tmpConfig.sensorname].sensor.value - tmpConfig.low.value) / (tmpConfig.high    .value - tmpConfig.low.value)) * 100
 
         if(enableAlarm) then
             if(not alarmsTriggered[tmpConfig.sensorname]) then 
-                if(sensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
+                if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
                     alarmsTriggered[tmpConfig.sensorname] = true
                     alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, sensor.value, tmpConfig.high.value))
                     alarmh.Haptic(tmpConfig.high.haptic)
                     alarmh.Audio(tmpConfig.high.audio)
             
-                elseif(sensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
+                elseif(SensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
                     alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, sensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
+                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
                     alarmh.Haptic(tmpConfig.low.haptic)
                     alarmh.Audio(tmpConfig.low.audio)
                 end
@@ -226,14 +226,14 @@ local function processStatus(tmpConfig, tmpSensorID)
     local switch
     local statuscode  = ''
 
-    if(sensorT[tmpConfig.sensorname].sensor.valid) then
-        statusint    = string.format("%s", math.floor(sensorT[tmpConfig.sensorname].sensor.value))
+    if(SensorT[tmpConfig.sensorname].sensor.valid) then
+        statusint    = string.format("%s", math.floor(SensorT[tmpConfig.sensorname].sensor.value))
         statuscode  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
 
         if(config.status[statuscode] ~= nil) then 
-            sensorT[tmpConfig.sensorname].text = config.status[statuscode].text;
+            SensorT[tmpConfig.sensorname].text = config.status[statuscode].text;
         else
-            sensorT[tmpConfig.sensorname].text = '';
+            SensorT[tmpConfig.sensorname].text = '';
         end
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
@@ -253,7 +253,7 @@ local function processStatus(tmpConfig, tmpSensorID)
              end
          end
     else 
-        sensorT[tmpConfig.sensorname].text = "          -- "
+        SensorT[tmpConfig.sensorname].text = "          -- "
     end
 end
 
@@ -290,27 +290,28 @@ local function readParamsFromSensor(tmpSensorID)
     local countSensors      = 0
 
     for tmpSensorName, tmpSensorParam in pairs(config.converter.sensormap) do
-        if(tmpSensorParam > 0) then
-            --print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tmpSensorParam))
-            sensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
+        if(tonumber(tmpSensorParam) > 0) then
 
-            if(sensorT[tmpSensorName].sensor) then
+            --print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tmpSensorParam))
+            SensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
+
+            if(SensorT[tmpSensorName].sensor) then
                 countSensors = countSensors + 1
 
-                if(sensorT[tmpSensorName].sensor.valid) then
+                if(SensorT[tmpSensorName].sensor.valid) then
                     countSensorsValid = countSensorsValid + 1
                 else 
                     -- The sensor exist, but is not valid yet.
-                    sensorT[tmpSensorName].sensor.value = 0
-                    sensorT[tmpSensorName].percent      = 0
+                    SensorT[tmpSensorName].sensor.value = 0
+                    SensorT[tmpSensorName].percent      = 0
                 end
             else
                 -- The sensor does not exist, ignore it. (not counting, no values)
             end
         else 
             -- Parm is zero, so this sensor does not exist for this converter, we fake it with zero values.
-            sensorT[tmpSensorName].sensor.value = 0
-            sensorT[tmpSensorName].percent      = 0
+            SensorT[tmpSensorName].sensor.value = 0
+            SensorT[tmpSensorName].percent      = 0
         end
     end
 
@@ -370,10 +371,10 @@ local function loop()
         processGeneric(config.ecuv,  SensorID)
 
         -- Check if converter has these sensor before processing them, since the availibility varies
-        if(sensorT.status.sensor) then
+        if(SensorT.status.sensor) then
             processStatus(config.status, SensorID)
         end
-        if(sensorT.rpm2.sensor) then
+        if(SensorT.rpm2.sensor) then
             processGeneric(config.rpm2,  SensorID)
         end
     end
