@@ -26,13 +26,13 @@ sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one
 --SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
 
 SensorT = {
-    rpm         = {"..."},
-    rpm2        = {"..."},
-    egt         = {"..."},
-    pumpv       = {"..."},
-    ecuv        = {"..."},
-    fuellevel   = {"..."},
-    status      = {"..."}
+    ["rpm"]         = {"..."},
+    ["rpm2"]        = {"..."},
+    ["egt"]         = {"..."},
+    ["pumpv"]       = {"..."},
+    ["ecuv"]        = {"..."},
+    ["fuellevel"]   = {"..."},
+    ["status"]      = {"..."}
  }
 
 -- Locals for the application
@@ -246,7 +246,7 @@ end
 
 local function processGeneric(tmpConfig, tmpSensorID)
 
-    print(string.format("sensorname : %s",tmpConfig.sensorname))
+    --print(string.format("sensorname : %s",tmpConfig.sensorname))
 
     if(SensorT[tmpConfig.sensorname].sensor.valid) then
 
@@ -262,7 +262,7 @@ local function processGeneric(tmpConfig, tmpSensorID)
             if(not alarmsTriggered[tmpConfig.sensorname]) then 
                 if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
                     alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, sensor.value, tmpConfig.high.value))
+                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.high.value))
                     alarmh.Haptic(tmpConfig.high.haptic)
                     alarmh.Audio(tmpConfig.high.audio)
             
@@ -352,7 +352,8 @@ local function readParamsFromSensor(tmpSensorID)
 
     for tmpSensorName, tmpSensorParam in pairs(config.converter.sensormap) do
         if(tonumber(tmpSensorParam) > 0) then
-            print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tonumber(tmpSensorParam)))
+            --print(string.format("rsensor: %s : %s : %s", tmpSensorID, tmpSensorName, tonumber(tmpSensorParam)))
+            SensorT[tmpSensorName] = {"..."} -- Have to get rid of this, to get speed up.
             SensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
 
             if(SensorT[tmpSensorName].sensor) then

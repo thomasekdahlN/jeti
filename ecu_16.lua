@@ -187,7 +187,7 @@ end
 
 local function processGeneric(tmpConfig, tmpSensorID)
 
-    print(string.format("sensorname : %s",tmpConfig.sensorname))
+    --print(string.format("sensorname : %s",tmpConfig.sensorname))
 
     if(SensorT[tmpConfig.sensorname].sensor.valid) then
 
@@ -203,14 +203,12 @@ local function processGeneric(tmpConfig, tmpSensorID)
             if(not alarmsTriggered[tmpConfig.sensorname]) then 
                 if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
                     alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, sensor.value, tmpConfig.high.value))
-                    alarmh.Haptic(tmpConfig.high.haptic)
+                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.high.value))
                     alarmh.Audio(tmpConfig.high.audio)
             
                 elseif(SensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
                     alarmsTriggered[tmpConfig.sensorname] = true
                     alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
-                    alarmh.Haptic(tmpConfig.low.haptic)
                     alarmh.Audio(tmpConfig.low.audio)
                 end
             end
@@ -291,8 +289,8 @@ local function readParamsFromSensor(tmpSensorID)
 
     for tmpSensorName, tmpSensorParam in pairs(config.converter.sensormap) do
         if(tonumber(tmpSensorParam) > 0) then
-
-            --print(string.format("sensor: %s : %s : %s", tmpSensorID, tmpSensorName, tmpSensorParam))
+            --print(string.format("rsensor: %s : %s : %s", tmpSensorID, tmpSensorName, tonumber(tmpSensorParam)))
+            SensorT[tmpSensorName] = {"..."} -- Have to get rid of this, to get speed up.
             SensorT[tmpSensorName].sensor = system.getSensorByID(tmpSensorID, tonumber(tmpSensorParam))
 
             if(SensorT[tmpSensorName].sensor) then
