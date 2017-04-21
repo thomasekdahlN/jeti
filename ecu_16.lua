@@ -369,11 +369,15 @@ local function loop()
         processGeneric(config.ecuv,  SensorID)
 
         -- Check if converter has these sensor before processing them, since the availibility varies
-        if(SensorT.status.sensor) then
-            processStatus(config.status, SensorID)
+        if(config.converter.sensormap.status > 0) then
+            if(SensorT.status.sensor) then
+                processStatus(config.status, SensorID)
+            end
         end
-        if(SensorT.rpm2.sensor) then
-            processGeneric(config.rpm2,  SensorID)
+        if(config.converter.sensormap.rpm2 > 0) then
+            if(SensorT.rpm2.sensor) then
+                processGeneric(config.rpm2,  SensorID)
+            end
         end
     end
 end

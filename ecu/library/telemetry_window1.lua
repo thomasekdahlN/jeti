@@ -67,30 +67,18 @@ local function DrawBattery(u_pump, u_ecu, ox, oy)
 end
 
 ----------------------------------------------------------------------
-local function DrawFuelLow(ox, oy) 
+local function DrawFuelLow(percentage, ox, oy) 
 
   if( system.getTime() % 2 == 0) then -- blink every second
     -- triangle
-  lcd.drawLine(6+ox,47+oy,32+ox,3+oy)
-  lcd.drawLine(32+ox,3+oy,45+ox,47+oy)
-  lcd.drawLine(60+ox,47+oy,6+ox,47+oy)
-
-  lcd.drawLine(7+ox,47+oy,33+ox,3+oy)
-  lcd.drawLine(33+ox,3+oy,45+ox,47+oy)
-  lcd.drawLine(61+ox,46+oy,6+ox,46+oy)
-
-  lcd.drawLine(8+ox,47+oy,34+ox,3+oy)
-  lcd.drawLine(34+ox,3+oy,45+ox,47+oy)
-  lcd.drawLine(62+ox,46+oy,8+ox,46+oy)
-  lcd.drawText(31+ox,10+oy, "!", FONT_BIG)  
+    lcd.drawLine(21+ox,5+oy,2+ox,35+oy)
+    lcd.drawLine(2+ox,35+oy,41+ox,35+oy)
+    lcd.drawLine(41+ox,35+oy,21+ox,5+oy)
+    lcd.drawText(20+ox,11+oy, "!", FONT_BIG)  
   end  
   
   -- percentage and warning
-  local percentX = 20
-  if( SensorT.fuellevel.percent < 10 ) then percentX = 23 end
-  lcd.drawText(percentX+ox,28+oy, string.format("%d%s",SensorT.fuellevel.percent,"%"), FONT_BOLD)  
-  lcd.drawText(1+ox,49+oy, "Low", FONT_BOLD)  
-  
+  lcd.drawText(1+ox,49+oy, string.format("%s%s",tonumber(percentage),"%"), FONT_BOLD)    
 end
 
 ----------------------------------------------------------------------
@@ -102,7 +90,7 @@ function telemetry_window1.window(width, height)
       lcd.drawLine(45,2,45,66)  
       lcd.drawLine(45,36,148,36)  
 
-      if(SensorT.fuellevel.sensor) then
+      if(config.converter.sensormap.fuellevel) then
         if(SensorT.fuellevel.percent > config.fuellevel.warning.value) then
           DrawFuelGauge(SensorT.fuellevel.percent, 1, 0)   
         else
@@ -111,7 +99,7 @@ function telemetry_window1.window(width, height)
       end
 
       -- turbine
-      if(SensorT.status.sensor) then
+      if(config.converter.sensormap.status) then
         DrawTurbineStatus(SensorT.status.text, 50, 0)
       end
 

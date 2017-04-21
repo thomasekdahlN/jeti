@@ -16,7 +16,7 @@ local loadh      = require "library/loadhelper"
 local tableh     = require "library/tablehelper"
 local alarmh     = require "library/alarmhelper"
 local sensorh    = require "library/sensorhelper"
---local fake       = require "library/fakesensor"
+local fake       = require "library/fakesensor"
 local telemetry1 = require "ecu/library/telemetry_window1"
 local telemetry2 = require "ecu/library/telemetry_window2"
 
@@ -50,7 +50,7 @@ local alarmLowValuePassed = { -- enables alarms that has passed the low treshold
     egt         = false,
     pumpv       = false,
     ecuv        = true,
-    fuellevel   = true,  -- in ml from ecu
+    fuellevel   = false,  -- in ml from ecu
     status      = true
 }
 
@@ -210,14 +210,19 @@ local function processFueltank(tmpConfig, tmpSensorID)
 
         initFuelStatistics(tmpConfig) -- Important
 
+        -- We only enable the low alarms after they have passed the low threshold
+        if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.warning.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
+            alarmLowValuePassed[tmpConfig.sensorname] = true;
+        end
+
         -- Repeat fuel level audio at intervals
-        if(SensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel) then
+        if(SensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpConfig.sensorname]) then
             prevFuelLevel = prevFuelLevel - tmpConfig.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
             system.playNumber(prevFuelLevel / 1000, tmpConfig.decimals, tmpConfig.unit, tmpConfig.label) -- Read out the numbers from the interval, not the value - to get better clearity
         end
         
         -- Check for alarm thresholds
-        if(enableAlarm) then
+        if(enableAlarm and alarmLowValuePassed[tmpConfig.sensorname]) then
             if(not alarmsTriggered[tmpConfig.sensorname]) then
                 if(SensorT[tmpConfig.sensorname].percent < tmpConfig.critical.value) then
 
@@ -247,8 +252,7 @@ end
 local function processGeneric(tmpConfig, tmpSensorID)
 
     --print(string.format("sensorname : %s",tmpConfig.sensorname))
-
-    if(SensorT[tmpConfig.sensorname].sensor.valid) then
+    if(SensorT[tmpConfig.sensorname].sensor and SensorT[tmpConfig.sensorname].sensor.valid) then
 
         -- We only enable the low alarms after they have passed the low threshold
         if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
@@ -419,8 +423,7 @@ end
 -- Loop has to be the last function, so every other function is initialized
 local function loop()
 
-    --fake.makeSensorValues()
-
+    fake.makeSensorValues()
     if(SensorID ~= 0) then
         resetAlarmCounter()
         enableAlarmCheck()
@@ -434,10 +437,10 @@ local function loop()
         processGeneric(config.ecuv,  SensorID)
 
         -- Check if converter has these sensor before processing them, since the availibility varies
-        if(SensorT.status.sensor) then
+        if(config.converter.sensormap.status) then
             processStatus(config.status, SensorID)
         end
-        if(SensorT.rpm2.sensor) then
+        if(config.converter.sensormap.rpm2) then
             processGeneric(config.rpm2,  SensorID)
         end
     end

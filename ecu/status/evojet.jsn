@@ -1,19 +1,273 @@
-// Not finished config
 {
     "sensorname": "status",
-    "-30"   : "- ERROR -",
-    "-20"   : "TH: -off",
-    "-10"   : "TH: cool",
-    "-1"    : "TH: lock",
-    "0"     : "TH: stop",
-    "10"    : "TH: run-",
-    "20"    : "TH: rel-",
-    "25"    : "TH: glow",
-    "30"    : "TH: spin",
-    "40"    : "TH: fire",
-    "45"    : "TH: ignt",
-    "50"    : "TH: heat",
-    "60"    : "TH: acce",
-    "65"    : "TH: cal.",
-    "70"    : "TH: idel"
+    "- ERROR -"   : {
+        "text"      : "- ERROR -",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: -off"   : {
+        "text"      : "TH: -off",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: cool"   : {
+        "text"      : "TH: cool",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: lock"   : {
+        "text"      : "TH: lock",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: stop"   : {
+        "text"      : "TH: stop",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: run-"   : {
+        "text"      : "TH: run-",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: rel-"   : {
+        "text"      : "TH: rel-",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: glow"   : {
+        "text"      : "TH: glow",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: spin"   : {
+        "text"      : "TH: spin",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: fire"   : {
+        "text"      : "TH: fire",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: ignt"   : {
+        "text"      : "TH: ignt",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: heat"   : {
+        "text"      : "TH: heat",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: acce"   : {
+        "text"      : "TH: acce",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: cal."   : {
+        "text"      : "TH: cal.",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "TH: idel"   : {
+        "text"      : "TH: idel",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : ""
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    }
 }
