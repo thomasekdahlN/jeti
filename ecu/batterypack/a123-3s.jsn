@@ -22,7 +22,7 @@
     },
     "low"   : {
         "text"      : "ECU Battery low",
-        "value"     : 7.5,
+        "value"     : 9,
         "message"   : {
             "enable" : true,
             "seconds": 5

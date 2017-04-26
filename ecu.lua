@@ -384,9 +384,11 @@ local function readParamsFromSensor(tmpSensorID)
     if(countSensorsValid == countSensors) then
         sensorsOnline   = 1
 
-    elseif(sensorsOnline == 1) then -- Only trigger if all sensors has been online
+    elseif(sensorsOnline == 1 and enableAlarm and not alarmsTriggered.offline) then -- Only trigger if all sensors has been online
         -- If the valid number of sensors is not equal to the configured number of sensors, the ECU is somehow offline
         -- Will only trigger again if it goes online again and then offline again. Will not repeat.
+        alarmsTriggered.offline = true
+
         print(string.format("SensorsOffline: %s valid: %s", countSensors, countSensorsValid))
         sensorsOnline   = -1
         system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 10)
