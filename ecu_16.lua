@@ -17,12 +17,14 @@ local config          = {"..."} -- Complete turbine config object dynamically as
 --SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
 
 SensorT = {
-    rpm    = {"..."},
-    egt    = {"..."},
-    pumpv  = {"..."},
-    ecuv   = {"..."},
-    fuel   = {"..."},
-    status = {"..."}
+    rpm      = {"..."},
+    rpm2     = {"..."},
+    egt      = {"..."},
+    pumpv    = {"..."},
+    ecuv     = {"..."},
+    fuel     = {"..."},
+    throttle = {"..."},
+    status   = {"..."}
  }
 
 -- Locals for the application
@@ -216,11 +218,11 @@ function window(width, height)
         if(config.converter.sensormap.status and SensorT.status.text) then
             DrawTurbineStatus(SensorT.status.text, 50, 0)
         else
-            DrawTurbineStatus("OFFLINE", 50, 0)
+            DrawTurbineStatus("UNCONFIGURED", 50, 0)
         end
 
       -- battery
-      if(SensorT.pumpv.sensor.value and SensorT.ecuv.sensor.value) then
+      if(config.converter.sensormap.pumpv and SensorT.pumpv.sensor.value and SensorT.ecuv.sensor.value) then
           DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
       end
 end
@@ -421,40 +423,31 @@ end
 ----------------------------------------------------------------------
 -- 
 local function processStatus(tmpCfg, tmpSensorID)
-    local statusChanged = false
     local statusint     = 0 -- sensor statusid
     local switch
-    local statuscode  = ''
 
     if(SensorT[tmpCfg.sensorname].sensor.valid) then
         statusint    = string.format("%s", math.floor(SensorT[tmpCfg.sensorname].sensor.value))
-        statuscode  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
+        SensorT[tmpCfg.sensorname].text  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
 
-        if(config.status[statuscode] ~= nil) then 
-            SensorT[tmpCfg.sensorname].text = statuscode;
-        else
-            SensorT[tmpCfg.sensorname].text = '';
-        end
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
-        if(prevStatusID ~= statuscode) then
-            print(string.format("statusint %s", statusint))
-            print(string.format("Status changed %s != %s", prevStatusID, statuscode))
-            statusChanged = true
+        if(prevStatusID ~= SensorT[tmpCfg.sensorname].text) then
+            print(string.format("statusint #%s#", statusint))
+            print(string.format("Status changed #%s# != #%s# (#%s#)", prevStatusID, SensorT[tmpCfg.sensorname].text, statusint))
+
+            system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- we always show a message that will be logged on status changed
+            print(string.format("TurbineType:   %s", TurbineType))
+            print(string.format("TurbineStatus: %s", SensorT[tmpCfg.sensorname].text))
+            print(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text))
+            system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
         end 
-        prevStatusID = statuscode
+        prevStatusID = SensorT[tmpCfg.sensorname].text
         -------------------------------------------------------------
         -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
         -- This should get rid of all annoying alarms
-        if(statusChanged) then
-            system.messageBox(statuscode, 5) -- we always show a message that will be logged on status changed
-            if(enableAlarm) then
-                -- ToDo: Implement repeat of alarm
-                system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, statuscode),AUDIO_IMMEDIATE)
-             end
-         end
     else 
-        SensorT[tmpCfg.sensorname].text = "          -- "
+        SensorT[tmpCfg.sensorname].text = "OFFLINE"
     end
 end
 
@@ -507,7 +500,7 @@ local function readParamsFromSensor(tmpSensorID)
                 -- The sensor does not exist, ignore it. (not counting, no values)
             end
         else 
-            -- Parm is zero, so this sensor does not exist for this converter, we fake it with zero values.
+            -- Param is zero, so this sensor does not exist for this converter, we fake it with zero values.
             SensorT[tmpSensorName].sensor.value = 0
             SensorT[tmpSensorName].percent      = 0
         end
