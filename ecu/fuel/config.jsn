@@ -1,5 +1,5 @@
 {
-    "sensorname": "fuellevel",
+    "sensorname": "fuel",
     "tanksize" : 0,
     "decimals"  : 1,
     "unit"      : "l",

@@ -1,0 +1,22 @@
+{
+    "0"   : "Trim Low",
+    "1"   : "Ready",
+    "2"   : "Sticklo!",
+    "3"   : "Start on",
+    "4"   : "Ignition",
+    "5"   : "Preheat",
+    "6"   : "Fuelramp",
+    "7"   : "Running",
+    "8"   : "Stop",
+    "9"   : "Cooling",
+    "10"   : "Glow Bad",
+    "11"   : "Startbad",
+    "12"   : "High Temp",
+    "13"   : "Flameout",
+    "14"   : "Primevap",
+    "15"   : "Stage 1",
+    "16"   : "Stage 2",
+    "17"   : "Stage 3",
+    "18"   : "Unknown",
+    "19"   : "Unknown"        
+}

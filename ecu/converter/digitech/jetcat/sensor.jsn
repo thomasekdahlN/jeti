@@ -1,9 +1,11 @@
 {
-    "rpm"       : "2",
-    "rpm2"      : "9",
-    "egt"       : "1",
-    "pumpv"     : "4",
-    "ecuv"      : "5",
-    "fuellevel" : "6",
-    "status"    : "3"
+    "fuel"     : "1",
+    "rpm"      : "2",
+    "egt"      : "3",
+    "speed"    : "4",
+    "ecuv"     : "5",
+    "pumpv"    : "6",
+    "throttle" : "7",
+    "rpm2"     : "8",
+    "status"   : "9"
 }

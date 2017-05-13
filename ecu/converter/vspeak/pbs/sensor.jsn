@@ -1,10 +1,10 @@
 {
-    "egt"       : "1",
-    "rpm"       : "2",
-    "throttle"  : "3",
-    "pumpv"     : "4",
-    "ecuv"      : "5",
-    "fuellevel" : "6",
-    "fuelflow"  : "7",
-    "status"    : "8"
+    "egt"      : "1",
+    "rpm"      : "2",
+    "throttle" : "3",
+    "pumpv"    : "4",
+    "ecuv"     : "5",
+    "fuel"     : "6",
+    "fuelflow" : "7",
+    "status"   : "8"
 }

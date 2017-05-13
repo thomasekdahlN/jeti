@@ -1,0 +1,30 @@
+{
+    "rpm" : {
+        "sensorname": "rpm",
+        "high" : 180000,
+        "low"  : 43000
+    },
+    "rpm2" : {
+        "sensorname": "rpm2",
+        "high" : 8000,
+        "low"  : 1000
+    },
+    "ecuv" : {
+        "sensorname": "ecuv",
+        "high" : 12.6,
+        "low"  : 6
+    },
+    "egt" : {
+        "sensorname": "egt",
+        "high" : 750,
+        "low"  : 150
+    },
+    "pumpv" : {
+        "sensorname": "pumpv",
+        "high" : 2.5,
+        "low"  :0.2
+    },
+    "status" : {
+        "sensorname": "status"
+    }
+}

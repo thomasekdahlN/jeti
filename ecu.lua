@@ -12,13 +12,14 @@
 -- # 0.9 - Initial release
 -- ############################################################################# 
 
-local loadh      = require "library/loadhelper"
-local tableh     = require "library/tablehelper"
-local alarmh     = require "library/alarmhelper"
-local sensorh    = require "library/sensorhelper"
-local fake       = require "library/fakesensor"
-local telemetry1 = require "ecu/library/telemetry_window1"
-local telemetry2 = require "ecu/library/telemetry_window2"
+local loadh      = require "ecu/lib/loadhelper"
+local tableh     = require "ecu/lib/tablehelper"
+local alarmh     = require "ecu/lib/alarmhelper"
+local sensorh    = require "ecu/lib/sensorhelper"
+local fake       = require "ecu/lib/fakesensor"
+local telemetry1 = require "ecu/lib/telemetry_window1"
+local telemetry2 = require "ecu/lib/telemetry_window2"
+local telemetry4 = require "ecu/lib/telemetry_window4"
 
 -- Globals to be accessible also from libraries
 config          = {"..."} -- Complete turbine config object dynamically assembled
@@ -26,13 +27,13 @@ sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one
 --SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
 
 SensorT = {
-    ["rpm"]         = {"..."},
-    ["rpm2"]        = {"..."},
-    ["egt"]         = {"..."},
-    ["pumpv"]       = {"..."},
-    ["ecuv"]        = {"..."},
-    ["fuellevel"]   = {"..."},
-    ["status"]      = {"..."}
+    ["rpm"]    = {"..."},
+    ["rpm2"]   = {"..."},
+    ["egt"]    = {"..."},
+    ["pumpv"]  = {"..."},
+    ["ecuv"]   = {"..."},
+    ["fuel"]   = {"..."},
+    ["status"] = {"..."}
  }
 
 -- Locals for the application
@@ -45,13 +46,13 @@ local lang              = {"..."} -- Language read from file
 local alarmsTriggered   = {"..."} -- true on the alarm triggered, used to not repeat alarms to often
 
 local alarmLowValuePassed = { -- enables alarms that has passed the low treshold, to not get alarms before turbine is running properly. Status alarms, high alarms, fuel alarms , and ecu voltage alarms is always enabled.
-    rpm         = false,
-    rpm2        = false,
-    egt         = false,
-    pumpv       = false,
-    ecuv        = true,
-    fuellevel   = false,  -- in ml from ecu
-    status      = true
+    rpm    = false,
+    rpm2   = false,
+    egt    = false,
+    pumpv  = false,
+    ecuv   = true,
+    fuel   = false,  -- in ml from ecu
+    status = true
 }
 
 local SensorID              = 0
@@ -132,7 +133,9 @@ local function initForm(subform)
     -- make all the dynamic menu items
     local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, BatteryConfigIndex, SensorIndex = 1,1,1,1,1
     local SensorMenuT = {"..."}
-    SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorTable(SensorID)
+    -- SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorTable(SensorID) -- Returns only sensor names
+    SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorParamTable(SensorID) -- Returns all sensors with param valuye
+
     collectgarbage()
 
     ConverterTypeTable, ConverterTypeIndex  = tableh.fromDirectory("Apps/ecu/converter", ConverterType)
@@ -392,7 +395,7 @@ local function readParamsFromSensor(tmpSensorID)
         print(string.format("SensorsOffline: %s valid: %s", countSensors, countSensorsValid))
         sensorsOnline   = -1
         system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 10)
-        system.playFile("/Apps/ecu/audio/ECU reboot.wav",AUDIO_IMMEDIATE)
+        system.playFile("/Apps/ecu/audio/generic/ECU reboot.wav",AUDIO_IMMEDIATE)
         system.vibration(false, 4);
     end
 end
@@ -414,7 +417,8 @@ local function init()
     loadConfig()
 
     system.registerTelemetry(1, string.format("%s", lang.window2),2,telemetry2.window)
-    system.registerTelemetry(2, lang.window1, 2, telemetry1.window)  
+    --system.registerTelemetry(2, lang.window1, 2, telemetry1.window)  
+    system.registerTelemetry(2, "ECU large", 4, telemetry4.window)  
 
     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     collectgarbage()

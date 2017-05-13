@@ -1,0 +1,417 @@
+{
+    "sensorname": "status",
+    "DEV.DELAY"   : {
+        "text"      : "DEV.DELAY",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Device delay.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "FLAME OUT"   : {
+        "text"      : "FLAME OUT",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Flameout.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "EMERGENCY"   : {
+        "text"      : "EMERGENCY",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Emergency.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "OFF"   : {
+        "text"      : "OFF",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Off.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "ARMED"   : {
+        "text"      : "ARMED",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Armed.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "COOL-DOWN"   : {
+        "text"      : "COOL-DOWN",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Cool down.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "SLOW DOWN"   : {
+        "text"      : "SLOW DOWN",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Slow down.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "STANDBY"   : {
+        "text"      : "STANDBY",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Standby.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "PROP IGNIT"   : {
+        "text"      : "PROP IGNIT",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "ignition on.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "PROP-HEAT"   : {
+        "text"      : "PROP-HEAT",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Preheat1.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "PUMPSTART"   : {
+        "text"      : "PUMPSTART",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Pump start.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "BURNER ON"   : {
+        "text"      : "BURNER ON",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Burner on.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "FUELIGNIT"   : {
+        "text"      : "FUELIGNIT",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Fuel ignition.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "FUELHEAT"   : {
+        "text"      : "FUELHEAT",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Fuel heat.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "RAMP DELAY"   : {
+        "text"      : "RAMP DELAY",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Ramp delay.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "RAMP-UP"   : {
+        "text"      : "RAMP-UP",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Ramp up.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "STEADYB"   : {
+        "text"      : "STEADYB",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Steady.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "CAL IDLE"   : {
+        "text"      : "CAL IDLE",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Idle.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "CALIBRATE"   : {
+        "text"      : "CALIBRATE",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Calibrate idle.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "WAIT ACC"   : {
+        "text"      : "WAIT ACC",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Wait acceleration.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "GO IDLE"   : {
+        "text"      : "GO IDLE",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Go idle.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "AUTO"   : {
+        "text"      : "AUTO",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Auto.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "AUTO Heat Control"   : {
+        "text"      : "AUTO Heat Control",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Auto heat control.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    }
+}

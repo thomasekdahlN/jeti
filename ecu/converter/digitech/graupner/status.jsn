@@ -1,0 +1,15 @@
+{      
+    "0"  : "Lock",
+    "1"  : "Stop",
+    "2"  : "Run",
+    "3"  : "Rel",
+    "4"  : "Glow",
+    "5"  : "Spin",
+    "6"  : "Heat",
+    "7"  : "Accel",
+    "8"  : "Calibration",
+    "9"  : "Idle",
+    "10" : "Off",
+    "11" : "Cool",
+    "12" : "Unknown"
+}
