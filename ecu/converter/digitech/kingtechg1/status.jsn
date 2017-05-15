@@ -21,5 +21,6 @@
     "19" : "Ignition Fail",  
     "20" : "Ignitor Bad",         
     "21" : "Battery Low",         
-    "22" : "Unknown"
+    "22" : "Unknown",
+    "23" : "Unknown"
 }

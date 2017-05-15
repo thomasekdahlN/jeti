@@ -438,13 +438,14 @@ local function processStatus(tmpCfg, tmpSensorID)
         -- Check if status is changed since the last time
         if(prevStatusID ~= SensorT[tmpCfg.sensorname].text) then
             print(string.format("statusint #%s#", statusint))
-            print(string.format("Status changed #%s# != #%s# (#%s#)", prevStatusID, SensorT[tmpCfg.sensorname].text, statusint))
 
-            system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- we always show a message that will be logged on status changed
-            print(string.format("TurbineType:   %s", TurbineType))
-            print(string.format("TurbineStatus: %s", SensorT[tmpCfg.sensorname].text))
-            print(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text))
-            system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
+            if(SensorT[tmpCfg.sensorname].text) then
+                system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- we always show a message that will be logged on status changed
+                print(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text))
+                system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
+            else
+                system.messageBox(string.format("Unmapped status int: %s", statusint), 5) -- we always show a message that will be logged on status changed
+            end
         end 
         prevStatusID = SensorT[tmpCfg.sensorname].text
         -------------------------------------------------------------
