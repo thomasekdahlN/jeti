@@ -82,8 +82,10 @@ function fromDirectory(path, choice)
         if(filetype == "folder" and string.sub(name, 1, 1) ~= ".") then
             table.insert(tmpTable, name)
 
-            if(name == choice) then
-                tmpIndex=#tmpTable
+            if (choice) then
+                if(name == choice) then
+                    tmpIndex=#tmpTable
+                end
             end
         end
     end
@@ -106,8 +108,10 @@ function fromFiles(path, choice)
         if(string.sub(name, -3, -1) == "jsn" and string.sub(name, 1, 1) ~= ".") then
             table.insert(tmpTable, string.sub(name, 1, -5))
             
-            if(string.sub(name, 1, -5) == choice) then
-                tmpIndex=#tmpTable
+            if (choice) then
+                if(string.sub(name, 1, -5) == choice) then
+                    tmpIndex=#tmpTable
+                end
             end
         end
     end
@@ -246,7 +250,7 @@ local function ConverterTypeChanged(value)
     ConverterType  = ConverterTypeTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
     print(string.format("ConverterTypeSave %s = %s", value, ConverterType))
     system.pSave("ConverterType",  ConverterType)
-    TurbineTypeTable    = fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType))
+    TurbineTypeTable    = fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType), nil)
 end
 
 ----------------------------------------------------------------------
@@ -254,7 +258,7 @@ end
 local function TurbineTypeChanged(value)
     TurbineType  = TurbineTypeTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
     system.pSave("TurbineType", TurbineType)
-    TurbineConfigTable  = fromFiles(string.format("Apps/ecu/turbine/%s", TurbineType))
+    TurbineConfigTable  = fromFiles(string.format("Apps/ecu/turbine_16/%s", TurbineType), nil)
 end
 
 ----------------------------------------------------------------------
