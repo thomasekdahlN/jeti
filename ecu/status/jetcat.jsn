@@ -621,7 +621,7 @@
          "audio" : {
              "enable"    : true,
              "repeat"    : 1,
-             "file"      : "Switch off.wav"
+             "file"      : "SwitchOff.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -630,8 +630,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "Stby/START"   : {
-        "text"      : "Stby/START",
+    "StbySTART"   : {
+        "text"      : "StbySTART",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -639,7 +639,7 @@
          "audio" : {
              "enable"    : true,
              "repeat"    : 1,
-             "file"      : "Standby start.wav"
+             "file"      : "StbySTART.wav"
          },
          "haptic"    : {
              "enable"    : false,

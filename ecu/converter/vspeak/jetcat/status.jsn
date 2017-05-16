@@ -35,7 +35,7 @@
     "0"     : "-OFF-",
     "1"     : "SlowDown",
     "2"     : "SwitchOff",
-    "3"     : "Stby/START",
+    "3"     : "StbySTART",
     "4"     : "PreHeat1",
     "5"     : "PreHeat2",
     "6"     : "Ignite...",
