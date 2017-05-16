@@ -5,7 +5,7 @@ NOTE: You do not have to edit configuration files, standard config files for you
 
 NOTE II: ecu_16.lc is the most recently maintained. A lot of configuration has been sacrifised for convention - to save enough memory to make it run on -16 transmitters.
 
-Now supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter and jetcat ecu converter.
+Now supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter, jetcat ecu converter and experimental support for CB-Electroniks and Xicoy converters (needs testers).
 
 Only works with Jeti transmitter FW 4.22. 
 
