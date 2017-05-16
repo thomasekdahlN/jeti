@@ -25,21 +25,26 @@ Only works with Jeti transmitter FW 4.22.
 Developers, testers and helpers wanted. PM me.
 
 #Now supporting the following ecu converters and turbines:
-- Vspeak FW 1.0 - JetCat
-- Vspeak FW 2.2 - Hornet
-- Vspeak FW 2.1 - Jakadofsky
-- Vspeak FW 2.1 - evoJet / Pahl 
-- Vspeak FW 1.1 - PBS
-- Digitech - Evojet
-- Digitech - Graupner G-Booster
-- Digitech - Hammer
-- Digitech - Hornet
-- Digitech - JetCat
-- Digitech - Kingtech g1
-- Digitech - Kingtech g2
-- Digitech - Lambert
-- Digitech - Xicoy v6
-- Digitech - Xicoy v10
+- Vspeak - FW 1.0 - JetCat
+- Vspeak - FW 2.2 - Hornet
+- Vspeak - FW 2.1 - Jakadofsky
+- Vspeak - FW 2.1 - evoJet / Pahl 
+- Vspeak - FW 1.1 - PBS
+- Digitech - FW 1.2 - Evojet
+- Digitech - FW 1.2  - Graupner G-Booster
+- Digitech - FW 1.2  - Hammer
+- Digitech - FW 1.2  - Hornet
+- Digitech - FW 1.2  - JetCat
+- Digitech - FW 1.2  - Kingtech g1
+- Digitech - FW 1.2  - Kingtech g2
+- Digitech - FW 1.2  - Lambert
+- Digitech - FW 1.2  - Xicoy v6
+- Digitech - FW 1.2  - Xicoy v10
+- CB-Electroniks - FW ??  - Xicoy v10 (Experimental)
+- CB-Electroniks - FW ??  - Xicoy v6 (Experimental)
+- CB-Electroniks - FW ??  - JetCat (Experimental)
+- Xicoy - FW ??  - Xicoy v6 (Experimental)
+- Xicoy - FW ??  - Xicoy v10 (Experimental)
 - Orbit 
 
 - Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config. Config files are read dynamically from ecu folder.
