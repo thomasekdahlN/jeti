@@ -1,0 +1,22 @@
+{
+    "0"  : "-OFF-",
+    "1"  : "Standby",
+    "2"  : "Ignite...",
+    "3"  : "Accelerate",
+    "4"  : "Stabilise",
+    "5"  : "Learn Hi",
+    "6"  : "LearnLO",
+    "7"  : "(7)",
+    "8"  : "SlowDown",
+    "9"  : "(9)",
+    "10" : "Auto-Off",
+    "11" : "RUN (reg.)",
+    "12" : "AccelrDly",
+    "13" : "SpeedCtrl",
+    "14" : "TS-Reg",
+    "15" : "PreHeat1",
+    "16" : "PreHeat2",
+    "17" : "MainFStrt",
+    "18" : "(18)",
+    "19" : "Keros.Full"        
+}
