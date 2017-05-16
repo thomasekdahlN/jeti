@@ -96,6 +96,7 @@ Telemetry display visual
 - Fuel gauge, pump volt, ECU volt and status double window , code borrowed from "ECU data display" for Orbit made by Bernd Woköck
 - Battery gauge, RPM, RPM2, EGT and status double window , code borrowed from "ECU data display" for Orbit made by Bernd Woköck (not for -16)
 - Experimental RPM and TEMP round gauge (very cool, but not tested) (not for -16)
+- Experimental full screen GUI (Only for -24)
 
 Thinking of implementing:
 - Warning if you try to shutdown turbine while it is too hot (if possible to implement)
