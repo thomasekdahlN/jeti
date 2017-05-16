@@ -5,7 +5,5 @@
     "speed"    : "4",
     "ecuv"     : "5",
     "pumpv"    : "6",
-    "throttle" : "7",
-    "rpm2"     : "8",
-    "status"   : "9"
+    "throttle" : "7"
 }
