@@ -195,7 +195,7 @@ end
 
 ----------------------------------------------------------------------
 --
-function telemetry_window4.window(width, height) 
+function telemetry_window4.show(width, height) 
     local xcg1  = 5
     local xcg2  = tonumber((width / 2))
     local yc    = tonumber((height / 3) + 20)

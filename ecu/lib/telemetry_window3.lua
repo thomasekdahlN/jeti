@@ -12,7 +12,7 @@
 local telemetry_window3 = {}
 ----------------------------------------------------------------------
 --
-function telemetry_window3.window(width, height) 
+function telemetry_window3.show(width, height) 
     local xcg1  = 5
     local xcg2  = tonumber((width / 2))
     local yc    = tonumber((height / 3) + 20)

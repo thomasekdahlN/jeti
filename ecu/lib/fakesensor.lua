@@ -20,7 +20,7 @@ function fakesensor.makeSensorValues()
   SensorT.rpm              = {"..."}
   SensorT.rpm2             = {"..."}
   SensorT.egt              = {"..."}
-  SensorT.fuellevel        = {"..."}
+  SensorT.fuel             = {"..."}
   SensorT.ecuv             = {"..."}
   SensorT.pumpv            = {"..."}
   SensorT.status           = {"..."}
@@ -28,13 +28,13 @@ function fakesensor.makeSensorValues()
   SensorT.rpm.sensor       = {"..."}
   SensorT.rpm2.sensor      = {"..."}
   SensorT.egt.sensor       = {"..."}
-  SensorT.fuellevel.sensor = {"..."}
+  SensorT.fuel.sensor      = {"..."}
   SensorT.ecuv.sensor      = {"..."}
   SensorT.pumpv.sensor     = {"..."}
   SensorT.status.sensor    = {"..."}
 
   -- Should have a random number generator here.
-  if(system.getTime() % 10 == 0) then
+  if(system.getTime() % 5 == 0) then
     SensorT.rpm.sensor.value  = 121239
     SensorT.rpm.sensor.max    = 156693
 
@@ -44,9 +44,9 @@ function fakesensor.makeSensorValues()
     SensorT.egt.sensor.value  = 634
     SensorT.egt.sensor.max    = 856
 
-    SensorT.fuellevel.sensor.value  = 0
-    SensorT.fuellevel.sensor.max    = 2501
-    SensorT.fuellevel.percent       = 70
+    SensorT.fuel.sensor.value  = 0
+    SensorT.fuel.sensor.max    = 2501
+    SensorT.fuel.percent       = 70
 
     SensorT.ecuv.sensor.value  = 7.1
     SensorT.ecuv.sensor.max    = 7.6
@@ -68,9 +68,9 @@ function fakesensor.makeSensorValues()
     SensorT.egt.sensor.value  = 435
     SensorT.egt.sensor.max    = 757
 
-    SensorT.fuellevel.sensor.value  = 2501
-    SensorT.fuellevel.sensor.max    = 2501
-    SensorT.fuellevel.percent       = 30
+    SensorT.fuel.sensor.value  = 2501
+    SensorT.fuel.sensor.max    = 2501
+    SensorT.fuel.percent       = 30
 
     SensorT.ecuv.sensor.value  = 7.0
     SensorT.ecuv.sensor.max    = 7.5

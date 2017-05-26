@@ -54,6 +54,7 @@ local TurbineConfigTable    = {"..."}   -- Array with all available config field
 local TurbineConfig         = "generic"  -- the turbine config file chosen
 
 local BatteryConfigTable    = {"..."}   -- Array with all available config fields
+local BatteryConfig         = "life-2s"  -- the battery config file chosen
 
 function fileJson(filename)
     local structure
@@ -196,7 +197,7 @@ local function DrawFuelGauge(percentage, ox, oy)
     end  
     --  fractional bar
     local y = math.floor( 53-nSolidBar*12+(1-nFracBar)*11 + 0.5)
-    --lcd.drawFilledRectangle (5+ox,y+oy,25,11*nFracBar) -- FIX THIS
+    lcd.drawFilledRectangle (5+ox,y+oy,25,11*nFracBar)
 end
 local function DrawTurbineStatus(status, ox, oy) 
     lcd.drawText(4+ox,2+oy, "Turbine", FONT_MINI)  
@@ -237,7 +238,7 @@ function window(width, height)
             DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
         end
     else
-        DrawTurbineStatus("NO SENSOR", 50, 0)
+        DrawTurbineStatus("NO CONFIG", 50, 0)
     end
 end
 
@@ -248,8 +249,6 @@ local function loadConfig()
 
     -- Generic config loading adding to default turbine config
     config.ecuv      = fileJson(string.format("Apps/ecu/batterypack_16/%s.jsn", BatteryConfig))
-    collectgarbage()
-
     config.fuel     = fileJson("Apps/ecu/fuel_16/config.jsn")
     config.converter = fileJson(string.format("Apps/ecu/converter/%s/%s/config.jsn", ConverterType, TurbineType))
     collectgarbage()
@@ -301,7 +300,7 @@ end
 --
 local function initForm(subform)
     -- make all the dynamic menu items
-    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, SensorIndex, BatteryConfigIndex = 1,1,1,1,1
+    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, BatteryConfigIndex, SensorIndex = 1,1,1,1,1
     local SensorMenuT = {"..."}
     SensorT, SensorMenuT, SensorMenuIndex = getSensorTable(SensorID)
     collectgarbage()
@@ -563,7 +562,6 @@ local function init()
     TurbineConfig     = system.pLoad("TurbineConfig", "generic")
     BatteryConfig     = system.pLoad("BatteryConfig", 'lipo-2s')
     TankSize          = system.pLoad("TankSize", 0)
-
     alarmOffSwitch    = system.pLoad("alarmOffSwitch")
     -- read all the config files
     loadConfig()
@@ -593,4 +591,4 @@ local function loop()
     end
 end
 lang = fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.90', name=string.format("%s -16", lang.appName)}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='1.0', name=string.format("%s -16", lang.appName)}

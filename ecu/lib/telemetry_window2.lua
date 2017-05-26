@@ -74,7 +74,7 @@ end
 
 ----------------------------------------------------------------------
 -- Print the telemetry values
-function telemetry_window2.window(width, height) 
+function telemetry_window2.show(width, height) 
 
     if(sensorsOnline == 1) then
       -- field separator lines

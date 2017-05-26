@@ -15,7 +15,7 @@ local telemetry_window1 = {}
 
 ----------------------------------------------------------------------
 local function DrawFuelGauge(percentage, ox, oy) 
-    
+
     -- gas station symbol
     lcd.drawRectangle(34+ox,31+oy,5,9)  
     lcd.drawLine(35+ox,34+oy,37+ox,34+oy)
@@ -47,8 +47,8 @@ local function DrawFuelGauge(percentage, ox, oy)
     local y = math.floor( 53-nSolidBar*12+(1-nFracBar)*11 + 0.5)
     lcd.drawFilledRectangle (5+ox,y+oy,25,11*nFracBar) 
 
-    --lcd.drawText(4+ox,15+oy, config.fuellevel.tanksize, FONT_BOLD)
-    --lcd.drawText(1+ox,49+oy, string.format("Fulltank: %.1f",tonumber(config.fuellevel.tanksize/1000)), FONT_BOLD)
+    --lcd.drawText(4+ox,15+oy, config.fuel.tanksize, FONT_BOLD)
+    --lcd.drawText(1+ox,49+oy, string.format("Fulltank: %.1f",tonumber(config.fuel.tanksize/1000)), FONT_BOLD)
 end
 
 ----------------------------------------------------------------------
@@ -83,31 +83,45 @@ end
 
 ----------------------------------------------------------------------
 -- Print the telemetry values
-function telemetry_window1.window(width, height) 
+function telemetry_window1.show(width, height) 
   
+  if(SensorID ~= 0) then
     if(sensorsOnline > 0) then
-      -- field separator lines
-      lcd.drawLine(45,2,45,66)  
-      lcd.drawLine(45,36,148,36)  
+        -- field separator lines
+        lcd.drawLine(45,2,45,66)  
+        lcd.drawLine(45,36,148,36)  
 
-      if(config.converter.sensormap.fuellevel) then
-        if(SensorT.fuellevel.percent > config.fuellevel.warning.value) then
-          DrawFuelGauge(SensorT.fuellevel.percent, 1, 0)   
-        else
-          DrawFuelLow(SensorT.fuellevel.percent, 1, 0) 
+        if(config.converter.sensormap.fuel) then
+          if(SensorT.fuel.percent) then
+            if(SensorT.fuel.percent > config.fuel.warning.value) then
+              DrawFuelGauge(SensorT.fuel.percent, 1, 0)   
+            else
+              DrawFuelLow(SensorT.fuel.percent, 1, 0) 
+            end
+          end
         end
-      end
 
-      -- turbine
-      if(config.converter.sensormap.status) then
-        DrawTurbineStatus(SensorT.status.text, 50, 0)
-      end
+        -- turbine
+        if(config.converter.sensormap.status) then
+          if(SensorT.status.text) then
+            DrawTurbineStatus(SensorT.status.text, 50, 0)
+          else
+            DrawTurbineStatus("UNKNOWN", 50, 0)
+          end
+        else
+              DrawTurbineStatus("UNCONFIG", 50, 0)
+        end
 
-      -- battery
-      DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
+        -- battery
+        if(config.converter.sensormap.pumpv and SensorT.pumpv.sensor.value and SensorT.ecuv.sensor.value) then
+          DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
+        end
     else
-        lcd.drawText(5,5, 'OFFLINE', FONT_MAXI)
+      lcd.drawText(5,5, 'OFFLINE', FONT_MAXI)
     end
+  else
+    DrawTurbineStatus("NO CONFIG", 50, 0)
+  end
 end
 
 return telemetry_window1

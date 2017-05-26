@@ -17,9 +17,10 @@ local tableh     = require "ecu/lib/tablehelper"
 local alarmh     = require "ecu/lib/alarmhelper"
 local sensorh    = require "ecu/lib/sensorhelper"
 local fake       = require "ecu/lib/fakesensor"
-local telemetry1 = require "ecu/lib/telemetry_window1"
-local telemetry2 = require "ecu/lib/telemetry_window2"
-local telemetry4 = require "ecu/lib/telemetry_window4"
+local window1 = require "ecu/lib/telemetry_window1"
+local window2 = require "ecu/lib/telemetry_window2"
+local window3 = require "ecu/lib/telemetry_window3"
+local window4 = require "ecu/lib/telemetry_window4"
 
 -- Globals to be accessible also from libraries
 config          = {"..."} -- Complete turbine config object dynamically assembled
@@ -27,18 +28,18 @@ sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one
 --SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
 
 SensorT = {
-    ["rpm"]    = {"..."},
-    ["rpm2"]   = {"..."},
-    ["egt"]    = {"..."},
-    ["pumpv"]  = {"..."},
-    ["ecuv"]   = {"..."},
-    ["fuel"]   = {"..."},
-    ["status"] = {"..."}
+    rpm    = {"..."},
+    rpm2   = {"..."},
+    egt    = {"..."},
+    pumpv  = {"..."},
+    ecuv   = {"..."},
+    fuel   = {"..."},
+    status = {"..."}
  }
 
 -- Locals for the application
 local enableAlarm                 = false
-local prevStatusID, prevFuelLevel = 0,0
+local prevStatusID, prevFuelLevel, TankSize = 0,0,0
 local alarmOffSwitch
 
 local lang              = {"..."} -- Language read from file
@@ -76,7 +77,7 @@ local function loadConfig()
 
     -- Generic config loading adding to default turbine config
     config.ecuv      = loadh.fileJson(string.format("Apps/ecu/batterypack/%s.jsn", BatteryConfig))
-    config.fuellevel = loadh.fileJson("Apps/ecu/fuel/config.jsn")
+    config.fuel      = loadh.fileJson("Apps/ecu/fuel/config.jsn")
     config.status    = loadh.fileJson(string.format("Apps/ecu/status/%s.jsn", TurbineType))
     config.converter = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/config.jsn", ConverterType, TurbineType))
 end 
@@ -88,6 +89,7 @@ local function ConverterTypeChanged(value)
     print(string.format("ConverterTypeSave %s = %s", value, ConverterType))
     system.pSave("ConverterType",  ConverterType)
     TurbineTypeTable    = tableh.fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType))
+    loadConfig() -- reload after config change
 end
 
 ----------------------------------------------------------------------
@@ -96,6 +98,7 @@ local function TurbineTypeChanged(value)
     TurbineType  = TurbineTypeTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
     system.pSave("TurbineType", TurbineType)
     TurbineConfigTable  = tableh.fromFiles(string.format("Apps/ecu/turbine/%s", TurbineType))
+    loadConfig() -- reload after config change
 end
 
 ----------------------------------------------------------------------
@@ -155,12 +158,16 @@ local function initForm(subform)
     form.addSelectbox(TurbineConfigTable, TurbineConfigIndex, true, TurbineConfigChanged)
 
     form.addRow(2)
-    form.addLabel({label=lang.selectBatteryConfig, width=200})
-    form.addSelectbox(BatteryConfigTable, BatteryConfigIndex, true, BatteryConfigChanged)
-
-    form.addRow(2)
     form.addLabel({label=lang.selectLeftTurbineSensor, width=200})
     form.addSelectbox(SensorMenuT, SensorMenuIndex, true, SensorChanged)
+
+    form.addRow(2)
+    form.addLabel({label='Tank size', width=200})
+    form.addIntbox(TankSize,0,10000,0,0,50,function(value) TankSize=value; system.pSave("TankSize",value) end )
+
+    form.addRow(2)
+    form.addLabel({label=lang.selectBatteryConfig, width=200})
+    form.addSelectbox(BatteryConfigTable, BatteryConfigIndex, true, BatteryConfigChanged)
 
     form.addRow(2)
     form.addLabel({label=lang.alarmOffSwitch, width=200})
@@ -227,44 +234,44 @@ end
 
 ----------------------------------------------------------------------
 --
-local function processFueltank(tmpConfig, tmpSensorID)
+local function processFuel(tmpCfg, tmpSensorID)
 
-    if(SensorT[tmpConfig.sensorname].sensor.valid) then
+    if(SensorT[tmpCfg.sensorname].sensor.valid) then
 
-        initFuelStatistics(tmpConfig) -- Important
+        initFuelStatistics(tmpCfg) -- Important
 
         -- We only enable the low alarms after they have passed the low threshold
-        if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.warning.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
-            alarmLowValuePassed[tmpConfig.sensorname] = true;
+        if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
+            alarmLowValuePassed[tmpCfg.sensorname] = true;
         end
 
         -- Repeat fuel level audio at intervals
-        if(SensorT[tmpConfig.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpConfig.sensorname]) then
-            prevFuelLevel = prevFuelLevel - tmpConfig.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
-            system.playNumber(prevFuelLevel / 1000, tmpConfig.decimals, tmpConfig.unit, tmpConfig.label) -- Read out the numbers from the interval, not the value - to get better clearity
+        if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
+            prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
+            system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
         end
         
         -- Check for alarm thresholds
-        if(enableAlarm and alarmLowValuePassed[tmpConfig.sensorname]) then
-            if(not alarmsTriggered[tmpConfig.sensorname]) then
-                if(SensorT[tmpConfig.sensorname].percent < tmpConfig.critical.value) then
+        if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
+            if(not alarmsTriggered[tmpCfg.sensorname]) then
+                if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
 
-                    alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.critical.message,string.format("%s (%s < %s)", tmpConfig.critical.text, SensorT[tmpConfig.sensorname].percent, tmpConfig.critical.value))
-                    alarmh.Haptic(tmpConfig.critical.haptic)
-                    alarmh.Audio(tmpConfig.critical.audio)
+                    alarmsTriggered[tmpCfg.sensorname] = true
+                    alarmh.Message(tmpCfg.critical.message,string.format("%s (%s < %s)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
+                    alarmh.Haptic(tmpCfg.critical.haptic)
+                    alarmh.Audio(tmpCfg.critical.audio)
             
-                elseif(SensorT[tmpConfig.sensorname].percent < tmpConfig.warning.value) then
+                elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
 
-                    alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.warning.message,string.format("%s (%s < %s)", tmpConfig.warning.text, SensorT[tmpConfig.sensorname].percent, tmpConfig.warning.value))
-                    alarmh.Haptic(tmpConfig.warning.haptic)
-                    alarmh.Audio(tmpConfig.warning.audio)
+                    alarmsTriggered[tmpCfg.sensorname] = true
+                    alarmh.Message(tmpCfg.warning.message,string.format("%s (%s < %s)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
+                    alarmh.Haptic(tmpCfg.warning.haptic)
+                    alarmh.Audio(tmpCfg.warning.audio)
                  end
             end
         end
     else
-        SensorT[tmpConfig.sensorname].percent = 0
+        SensorT[tmpCfg.sensorname].percent = 0
     end
 end
 
@@ -272,32 +279,33 @@ end
 -- readGenericSensor high/low value alarms
 -- ToDo: These alarms will be repeated to often, how to avoid that? Second counter, repeat counter?
 
-local function processGeneric(tmpConfig, tmpSensorID)
+local function processGeneric(tmpCfg, tmpSensorID)
 
-    --print(string.format("sensorname : %s",tmpConfig.sensorname))
-    if(SensorT[tmpConfig.sensorname].sensor and SensorT[tmpConfig.sensorname].sensor.valid) then
+    if(tmpCfg) then
+        if(SensorT[tmpCfg.sensorname].sensor and SensorT[tmpCfg.sensorname].sensor.valid) then
 
-        -- We only enable the low alarms after they have passed the low threshold
-        if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.low.value and not alarmLowValuePassed[tmpConfig.sensorname]) then
-            alarmLowValuePassed[tmpConfig.sensorname] = true;
-        end
+            -- We only enable the low alarms after they have passed the low threshold
+            if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.low.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
+                alarmLowValuePassed[tmpCfg.sensorname] = true;
+            end
 
-        -- calculate percentage
-        SensorT[tmpConfig.sensorname].percent = ((SensorT[tmpConfig.sensorname].sensor.value - tmpConfig.low.value) / (tmpConfig.high    .value - tmpConfig.low.value)) * 100
+            -- calculate percentage
+            SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value, tmpCfg.low.value)
 
-        if(enableAlarm) then
-            if(not alarmsTriggered[tmpConfig.sensorname]) then 
-                if(SensorT[tmpConfig.sensorname].sensor.value > tmpConfig.high.value) then
-                    alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s > %s)", tmpConfig.high.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.high.value))
-                    alarmh.Haptic(tmpConfig.high.haptic)
-                    alarmh.Audio(tmpConfig.high.audio)
-            
-                elseif(SensorT[tmpConfig.sensorname].sensor.value < tmpConfig.low.value and alarmLowValuePassed[tmpConfig.sensorname]) then
-                    alarmsTriggered[tmpConfig.sensorname] = true
-                    alarmh.Message(tmpConfig.high.message,string.format("%s (%s < %s)", tmpConfig.low.text, SensorT[tmpConfig.sensorname].sensor.value, tmpConfig.low.value))
-                    alarmh.Haptic(tmpConfig.low.haptic)
-                    alarmh.Audio(tmpConfig.low.audio)
+            if(enableAlarm) then
+                if(not alarmsTriggered[tmpCfg.sensorname]) then 
+                    if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high.value) then
+                        alarmsTriggered[tmpCfg.sensorname] = true
+                        alarmh.Message(tmpCfg.high.message,string.format("%s (%s > %s)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
+                        alarmh.Haptic(tmpCfg.high.haptic)
+                        alarmh.Audio(tmpCfg.high.audio)
+                
+                    elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low.value and alarmLowValuePassed[tmpCfg.sensorname]) then
+                        alarmsTriggered[tmpCfg.sensorname] = true
+                        alarmh.Message(tmpCfg.high.message,string.format("%s (%s < %s)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
+                        alarmh.Haptic(tmpCfg.low.haptic)
+                        alarmh.Audio(tmpCfg.low.audio)
+                    end
                 end
             end
         end
@@ -322,7 +330,7 @@ local function processStatus(tmpCfg, tmpSensorID)
                 SensorT[tmpCfg.sensorname].text = string.format("Status %s", statusint)
             end
 
-            alarmh.Message(config.status[statuscode].message, SensorT[tmpConfig.sensorname].text) -- we always show a message that will be logged on status changed
+            alarmh.Message(config.status[statuscode].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
             -- Has to be done a bit more robust, if status code does not exist, then also config is missing.
             if(enableAlarm) then
                 -- ToDo: Implement repeat of alarm
@@ -426,15 +434,18 @@ local function init()
     ConverterType     = system.pLoad("ConverterType", "vspeak")
     TurbineType       = system.pLoad("TurbineType", "jetcat")
     TurbineConfig     = system.pLoad("TurbineConfig", "generic")
-    BatteryConfig     = system.pLoad("BatteryConfig", "life-2s")
+    BatteryConfig     = system.pLoad("BatteryConfig", "lipo-2s")
+    TankSize          = system.pLoad("TankSize", 0)
     alarmOffSwitch    = system.pLoad("alarmOffSwitch")
 
     -- read all the config files
     loadConfig()
 
-    system.registerTelemetry(1, string.format("%s", lang.window2),2,telemetry2.window)
+    system.registerTelemetry(1, lang.window1, 2,window1.show)
     --system.registerTelemetry(2, lang.window1, 2, telemetry1.window)  
-    system.registerTelemetry(2, "ECU large", 4, telemetry4.window)  
+    system.registerTelemetry(2, lang.window2, 2, window2.show)  
+
+    --system.registerTelemetry(2, "Large", 4, window4.show)  - Full screen 
 
     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     collectgarbage()
@@ -445,14 +456,14 @@ end
 -- Loop has to be the last function, so every other function is initialized
 local function loop()
 
-    fake.makeSensorValues()
+    --fake.makeSensorValues()
     if(SensorID ~= 0) then
         resetAlarmCounter()
         enableAlarmCheck()
         readParamsFromSensor(SensorID)
 
         -- All converters has these sensors
-        processFueltank(config.fuellevel, SensorID)
+        processFuel(config.fuel, SensorID)
         processGeneric(config.rpm,   SensorID)
         processGeneric(config.egt,   SensorID)
         processGeneric(config.pumpv, SensorID)
@@ -470,4 +481,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='0.95', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.0', name=lang.appName}

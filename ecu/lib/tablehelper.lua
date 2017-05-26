@@ -18,9 +18,6 @@ function tablehelper.fromDirectory(path, choice)
     local tmpTable = {"..."}
     local tmpIndex = 1
 
-    collectgarbage()
-    print(string.format("fromDirectory: %s - mem: %s", path, collectgarbage("count")))
-
     for name, filetype, size in dir(path) do
         if(filetype == "folder" and string.sub(name, 1, 1) ~= ".") then
             table.insert(tmpTable, name)
@@ -30,6 +27,9 @@ function tablehelper.fromDirectory(path, choice)
             end
         end
     end
+    collectgarbage()
+    print(string.format("fromDirectory: %s - mem: %s", path, collectgarbage("count")))
+
     return tmpTable, tmpIndex
 end
 
@@ -46,8 +46,10 @@ function tablehelper.fromFiles(path, choice)
         if(string.sub(name, -3, -1) == "jsn" and string.sub(name, 1, 1) ~= ".") then
             table.insert(tmpTable, string.sub(name, 1, -5))
             
-            if(string.sub(name, 1, -5) == choice) then
-                tmpIndex=#tmpTable
+            if (choice) then
+                if(string.sub(name, 1, -5) == choice) then
+                    tmpIndex=#tmpTable
+                end
             end
         end
     end
