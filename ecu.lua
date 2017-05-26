@@ -78,9 +78,7 @@ local function loadConfig()
     config.ecuv      = loadh.fileJson(string.format("Apps/ecu/batterypack/%s.jsn", BatteryConfig))
     config.fuellevel = loadh.fileJson("Apps/ecu/fuel/config.jsn")
     config.status    = loadh.fileJson(string.format("Apps/ecu/status/%s.jsn", TurbineType))
-    config.converter = {"..."} 
-    config.converter.statusmap = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/status.jsn", ConverterType, TurbineType))
-    config.converter.sensormap = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/sensor.jsn", ConverterType, TurbineType))
+    config.converter = loadh.fileJson(string.format("Apps/ecu/converter/%s/%s/config.jsn", ConverterType, TurbineType))
 end 
 
 ----------------------------------------------------------------------
@@ -189,20 +187,42 @@ local function keyPressed(key)
     form.reinit(1)
 end
 
+local function calcPercent(current, high, low)
+    local percent = ((current - low) / (high - low)) * 100
+    if(percent < 0) then 
+            percent = 0
+    end
+    return percent
+end
+
 ----------------------------------------------------------------------
 -- Calculates: config.fuellevel.tanksize and config.fuellevel.interval and fuelpercent
-local function initFuelStatistics(tmpConfig)
+local function initFuelStatistics(tmpCfg)
 
-    if(config.fuellevel.tanksize < 50) then
+    -- print(string.format("fuel.value : %s",SensorT[tmpCfg.sensorname].sensor.value))
 
-        -- Init: Automatic calculations done on the first run after we read the sensor value.
-        config.fuellevel.tanksize = SensorT[tmpConfig.sensorname].sensor.value -- new or max?
-        config.fuellevel.interval = config.fuellevel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-        prevFuelLevel = config.fuellevel.tanksize - config.fuellevel.interval -- init full tank reporting, but do not start before next interval
-    end 
-    
-    -- Calculate fuel percentage
-    SensorT[tmpConfig.sensorname].percent = (SensorT[tmpConfig.sensorname].sensor.value / config.fuellevel.tanksize) * 100
+    if(config.fuel.tanksize < 50) then -- Configure TankSize during first 50 cycles
+        if(config.converter.fuel.countingdown) then
+
+            -- Init: Automatic calculations done on the first run after we read the sensor value.
+            config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
+            TankSize             = config.fuel.tanksize 
+            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+        else
+            -- counting up, have to subtract
+            config.fuel.tanksize = TankSize -- TankSize read from GUI not from ECU when counting up usage
+            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+        end 
+    end
+
+    -- Calculate fuel percentage remaining
+    if(config.converter.fuel.countingdown) then
+        SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    else
+        SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    end
 end
 
 ----------------------------------------------------------------------
@@ -284,46 +304,42 @@ local function processGeneric(tmpConfig, tmpSensorID)
     end
 end
 
-----------------------------------------------------------------------
--- 
-local function processStatus(tmpConfig, tmpSensorID)
-    local statusChanged = false
+
+local function processStatus(tmpCfg, tmpSensorID)
     local statusint     = 0 -- sensor statusid
     local switch
-    local statuscode  = ''
 
-    if(SensorT[tmpConfig.sensorname].sensor.valid) then
-        statusint    = string.format("%s", math.floor(SensorT[tmpConfig.sensorname].sensor.value))
-        statuscode  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
+    if(SensorT[tmpCfg.sensorname].sensor.valid) then
+        statusint    = string.format("%s", math.floor(SensorT[tmpCfg.sensorname].sensor.value))
+        SensorT[tmpCfg.sensorname].text  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
 
-        if(config.status[statuscode] ~= nil) then 
-            SensorT[tmpConfig.sensorname].text = config.status[statuscode].text;
-        else
-            SensorT[tmpConfig.sensorname].text = '';
-        end
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
-        if(prevStatusID ~= statuscode) then
-            print(string.format("statusint %s", statusint))
-            print(string.format("Status changed %s != %s", prevStatusID, statuscode))
-            statusChanged = true
-        end 
-        prevStatusID = statuscode
-        -------------------------------------------------------------
-        -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
-        -- This should get rid of all annoying alarms
-        if(statusChanged) then
+        if(prevStatusID ~= SensorT[tmpCfg.sensorname].text) then
+            print(string.format("statusint #%s#", statusint))
+
+            if(not SensorT[tmpCfg.sensorname].text) then
+                SensorT[tmpCfg.sensorname].text = string.format("Status %s", statusint)
+            end
+
             alarmh.Message(config.status[statuscode].message, SensorT[tmpConfig.sensorname].text) -- we always show a message that will be logged on status changed
+            -- Has to be done a bit more robust, if status code does not exist, then also config is missing.
             if(enableAlarm) then
                 -- ToDo: Implement repeat of alarm
                 alarmh.Haptic(config.status[statuscode].haptic)
                 alarmh.Audio(config.status[statuscode].audio)
              end
-         end
+
+        end 
+        prevStatusID = SensorT[tmpCfg.sensorname].text
+        -------------------------------------------------------------
+        -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
+        -- This should get rid of all annoying alarms
     else 
-        SensorT[tmpConfig.sensorname].text = "          -- "
+        SensorT[tmpCfg.sensorname].text = "OFFLINE"
     end
 end
+
 
 ----------------------------------------------------------------------
 -- Resets alarms so they will be triggered again every 30 seconds

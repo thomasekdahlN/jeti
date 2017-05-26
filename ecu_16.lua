@@ -18,18 +18,16 @@ local config          = {"..."} -- Complete turbine config object dynamically as
 
 SensorT = {
     rpm      = {"..."},
-    rpm2     = {"..."},
     egt      = {"..."},
     pumpv    = {"..."},
     ecuv     = {"..."},
     fuel     = {"..."},
-    throttle = {"..."},
     status   = {"..."}
  }
 
 -- Locals for the application
 local enableAlarm                 = false
-local prevStatusID, prevFuel = 0,0
+local prevStatusID, prevFuel, TankSize = 0,0,0
 local alarmOffSwitch
 
 local lang              = {"..."} -- Language read from file
@@ -38,7 +36,6 @@ local alarmsTriggered   = {"..."} -- true on the alarm triggered, used to not re
 
 local alarmLowValuePassed = { -- enables alarms that has passed the low treshold, to not get alarms before turbine is running properly. Status alarms, high alarms, fuel alarms , and ecu voltage alarms is always enabled.
     rpm    = false,
-    rpm2   = false,
     egt    = false,
     pumpv  = false,
     ecuv   = true,
@@ -55,6 +52,8 @@ local TurbineType           = "hornet"  -- the turbine type chosen
 
 local TurbineConfigTable    = {"..."}   -- Array with all available config fields
 local TurbineConfig         = "generic"  -- the turbine config file chosen
+
+local BatteryConfigTable    = {"..."}   -- Array with all available config fields
 
 function fileJson(filename)
     local structure
@@ -210,37 +209,49 @@ local function DrawBattery(u_pump, u_ecu, ox, oy)
   lcd.drawText(45+ox,12+oy, string.format("%.1f%s",u_ecu,"V"), FONT_BOLD)
 end
 function window(width, height)  
-      -- field separator lines
-      lcd.drawLine(45,2,45,66)  
-      lcd.drawLine(45,36,148,36)  
+    -- field separator lines
+    lcd.drawLine(45,2,45,66)  
+    lcd.drawLine(45,36,148,36)  
 
-        if(config.converter.sensormap.fuel and SensorT.fuel.percent) then
-            DrawFuelGauge(SensorT.fuel.percent, 1, 0)
+    if(SensorID ~= 0) then
+
+        if(config.converter.sensormap.fuel) then 
+            if(SensorT.fuel.percent) then
+                DrawFuelGauge(SensorT.fuel.percent, 1, 0)
+            end
         end
 
-      -- turbine
-        if(config.converter.sensormap.status and SensorT.status.text) then
-            DrawTurbineStatus(SensorT.status.text, 50, 0)
+        -- turbine
+        if(config.converter.sensormap.status) then
+            if(SensorT.status.text) then
+                DrawTurbineStatus(SensorT.status.text, 50, 0)
+            else
+                DrawTurbineStatus("UNKNOWN", 50, 0)
+            end
         else
-            DrawTurbineStatus("UNCONFIGURED", 50, 0)
+            DrawTurbineStatus("UNCONFIG", 50, 0)
         end
 
-      -- battery
-      if(config.converter.sensormap.pumpv and SensorT.pumpv.sensor.value and SensorT.ecuv.sensor.value) then
-          DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
-      end
+        -- battery
+        if(config.converter.sensormap.pumpv and SensorT.pumpv.sensor.value and SensorT.ecuv.sensor.value) then
+            DrawBattery(SensorT.pumpv.sensor.value, SensorT.ecuv.sensor.value, 50, 37)
+        end
+    else
+        DrawTurbineStatus("NO SENSOR", 50, 0)
+    end
 end
+
 local function loadConfig()
     -- Load main turbine config    
     config      = fileJson(string.format(string.format("Apps/ecu/turbine_16/%s/%s.jsn", TurbineType, TurbineConfig)))
     collectgarbage()
 
     -- Generic config loading adding to default turbine config
-    config.converter = {"..."} 
-    --config.ecuv      = loadh.fileJson(string.format("Apps/ecu/batterypack/%s_16.jsn", BatteryConfig))
-    config.fuel = fileJson("Apps/ecu/fuel_16/config.jsn")
-    config.converter.statusmap = fileJson(string.format("Apps/ecu/converter/%s/%s/status.jsn", ConverterType, TurbineType))
-    config.converter.sensormap = fileJson(string.format("Apps/ecu/converter/%s/%s/sensor.jsn", ConverterType, TurbineType))
+    config.ecuv      = fileJson(string.format("Apps/ecu/batterypack_16/%s.jsn", BatteryConfig))
+    collectgarbage()
+
+    config.fuel     = fileJson("Apps/ecu/fuel_16/config.jsn")
+    config.converter = fileJson(string.format("Apps/ecu/converter/%s/%s/config.jsn", ConverterType, TurbineType))
     collectgarbage()
 end 
 
@@ -251,6 +262,7 @@ local function ConverterTypeChanged(value)
     print(string.format("ConverterTypeSave %s = %s", value, ConverterType))
     system.pSave("ConverterType",  ConverterType)
     TurbineTypeTable    = fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType), nil)
+    loadConfig() -- reload after config change
 end
 
 ----------------------------------------------------------------------
@@ -259,6 +271,7 @@ local function TurbineTypeChanged(value)
     TurbineType  = TurbineTypeTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
     system.pSave("TurbineType", TurbineType)
     TurbineConfigTable  = fromFiles(string.format("Apps/ecu/turbine_16/%s", TurbineType), nil)
+    loadConfig() -- reload after config change
 end
 
 ----------------------------------------------------------------------
@@ -266,6 +279,14 @@ end
 local function TurbineConfigChanged(value)
     TurbineConfig  = TurbineConfigTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
     system.pSave("TurbineConfig", TurbineConfig)
+    loadConfig() -- reload after config change
+end
+
+----------------------------------------------------------------------
+--
+local function BatteryConfigChanged(value)
+    BatteryConfig  = BatteryConfigTable[value] --The value is local to this function and not global to script, hence it must be set explicitly.
+    system.pSave("BatteryConfig", BatteryConfig)
     loadConfig() -- reload after config change
 end
 
@@ -280,7 +301,7 @@ end
 --
 local function initForm(subform)
     -- make all the dynamic menu items
-    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, SensorIndex = 1,1,1,1,1
+    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, SensorIndex, BatteryConfigIndex = 1,1,1,1,1
     local SensorMenuT = {"..."}
     SensorT, SensorMenuT, SensorMenuIndex = getSensorTable(SensorID)
     collectgarbage()
@@ -288,6 +309,7 @@ local function initForm(subform)
     ConverterTypeTable, ConverterTypeIndex  = fromDirectory("Apps/ecu/converter", ConverterType)
     TurbineTypeTable,   TurbineTypeIndex    = fromDirectory(string.format("Apps/ecu/converter/%s", ConverterType), TurbineType)
     TurbineConfigTable, TurbineConfigIndex  = fromFiles(string.format("Apps/ecu/turbine_16/%s", TurbineType), TurbineConfig)
+    BatteryConfigTable, BatteryConfigIndex  = fromFiles("Apps/ecu/batterypack_16", BatteryConfig)
     collectgarbage()
 
     form.addRow(2)
@@ -302,10 +324,17 @@ local function initForm(subform)
     form.addLabel({label=lang.selectTurbineConfig, width=200})
     form.addSelectbox(TurbineConfigTable, TurbineConfigIndex, true, TurbineConfigChanged)
 
-
     form.addRow(2)
     form.addLabel({label=lang.selectLeftTurbineSensor, width=200})
     form.addSelectbox(SensorMenuT, SensorMenuIndex, true, SensorChanged)
+
+    form.addRow(2)
+    form.addLabel({label=lang.selectBatteryConfig, width=200})
+    form.addSelectbox(BatteryConfigTable, BatteryConfigIndex, true, BatteryConfigChanged)
+
+    form.addRow(2)
+    form.addLabel({label='Tank size', width=200})
+    form.addIntbox(TankSize,0,10000,0,0,50,function(value) TankSize=value; system.pSave("TankSize",value) end )
 
     form.addRow(2)
     form.addLabel({label=lang.alarmOffSwitch, width=200})
@@ -334,21 +363,33 @@ local function initFuelStatistics(tmpCfg)
 
     -- print(string.format("fuel.value : %s",SensorT[tmpCfg.sensorname].sensor.value))
 
-    if(config.fuel.tanksize < 50) then
+    if(config.fuel.tanksize < 50) then -- Configure TankSize during first 50 cycles
+        if(config.converter.fuel.countingdown) then
 
-        -- Init: Automatic calculations done on the first run after we read the sensor value.
-        config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
-        config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-        prevFuel = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
-    end 
+            -- Init: Automatic calculations done on the first run after we read the sensor value.
+            config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
+            TankSize             = config.fuel.tanksize 
+            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+        else
+            -- counting up, have to subtract
+            config.fuel.tanksize = TankSize -- TankSize read from GUI not from ECU when counting up usage
+            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+        end 
+    end
 
-    -- Calculate fuel percentage
-    SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    -- Calculate fuel percentage remaining
+    if(config.converter.fuel.countingdown) then
+        SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    else
+        SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    end
 end
 
 ----------------------------------------------------------------------
 --
-local function processFueltank(tmpCfg, tmpSensorID)
+local function processFuel(tmpCfg, tmpSensorID)
 
     if(SensorT[tmpCfg.sensorname].sensor.valid) then
 
@@ -439,13 +480,12 @@ local function processStatus(tmpCfg, tmpSensorID)
         if(prevStatusID ~= SensorT[tmpCfg.sensorname].text) then
             print(string.format("statusint #%s#", statusint))
 
-            if(SensorT[tmpCfg.sensorname].text) then
-                system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- we always show a message that will be logged on status changed
-                print(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text))
-                system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
-            else
-                system.messageBox(string.format("Unmapped status int: %s", statusint), 5) -- we always show a message that will be logged on status changed
+            if(not SensorT[tmpCfg.sensorname].text) then
+                SensorT[tmpCfg.sensorname].text = string.format("Status %s", statusint)
             end
+            system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- we always show a message that will be logged on status changed
+            print(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text))
+            system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
         end 
         prevStatusID = SensorT[tmpCfg.sensorname].text
         -------------------------------------------------------------
@@ -521,6 +561,9 @@ local function init()
     ConverterType     = system.pLoad("ConverterType", "vspeak")
     TurbineType       = system.pLoad("TurbineType", "hornet")
     TurbineConfig     = system.pLoad("TurbineConfig", "generic")
+    BatteryConfig     = system.pLoad("BatteryConfig", 'lipo-2s')
+    TankSize          = system.pLoad("TankSize", 0)
+
     alarmOffSwitch    = system.pLoad("alarmOffSwitch")
     -- read all the config files
     loadConfig()
@@ -538,11 +581,11 @@ local function loop()
         enableAlarmCheck()
         readParamsFromSensor(SensorID) -- Real sensor values
         -- All converters has these sensors
-        processFueltank(config.fuel, SensorID)
+        processFuel(config.fuel, SensorID)
         processGeneric(config.rpm, SensorID)
         processGeneric(config.egt, SensorID)
         processGeneric(config.pumpv, SensorID)
-        -- processGeneric(config.ecuv, SensorID) -- ecuv not supported on -16
+        processGeneric(config.ecuv, SensorID)
         -- Check if converter has these sensor before processing them, since the availibility varies
         if(config.converter.sensormap.status) then
             processStatus(config.status, SensorID)

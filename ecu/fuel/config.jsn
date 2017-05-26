@@ -5,7 +5,7 @@
     "unit"      : "l",
     "label"     : "R.volume",
     "warning"   : {
-        "text"      : "Warning fuellevel",
+        "text"      : "Warning fuel",
         "value"     : 20,
         "message"   : {
             "enable" : true,
@@ -24,7 +24,7 @@
         }
     },
     "critical"   : {
-        "text"      : "Critical fuellevel",
+        "text"      : "Critical fuel",
         "value"     : 10,
         "message"   : {
             "enable" : true,

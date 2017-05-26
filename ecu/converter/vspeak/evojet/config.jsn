@@ -1,0 +1,34 @@
+{
+    "sensormap" : {
+        "egt"       : "1",
+        "rpm"       : "2",
+        "throttle"  : "3",
+        "pumpv"     : "4",
+        "ecuv"      : "5",
+        "fuel"      : "6",
+        "fuelflow"  : "7",
+        "speed"     : "8",
+        "rpm2"      : "9",
+        "status"    : "10"
+    },
+    "fuel" : {
+        "countingdown" : false
+    },
+    "statusmap" : {
+        "-30"   : "- ERROR -",
+        "-20"   : "TH: -off",
+        "-10"   : "TH: cool",
+        "-1"    : "TH: lock",
+        "0"     : "TH: stop",
+        "10"    : "TH: run-",
+        "20"    : "TH: rel-",
+        "25"    : "TH: glow",
+        "30"    : "TH: spin",
+        "40"    : "TH: fire",
+        "45"    : "TH: ignt",
+        "50"    : "TH: heat",
+        "60"    : "TH: acce",
+        "65"    : "TH: cal.",
+        "70"    : "TH: idel"
+    }
+}
