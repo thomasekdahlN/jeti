@@ -78,7 +78,7 @@ The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
 - Fuel critical alarm (configured at 10% fuel level)
 - Fuel - Audio messaage with remaining fuellevel 10 times pr tank (automaticially set intervals based on tanksize read from ECU)
 - Fuel - Automatic reading of tanksize from ECU (shown in telemetry window)
-- = Fuel = Zero configuration neccessary to have very advanced information and alarms on tank level
+- = Fuel = Zero configuration neccessary (on vspeak with jetcat, hornet, and all digitech - the rest have to input TankSize) to have very advanced information and alarms on tank level
 - Calculates  percentages from the interval between high and low config values)
 Alarms will be repeated every 30 second if error condition is sustained
 
