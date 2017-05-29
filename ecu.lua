@@ -330,7 +330,8 @@ local function processStatus(tmpCfg, tmpSensorID)
                 SensorT[tmpCfg.sensorname].text = string.format("Status %s", statusint)
             end
 
-            alarmh.Message(config.status[statuscode].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
+            system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- a bit more robust
+            -- alarmh.Message(config.status[statuscode].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
             -- Has to be done a bit more robust, if status code does not exist, then also config is missing.
             if(enableAlarm) then
                 -- ToDo: Implement repeat of alarm
