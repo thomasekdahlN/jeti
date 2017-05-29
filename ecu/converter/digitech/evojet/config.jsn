@@ -1,14 +1,12 @@
 {
     "sensormap" : {
-        "fuel"     :"1",
-        "rpm"      :"2",
-        "egt"      :"3",
-        "speed"    : "4",
+        "fuel"     : "6",
+        "rpm"      : "2",
+        "egt"      : "1",
         "ecuv"     : "5",
-        "pumpv"    : "6",
-        "throttle" : "7",
-        "rpm2"     : "8",
-        "status"   : "9"
+        "pumpv"    : "4",
+        "rpm2"     : "9",
+        "status"   : "10"
     },
     "fuel" : {
         "countingdown" : true
