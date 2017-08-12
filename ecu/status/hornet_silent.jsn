@@ -30,7 +30,7 @@
              "file"      : "Flameout.wav"
          },
          "haptic"    : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "stick"     : "left",
              "vibrationProfile"   : 4
@@ -48,7 +48,7 @@
              "file"      : "Emergency.wav"
          },
          "haptic"    : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "stick"     : "left",
              "vibrationProfile"   : 4
@@ -75,7 +75,7 @@
     "ARMED"   : {
         "text"      : "ARMED",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
@@ -111,11 +111,11 @@
     "SLOW DOWN"   : {
         "text"      : "SLOW DOWN",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Slow down.wav"
          },
@@ -129,11 +129,11 @@
     "STANDBY"   : {
         "text"      : "STANDBY",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Standby.wav"
          },
@@ -237,11 +237,11 @@
     "FUELHEAT"   : {
         "text"      : "FUELHEAT",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Fuel heat.wav"
          },
@@ -255,11 +255,11 @@
     "RAMP DELAY"   : {
         "text"      : "RAMP DELAY",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Ramp delay.wav"
          },
@@ -273,11 +273,11 @@
     "RAMP-UP"   : {
         "text"      : "RAMP-UP",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Ramp up.wav"
          },
@@ -295,7 +295,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Steady.wav"
          },
@@ -313,7 +313,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Idle.wav"
          },
@@ -331,7 +331,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Calibrate idle.wav"
          },
@@ -345,11 +345,11 @@
     "WAIT ACC"   : {
         "text"      : "WAIT ACC",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Wait acceleration.wav"
          },
@@ -367,7 +367,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Go idle.wav"
          },
@@ -381,11 +381,11 @@
     "AUTO"   : {
         "text"      : "AUTO",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Auto.wav"
          },
@@ -399,11 +399,11 @@
     "AUTO Heat Control"   : {
         "text"      : "AUTO Heat Control",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Auto heat control.wav"
          },

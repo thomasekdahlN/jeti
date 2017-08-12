@@ -525,11 +525,11 @@
     "Manual Off"   : {
         "text"      : "Manual Off",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Manual off.wav"
          },
@@ -565,7 +565,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "RC off.wav"
          },
@@ -583,7 +583,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "RC off.wav"
          },
@@ -597,11 +597,11 @@
     "SlowDown"   : {
         "text"      : "SlowDown",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Slow down.wav"
          },
@@ -619,7 +619,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "SwitchOff.wav"
          },
@@ -633,11 +633,11 @@
     "StbySTART"   : {
         "text"      : "StbySTART",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "StbySTART.wav"
          },
@@ -651,11 +651,11 @@
     "PreHeat1"   : {
         "text"      : "PreHeat1",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Preheat1.wav"
          },
@@ -669,11 +669,11 @@
     "PreHeat2"   : {
         "text"      : "PreHeat2",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Preheat2.wav"
          },
@@ -687,11 +687,11 @@
     "Ignite..."   : {
         "text"      : "Ignite...",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Ignite.wav"
          },
@@ -705,11 +705,11 @@
     "AccelrDly"   : {
         "text"      : "AccelrDly",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Ramp delay.wav"
          },
@@ -741,11 +741,11 @@
     "Keros.Full"   : {
         "text"      : "Keros.Full",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Kerosin full.wav"
          },
@@ -759,11 +759,11 @@
     "accelerate"   : {
         "text"      : "accelerate",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Accelerate.wav"
          },
@@ -777,11 +777,11 @@
     "Stabilise"   : {
         "text"      : "Stabilise",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Stabelize.wav"
          },
@@ -795,7 +795,7 @@
     "LearnLO"   : {
         "text"      : "LearnLO",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
@@ -817,7 +817,7 @@
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Run.wav"
          },

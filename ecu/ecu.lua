@@ -247,35 +247,28 @@ local function processFuel(tmpCfg, tmpSensorID)
 
         -- Repeat fuel level audio at intervals
         if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
-            prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?  
-
-            if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
-                system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
-            end
+            prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
+            system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
         end
         
         -- Check for alarm thresholds
-        if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
-            if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
-                if(not alarmsTriggered[tmpCfg.sensorname]) then
-                    if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
+        if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
+            if(not alarmsTriggered[tmpCfg.sensorname]) then
+                if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
 
-                        alarmsTriggered[tmpCfg.sensorname] = true
-                        alarmh.Message(tmpCfg.critical.message,string.format("%s (%s < %s)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
-                        alarmh.Haptic(tmpCfg.critical.haptic)
-                        alarmh.Audio(tmpCfg.critical.audio)
-                
-                    elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
+                    alarmsTriggered[tmpCfg.sensorname] = true
+                    alarmh.Message(tmpCfg.critical.message,string.format("%s (%s < %s)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
+                    alarmh.Haptic(tmpCfg.critical.haptic)
+                    alarmh.Audio(tmpCfg.critical.audio)
+            
+                elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
 
-                        alarmsTriggered[tmpCfg.sensorname] = true
-                        alarmh.Message(tmpCfg.warning.message,string.format("%s (%s < %s)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
-                        alarmh.Haptic(tmpCfg.warning.haptic)
-                        alarmh.Audio(tmpCfg.warning.audio)
-                     end
-                end
+                    alarmsTriggered[tmpCfg.sensorname] = true
+                    alarmh.Message(tmpCfg.warning.message,string.format("%s (%s < %s)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
+                    alarmh.Haptic(tmpCfg.warning.haptic)
+                    alarmh.Audio(tmpCfg.warning.audio)
+                 end
             end
-        else
-            alarmh.Message(tmpCfg.warning.message,string.format("Error in fuel sensor (level:%s,value:%s)", tmpCfg.warning.text, prevFuelLevel, SensorT[tmpCfg.sensorname].sensor.value))
         end
     else
         SensorT[tmpCfg.sensorname].percent = 0
@@ -489,4 +482,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.1', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.0', name=lang.appName}
