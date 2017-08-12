@@ -3,8 +3,6 @@ Jeti Advanced ECU LUA Script. Easy setup based on best practise, advanced alarms
 
 NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and kill switch - and you will probably have the most advanced turbine surveilance available to RC turbine models today.
 
-NOTE II: ecu_16.lc is the most recently maintained. A lot of configuration has been sacrifised for convention - to save enough memory to make it run on -16 transmitters.
-
 Now supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter, jetcat ecu converter and experimental support for CB-Electroniks and Xicoy converters (needs testers).
 
 Only works with Jeti transmitter FW 4.22. 
