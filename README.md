@@ -118,13 +118,15 @@ So the idea is that with this lua script you will get all needed turbine alarms 
 For the people who love to tinker it is infinitely extensive and changeable in a easy manner in the configuration file pr ecu. But the distributed configuration file should be best practise for all others.
 
 #Installation
-- copy ecu_16.lc (not .lua, for memory optimization) and ecu folder into the Apps folder on your Jeti transmitter
-- add ecu.lua to Applications
-- choose ecu converter type
-- choose turbine manufacturer type
-- choose turbine type
-- choose battery pack type
-- choose kill switch
+- copy ecu_16.lc (if you have a DS-16 or DC-16) and ecu folder into the Apps folder on your Jeti transmitter
+- copy ecu.lua (if you have a DS-24 or DC-24) and ecu folder into the Apps folder on your Jeti transmitter (This is the most advanced version)
+- add ecu_16.lc or ecu.lua to Applications (in Jeti transmitter)
+- Enter the ECU application on the Jeti transmitter
+- choose ecu converter type (from menu in App on transmitter)
+- choose turbine manufacturer type (from menu in App on transmitter)
+- choose turbine type (from menu in App on transmitter)
+- choose battery pack type (from menu in App on transmitter)
+- choose kill switch (from menu in App on transmitter)
 - you may have to reboot your transmitter once, to read all parameters correctly
 
 Then you are up and running with the most advanced ecu monitoring available today
