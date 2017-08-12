@@ -5,7 +5,7 @@ NOTE: You do not have to edit configuration files, standard config files for you
 
 Now supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter, jetcat ecu converter and experimental support for CB-Electroniks and Xicoy converters (needs testers).
 
-Only works with Jeti transmitter FW 4.22. 
+Only works with Jeti transmitter FW 4.22 or better. 
 
 ![alarm - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081407/87552642-234a-11e7-897d-e4f2ae4de45f.jpg)
 ![gui - configuration](https://cloud.githubusercontent.com/assets/26059207/25081408/875af9a0-234a-11e7-8c05-8a3d246c3d4a.jpg)
