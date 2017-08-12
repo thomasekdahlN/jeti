@@ -1,4 +1,4 @@
-# Jeti ECU Telemetry (Beta version)
+# Jeti Turbine ECU Telemetry (Beta version)
 Jeti Advanced ECU LUA Script. Easy setup based on best practise, advanced alarms that are silent until really needed and very configurable from configuration files if you need to (default best practise setup should be enough for most people).
 
 NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and kill switch - and you will probably have the most advanced turbine surveilance available to RC turbine models today.
