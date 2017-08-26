@@ -39,7 +39,7 @@ SensorT = {
 
 -- Locals for the application
 local enableAlarm                 = false
-local prevStatusID, prevFuelLevel, TankSize = 0,0,0
+local prevStatus, prevFuelLevel, TankSize = 0,0,0
 local alarmOffSwitch
 
 local lang              = {"..."} -- Language read from file
@@ -214,12 +214,12 @@ local function initFuelStatistics(tmpCfg)
             -- Init: Automatic calculations done on the first run after we read the sensor value.
             config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
             TankSize             = config.fuel.tanksize 
-            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
             prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
         else
             -- counting up, have to subtract
             config.fuel.tanksize = TankSize -- TankSize read from GUI not from ECU when counting up usage
-            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
             prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
         end 
     end
@@ -330,24 +330,24 @@ local function processStatus(tmpCfg, tmpSensorID)
 
         -------------------------------------------------------------_
         -- Check if status is changed since the last time
-        if(prevStatusID ~= SensorT[tmpCfg.sensorname].text) then
-            print(string.format("statusint #%s#", statusint))
+        if(prevStatus ~= SensorT[tmpCfg.sensorname].text) then
+            print(string.format("status #%s#%s#", statusint, SensorT[tmpCfg.sensorname].text))
 
             if(not SensorT[tmpCfg.sensorname].text) then
-                SensorT[tmpCfg.sensorname].text = string.format("Status %s", statusint)
+                SensorT[tmpCfg.sensorname].text = string.format("Missing status %s", statusint)
+                system.messageBox(SensorT[tmpCfg.sensorname].text, 5)
+            elseif
+
+                alarmh.Message(config.status[SensorT[tmpCfg.sensorname].text].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
+
+                if(enableAlarm) then
+                    -- ToDo: Implement repeat of alarm
+                    alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
+                    alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
+                end
+                prevStatus = SensorT[tmpCfg.sensorname].text
             end
-
-            system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- a bit more robust
-            -- alarmh.Message(config.status[statuscode].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
-            -- Has to be done a bit more robust, if status code does not exist, then also config is missing.
-            if(enableAlarm) then
-                -- ToDo: Implement repeat of alarm
-                alarmh.Haptic(config.status[statuscode].haptic)
-                alarmh.Audio(config.status[statuscode].audio)
-             end
-
         end 
-        prevStatusID = SensorT[tmpCfg.sensorname].text
         -------------------------------------------------------------
         -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
         -- This should get rid of all annoying alarms
