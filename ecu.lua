@@ -251,6 +251,8 @@ local function processFuel(tmpCfg, tmpSensorID)
 
             if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
                 system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
+            else
+                system.messageBox("Error: Negative fuel interval", 5)
             end
         end
         
@@ -336,7 +338,7 @@ local function processStatus(tmpCfg, tmpSensorID)
             if(not SensorT[tmpCfg.sensorname].text) then
                 SensorT[tmpCfg.sensorname].text = string.format("Missing status %s", statusint)
                 system.messageBox(SensorT[tmpCfg.sensorname].text, 5)
-            elseif
+            else
 
                 alarmh.Message(config.status[SensorT[tmpCfg.sensorname].text].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
 
