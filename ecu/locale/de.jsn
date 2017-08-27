@@ -6,10 +6,11 @@
     "window3":"ECU: RPM und TEMP Anzeige",
     "left": "links",
     "right": "rechts",
-    "selectConverterType":"Auswahl ECU Typ",
-    "selectTurbineType":"Turbine manufacturer",
+    "selectConverterType":"ECU Converter Typ",
+    "selectTurbineType":"ECU manufacturer",
     "selectTurbineConfig":"Turbine config",
     "selectBatteryConfig":"Battery type",
+    "selectTurbineSensor":"ECU Converter sensor",
     "selectLeftTurbineSensor":"ECU Status Turbine links",
     "selectRightTurbineSensor":"ECU Status Turbine rechts",
     "alarmOffSwitch": "Alarme AUS Schalter"

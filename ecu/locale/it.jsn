@@ -6,11 +6,12 @@
     "window3":"ECU: RPM and TEMP gauge",
     "left": "left",
     "right": "right",
-    "selectConverterType":"ECU converter type",
-    "selectTurbineType":"Turbine manufacturer",
+    "selectConverterType":"ECU telemetry converter",
+    "selectTurbineType":"ECU type",
     "selectTurbineConfig":"Turbine config",
     "selectBatteryConfig":"Battery type",
-    "selectLeftTurbineSensor":"ECU status turbine left",
-    "selectRightTurbineSensor":"ECU status turbine right",
+    "selectTurbineSensor":"ECU converter sensor",
+    "selectLeftTurbineSensor":"ECU sensor turbine left",
+    "selectRightTurbineSensor":"ECU sensor turbine right",
     "alarmOffSwitch": "Alarms of switch"
 }

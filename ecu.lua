@@ -3,24 +3,25 @@
 -- # Jeti Advanced ECU LUA Script. Easy telemetry displaying, advanced alarms, easy setup, very configurable, easy to setup new ecu types
 -- # Some Lua ideas copied from Jeti and TeroS
 -- #
--- # Copyright (c) 2017, Original idea by Thomas Ekdahl (thomas@ekdahl.no) co-developed with Volker Weigt the maker of vspeak hardware.
+-- # Copyright (c) 2017, Original idea by Thomas Ekdahl (thomas@ekdahl.no).
 -- # Telemetry display code graphics borrowed from ECU data display made by Bernd Woköck
 -- #
 -- # License: Share alike                                       
 -- # Can be used and changed non commercial, but feel free to send us changes back to be incorporated in the main code.
+-- # If using parts of this project elsewhere, please give me credit for it
 -- #                       
--- # 0.9 - Initial release
+-- # Version: 2.2
 -- ############################################################################# 
 
 local loadh      = require "ecu/lib/loadhelper"
 local tableh     = require "ecu/lib/tablehelper"
 local alarmh     = require "ecu/lib/alarmhelper"
 local sensorh    = require "ecu/lib/sensorhelper"
-local fake       = require "ecu/lib/fakesensor"
+--local fake       = require "ecu/lib/fakesensor"
 local window1 = require "ecu/lib/telemetry_window1"
 local window2 = require "ecu/lib/telemetry_window2"
-local window3 = require "ecu/lib/telemetry_window3"
-local window4 = require "ecu/lib/telemetry_window4"
+--local window3 = require "ecu/lib/telemetry_window3"
+--local window4 = require "ecu/lib/telemetry_window4"
 
 -- Globals to be accessible also from libraries
 config          = {"..."} -- Complete turbine config object dynamically assembled
@@ -132,10 +133,10 @@ end
 --
 local function initForm(subform)
     -- make all the dynamic menu items
-    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, BatteryConfigIndex, SensorIndex = 1,1,1,1,1
+    local ConverterTypeIndex, TurbineTypeIndex, TurbineConfigIndex, BatteryConfigIndex, SensorMenuIndex = 1,1,1,1,1
     local SensorMenuT = {"..."}
-    -- SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorTable(SensorID) -- Returns only sensor names
-    SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorParamTable(SensorID) -- Returns all sensors with param valuye
+    SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorTable(SensorID) -- Returns only sensor names
+    -- SensorT, SensorMenuT, SensorMenuIndex = sensorh.getSensorParamTable(SensorID) -- Returns all sensors with param valuye
 
     collectgarbage()
 
@@ -158,7 +159,7 @@ local function initForm(subform)
     form.addSelectbox(TurbineConfigTable, TurbineConfigIndex, true, TurbineConfigChanged)
 
     form.addRow(2)
-    form.addLabel({label=lang.selectLeftTurbineSensor, width=200})
+    form.addLabel({label=lang.selectTurbineSensor, width=200})
     form.addSelectbox(SensorMenuT, SensorMenuIndex, true, SensorChanged)
 
     form.addRow(2)
@@ -491,4 +492,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.1', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.2', name=lang.appName}
