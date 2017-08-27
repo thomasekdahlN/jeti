@@ -583,7 +583,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "RC off.wav"
          },
@@ -601,7 +601,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Slow down.wav"
          },
@@ -651,11 +651,11 @@
     "PreHeat1"   : {
         "text"      : "PreHeat1",
         "message"   : {
-            "enable" : false,
+            "enable" : true,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Preheat1.wav"
          },
@@ -723,11 +723,11 @@
     "MainFStrt"   : {
         "text"      : "MainFStrt",
         "message"   : {
-            "enable" : true,
+            "enable" : false,
             "seconds": 4
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Main fuel start.wav"
          },

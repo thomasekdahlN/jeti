@@ -10,7 +10,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "Over rpm.wav"
+                "file"      : "rpm_high.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -27,7 +27,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "Low rpm.wav"
+                "file"      : "rpm_low.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -47,7 +47,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "Over rpm shaft.wav"
+                "file"      : "rpm2_high.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -64,7 +64,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "Low shaft rpm.wav"
+                "file"      : "rpm2_low.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -84,7 +84,7 @@
             },
             "audio" : {
                 "enable"    : false,
-                "file"      : "Over temperature.wav"
+                "file"      : "egt_high.wav"
             },
             "haptic"    : {
                 "enable"    : false,
@@ -101,7 +101,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "Low temperature.wav"
+                "file"      : "egt_low.wav"
             },
             "haptic"    : {
                 "enable"    : true,
@@ -121,7 +121,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "High pump voltage.wav"
+                "file"      : "pumpv_high.wav"
             },
             "haptic"    : {
                 "enable"    : true,

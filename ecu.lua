@@ -237,51 +237,53 @@ end
 --
 local function processFuel(tmpCfg, tmpSensorID)
 
-    if(SensorT[tmpCfg.sensorname].sensor.valid) then
+    if(SensorT[tmpCfg.sensorname]) then
+        if(SensorT[tmpCfg.sensorname].sensor.valid) then
 
-        initFuelStatistics(tmpCfg) -- Important
+            initFuelStatistics(tmpCfg) -- Important
 
-        -- We only enable the low alarms after they have passed the low threshold
-        if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
-            alarmLowValuePassed[tmpCfg.sensorname] = true;
-        end
-
-        -- Repeat fuel level audio at intervals
-        if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
-            prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?  
-
-            if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
-                system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
-            else
-                system.messageBox("Error: Negative fuel interval", 5)
+            -- We only enable the low alarms after they have passed the low threshold
+            if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
+                alarmLowValuePassed[tmpCfg.sensorname] = true;
             end
-        end
-        
-        -- Check for alarm thresholds
-        if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
-            if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
-                if(not alarmsTriggered[tmpCfg.sensorname]) then
-                    if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
 
-                        alarmsTriggered[tmpCfg.sensorname] = true
-                        alarmh.Message(tmpCfg.critical.message,string.format("%s (%s < %s)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
-                        alarmh.Haptic(tmpCfg.critical.haptic)
-                        alarmh.Audio(tmpCfg.critical.audio)
-                
-                    elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
+            -- Repeat fuel level audio at intervals
+            if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
+                prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?  
 
-                        alarmsTriggered[tmpCfg.sensorname] = true
-                        alarmh.Message(tmpCfg.warning.message,string.format("%s (%s < %s)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
-                        alarmh.Haptic(tmpCfg.warning.haptic)
-                        alarmh.Audio(tmpCfg.warning.audio)
-                     end
+                if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
+                    system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
+                else
+                    system.messageBox("Error: Negative fuel interval", 5)
                 end
             end
+            
+            -- Check for alarm thresholds
+            if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
+                if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
+                    if(not alarmsTriggered[tmpCfg.sensorname]) then
+                        if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
+
+                            alarmsTriggered[tmpCfg.sensorname] = true
+                            alarmh.Message(tmpCfg.critical.message,string.format("%s (%s < %s)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
+                            alarmh.Haptic(tmpCfg.critical.haptic)
+                            alarmh.Audio(tmpCfg.critical.audio)
+                    
+                        elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
+
+                            alarmsTriggered[tmpCfg.sensorname] = true
+                            alarmh.Message(tmpCfg.warning.message,string.format("%s (%s < %s)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
+                            alarmh.Haptic(tmpCfg.warning.haptic)
+                            alarmh.Audio(tmpCfg.warning.audio)
+                         end
+                    end
+                end
+            else
+                alarmh.Message(tmpCfg.warning.message,string.format("Error in fuel sensor (level:%s,value:%s)", tmpCfg.warning.text, prevFuelLevel, SensorT[tmpCfg.sensorname].sensor.value))
+            end
         else
-            alarmh.Message(tmpCfg.warning.message,string.format("Error in fuel sensor (level:%s,value:%s)", tmpCfg.warning.text, prevFuelLevel, SensorT[tmpCfg.sensorname].sensor.value))
+            SensorT[tmpCfg.sensorname].percent = 0
         end
-    else
-        SensorT[tmpCfg.sensorname].percent = 0
     end
 end
 
@@ -345,6 +347,7 @@ local function processStatus(tmpCfg, tmpSensorID)
 
                 if(enableAlarm) then
                     -- ToDo: Implement repeat of alarm
+                    print(string.format("Sensor: %s Status: %s", tmpCfg.sensorname, SensorT[tmpCfg.sensorname].text))
                     alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
                     alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
                 end
