@@ -166,7 +166,7 @@ If it says Err instead of OK on the App status. Press the CMD button to see the 
 ![install - 16 - application added and running](https://user-images.githubusercontent.com/26059207/31859266-ace26e62-b709-11e7-8dd3-b01205e7d07a.png)<br><br>
 Answear yes<br>
 ![install - 17 - answear yes](https://user-images.githubusercontent.com/26059207/31859267-acfb08b4-b709-11e7-9282-8a951d3ddc21.png)<br><br>
-If it says Err instead of OK on the App status. Press the CMD button to see the debug log. Important: If reporting errors to me, you have to include a screenshot of this debug screen.<br>
+Debug log screen - you have to send me a screendump of this if you have problems running the app<br>
 ![install - 18 - debug info after pressing the command button](https://user-images.githubusercontent.com/26059207/31859268-ad135fd6-b709-11e7-8338-7fd456c0731d.png)<br><br>
 ![install - 19 - after choosing the applicatiomn](https://user-images.githubusercontent.com/26059207/31859269-ad2ce8de-b709-11e7-912c-3512f655e07d.png)<br><br>
 ![install - 20 - choose telemetry converter](https://user-images.githubusercontent.com/26059207/31859270-ad46d6ea-b709-11e7-9cb6-bac3a4210ffd.png)<br><br>
