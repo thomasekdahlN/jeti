@@ -129,24 +129,41 @@ For the people who love to tinker it is infinitely extensive and changeable in a
 
 Then you are up and running with the most advanced ecu monitoring available today
 
-#Installation in pictures
+#Installation in pictures<br>
+Press download from github<br>
 ![install - 01 - download from github png](https://user-images.githubusercontent.com/26059207/31859250-ab34975c-b709-11e7-9b11-5fa37ef47d08.png)<br>
+Choose download zip from github<br>
 ![install - 02 - download zip from github](https://user-images.githubusercontent.com/26059207/31859251-ab4e7ece-b709-11e7-96b5-6aab81926833.png)<br>
+Downloaded zip<br>
 ![install - 03 - downloaded zip file](https://user-images.githubusercontent.com/26059207/31859252-ab66de1a-b709-11e7-8867-d3551df54ae9.png)<br>
+Open downloaded zip file<br>
 ![install - 04 - open downloaded zip file](https://user-images.githubusercontent.com/26059207/31859253-ab7f6156-b709-11e7-868e-e30bee2b4605.png)<br>
+See both downloaded zip file and unzipped file<br>
 ![install - 05 - zip and unzipped file](https://user-images.githubusercontent.com/26059207/31859254-ab979334-b709-11e7-820e-d34129dae5d1.png)<br>
+See files inside unzipped folder (Jeti-master)
 ![install - 06 - files inside zip file](https://user-images.githubusercontent.com/26059207/31859255-abb23428-b709-11e7-91f3-9635db682ee1.png)<br>
+See files omn transmitter after connecting transmitter to PC/MAC with USB cable<br>
 ![install - 07 - files on transmitter usb](https://user-images.githubusercontent.com/26059207/31859256-abcb1c2c-b709-11e7-97c5-3e5b10926a46.png)<br>
+Files ion transmitter left, downloaded files on the right<br>
 ![install - 08 - files on trransmitter left files in zip right](https://user-images.githubusercontent.com/26059207/31859257-abe33c80-b709-11e7-81af-55e00123e254.png)<br>
+Copy the downloaded ecu folder into Apps in transmitter 
 ![install - 09 - copy entire ecu folder into the apps folder on the transmitter](https://user-images.githubusercontent.com/26059207/31859258-ac14802e-b709-11e7-83a6-3130cf98d292.png)<br>
+Copy the ecu_16.lc file to Apps folder on transmitter if you have ds-16 or dc-16<br>
 ![install - 10 - copy the ecu_16 lc to apps folder on transmitter if uou have ds-16 ot dc-16](https://user-images.githubusercontent.com/26059207/31859259-ac2da3ec-b709-11e7-9d74-35776a004563.png)<br>
+Copy the ecu.lc file to Apps folder on transmitter if you have ds-24 or dc-24<br>
 ![install - 11 - copy the ecu lc to apps folder on transmitter if uou have ds-24 ot dc-24](https://user-images.githubusercontent.com/26059207/31859260-ac46296c-b709-11e7-9706-579d83f4702b.png)<br>
+Disconnect USB from transmitter, start transmitter normally and choose the Application menu<br>
 ![install - 12 - choose application menu on transmitter](https://user-images.githubusercontent.com/26059207/31859261-ac5fabf8-b709-11e7-9470-003703fc3d70.png)<br>
+Choose user application menu on transmitter<br>
 ![install - 13 - choose user applications on transmitter](https://user-images.githubusercontent.com/26059207/31859262-ac78476c-b709-11e7-9009-1ec81c33a3e4.png)<br>
+Press + (plus) sign to add application
 ![install - 14 - press plus sign on transmitter](https://user-images.githubusercontent.com/26059207/31859263-ac92cdc6-b709-11e7-81b0-8ef1f92ed9c7.png)<br>
+Copy the ecu.lc file to Apps folder on transmitter if you have ds-24 or dc-24<br>
 ![install - 15 - choose ecu if you have a ds-24 or dc-24](https://user-images.githubusercontent.com/26059207/31859264-acacc7da-b709-11e7-9c44-d7d78ac191ab.png)<br>
+Copy the ecu_16.lc file to Apps folder on transmitter if you have ds-16 or dc-16<br>
 ![install - 15 - choose ecu_16 if you have a ds-16 or dc-16 png](https://user-images.githubusercontent.com/26059207/31859265-acc57ca8-b709-11e7-930c-6e74ea00fc0f.png)<br>
 ![install - 16 - application added and running](https://user-images.githubusercontent.com/26059207/31859266-ace26e62-b709-11e7-8dd3-b01205e7d07a.png)<br>
+Answear yes<br>
 ![install - 17 - answear yes](https://user-images.githubusercontent.com/26059207/31859267-acfb08b4-b709-11e7-9282-8a951d3ddc21.png)<br>
 ![install - 18 - debug info after pressing the command button](https://user-images.githubusercontent.com/26059207/31859268-ad135fd6-b709-11e7-8338-7fd456c0731d.png)<br>
 ![install - 19 - after choosing the applicatiomn](https://user-images.githubusercontent.com/26059207/31859269-ad2ce8de-b709-11e7-912c-3512f655e07d.png)<br>
