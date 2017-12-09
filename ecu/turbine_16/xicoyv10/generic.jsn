@@ -2,7 +2,7 @@
     "rpm" : {
         "sensorname": "rpm",
         "high" : 180000,
-        "low"  : 43000
+        "low"  : 40000
     },
     "rpm2" : {
         "sensorname": "rpm2",
@@ -22,7 +22,7 @@
     "pumpv" : {
         "sensorname": "pumpv",
         "high" : 2.5,
-        "low"  :0.2
+        "low"  :0.1
     },
     "status" : {
         "sensorname": "status"

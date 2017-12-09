@@ -1,7 +1,7 @@
 {
     "sensorname": "status",
-    "- ERROR -"   : {
-        "text"      : "- ERROR -",
+    "Error"   : {
+        "text"      : "Error",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -9,7 +9,7 @@
          "audio" : {
              "enable"    : true,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Error.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -18,16 +18,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "-off"   : {
-        "text"      : "-off",
+    "Off"   : {
+        "text"      : "Off",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Off.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -36,16 +36,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "cool"   : {
-        "text"      : "cool",
+    "Cool"   : {
+        "text"      : "Cool",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Cool.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -54,16 +54,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "lock"   : {
-        "text"      : "lock",
+    "Lock"   : {
+        "text"      : "Lock",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Lock.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -72,16 +72,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "stop"   : {
-        "text"      : "stop",
+    "Stop"   : {
+        "text"      : "Stop",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Stop.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -90,16 +90,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "run-"   : {
-        "text"      : "run-",
+    "Run"   : {
+        "text"      : "Run",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Run.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -108,16 +108,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "rel-"   : {
-        "text"      : "rel-",
+    "Rel"   : {
+        "text"      : "Rel",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Rel.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -126,16 +126,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "glow"   : {
-        "text"      : "glow",
+    "Glow"   : {
+        "text"      : "Glow",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Glow.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -144,16 +144,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "spin"   : {
-        "text"      : "spin",
+    "Spin"   : {
+        "text"      : "Spin",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Spin.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -162,16 +162,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "fire"   : {
-        "text"      : "fire",
+    "Fire"   : {
+        "text"      : "Fire",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Fire.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -180,16 +180,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "ignt"   : {
-        "text"      : "ignt",
+    "Ignition"   : {
+        "text"      : "Ignition",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Ignition.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -198,17 +198,16 @@
              "vibrationProfile"   : 4
          }
     },
-
-    "heat"   : {
-        "text"      : "heat",
+    "Heat"   : {
+        "text"      : "Heat",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Heat.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -217,16 +216,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "acce"   : {
-        "text"      : "acce",
+    "Accelerate"   : {
+        "text"      : "Accelerate",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Accelerate.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -235,16 +234,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "cal."   : {
-        "text"      : "cal.",
+    "Calibrate"   : {
+        "text"      : "Calibrate",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Calibrate.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -253,16 +252,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "idel"   : {
-        "text"      : "idel",
+    "Idle"   : {
+        "text"      : "Idle",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Failure.wav"
+             "file"      : "Idle.wav"
          },
          "haptic"    : {
              "enable"    : false,

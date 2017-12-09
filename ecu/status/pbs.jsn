@@ -1,7 +1,7 @@
 {
     "sensorname": "status",
-    "ERROR"   : {
-        "text"      : "ERROR",
+    "Error"   : {
+        "text"      : "Error",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -9,7 +9,7 @@
          "audio" : {
              "enable"    : true,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Error.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -18,16 +18,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "COOL"   : {
-        "text"  : "COOL",
+    "Cool"   : {
+        "text"  : "Cool",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Cool.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -36,16 +36,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "LOCK"    : {
-        "text"  : "LOCK",
+    "Lock"    : {
+        "text"  : "Lock",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Lock.wav"
          },
          "haptic"    : {
              "enable"    : true,
@@ -54,16 +54,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "STOP"     : {
-        "text"  : "STOP",
+    "Stop"     : {
+        "text"  : "Stop",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Stop.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -72,14 +72,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: Idle"    : {
-        "text"  : "TH: Idle",
+    "Idle"    : {
+        "text"  : "Idle",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Idle.wav"
          },
@@ -90,16 +90,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH:Rel"    : {
-        "text"  : "TH:Rel",
+    "Rel"    : {
+        "text"  : "Rel",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Rel.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -108,16 +108,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "TEST"    : {
-        "text"  : "TEST",
+    "Test"    : {
+        "text"  : "Test",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Test.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -126,16 +126,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "START"    : {
-        "text"  : "START",
+    "Start"    : {
+        "text"  : "Start",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Startup.wav"
+             "file"      : "Start.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -144,32 +144,32 @@
              "vibrationProfile"   : 4
          }
     },
-    "FIRE"    : {
-        "text"  : "FIRE",
+    "Fire"   : {
+        "text"      : "Fire",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : ""
+             "file"      : "Fire.wav"
          },
          "haptic"    : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "stick"     : "left",
              "vibrationProfile"   : 4
          }
     },
-    "IDLE _"    : {
-        "text"  : "IDLE _",
+    "Idle"   : {
+        "text"      : "Idle",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Idle.wav"
          },

@@ -21,7 +21,7 @@
         "audio" : {
             "enable"    : true,
             "repeat"    : 1,
-            "file"      : "EcuBatteryHigh.wav"
+            "file"      : "ecuv_high.wav"
         },
         "haptic"    : {
             "enable"    : false,
@@ -38,7 +38,7 @@
         },
         "audio" : {
             "enable"    : true,
-            "file"      : "EcuBatteryLow.wav"
+            "file"      : "ecuv_low.wav"
         },
         "haptic"    : {
             "enable"    : true,

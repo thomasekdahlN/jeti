@@ -205,7 +205,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Starting.wav"
          },
@@ -223,7 +223,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Started up.wav"
          },
@@ -241,7 +241,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Calibrated.wav"
          },
@@ -259,7 +259,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Auto stop.wav"
          },
@@ -277,7 +277,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Running.wav"
          },

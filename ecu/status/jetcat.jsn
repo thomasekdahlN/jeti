@@ -360,8 +360,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "Glowplug"   : {
-        "text"      : "Glowplug",
+    "Glow plug"   : {
+        "text"      : "Glow plug",
         "message"   : {
             "enable" : true,
             "seconds": 3
