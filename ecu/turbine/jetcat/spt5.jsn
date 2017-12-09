@@ -138,7 +138,7 @@
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "Flameout.wav"
+                "file"      : "pumpv_low.wav"
             },
             "haptic"    : {
                 "enable"    : true,

@@ -27,20 +27,21 @@ SensorT = {
 
 -- Locals for the application
 local enableAlarm                 = false
-local prevStatusID, prevFuel, TankSize = 0,0,0
+local prevStatusID, prevFuelLevel, TankSize = 0,0,0
 local alarmOffSwitch
 
 local lang              = {"..."} -- Language read from file
 
-local alarmsTriggered   = {"..."} -- true on the alarm triggered, used to not repeat alarms to often
+local alarmTriggeredTime   = {"..."} -- true on the alarm triggered, used to not repeat alarms to often
 
-local alarmLowValuePassed = { -- enables alarms that has passed the low treshold, to not get alarms before turbine is running properly. Status alarms, high alarms, fuel alarms , and ecu voltage alarms is always enabled.
-    rpm    = false,
-    egt    = false,
-    pumpv  = false,
-    ecuv   = true,
-    fuel   = true,
-    status = true
+local alarmTriggeredTime   = { -- stores latest datetime on the alarm triggered, used to not repeat alarms to often
+    rpm    = 0,
+    rpm2   = 0,
+    egt    = 0,
+    pumpv  = 0,
+    ecuv   = 0,
+    fuel   = 0,  -- in ml from ecu
+    status = 0,
 }
 
 local SensorID              = 0
@@ -358,31 +359,40 @@ local function calcPercent(current, high, low)
     return percent
 end
 
+----------------------------------------------------------------------
+-- Calculates: config.fuellevel.tanksize and config.fuellevel.interval and fuelpercent
 local function initFuelStatistics(tmpCfg)
 
-    -- print(string.format("fuel.value : %s",SensorT[tmpCfg.sensorname].sensor.value))
+    -- We only enable the low alarms after they have passed the low threshold
+    if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
+        alarmLowValuePassed[tmpCfg.sensorname] = true;
+    end
 
-    if(config.fuel.tanksize < 50) then -- Configure TankSize during first 50 cycles
+    if(config.fuel.tanksize < 50 and alarmLowValuePassed[tmpCfg.sensorname]) then -- Configure TankSize during first 50 cycles
         if(config.converter.fuel.countingdown) then
 
             -- Init: Automatic calculations done on the first run after we read the sensor value.
             config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
             TankSize             = config.fuel.tanksize 
-            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+            config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            prevFuelLevel        = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
         else
             -- counting up, have to subtract
             config.fuel.tanksize = TankSize -- TankSize read from GUI not from ECU when counting up usage
-            config.fuel.interval = config.fuel.tanksize / 11 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+            config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
+            prevFuelLevel        = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
         end 
     end
 
     -- Calculate fuel percentage remaining
-    if(config.converter.fuel.countingdown) then
-        SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    if(config.fuel.tanksize > 50 and alarmLowValuePassed[tmpCfg.sensorname]) then
+        if(config.converter.fuel.countingdown) then
+            SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+        else
+            SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+        end
     else
-        SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+        SensorT[tmpCfg.sensorname].percent = 0
     end
 end
 
@@ -400,25 +410,25 @@ local function processFuel(tmpCfg, tmpSensorID)
         end
 
         -- Repeat fuel level audio at intervals
-        if(SensorT[tmpCfg.sensorname].sensor.value < prevFuel and alarmLowValuePassed[tmpCfg.sensorname]) then
-            prevFuel = prevFuel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
-            system.playNumber(prevFuel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
+        if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
+            prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?    
+            system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
         end
         
         -- Check for alarm thresholds
         if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
-            if(not alarmsTriggered[tmpCfg.sensorname]) then
+            if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then
                 if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical) then
 
-                    alarmsTriggered[tmpCfg.sensorname] = true
+                    alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 20
                     system.messageBox(string.format("%s (%s < %s)", 'fuel critical', SensorT[tmpCfg.sensorname].percent, tmpCfg.critical))
-                    system.playFile("/Apps/ecu/audio/generic/fuel_critical.wav",AUDIO_IMMEDIATE)
+                    system.playFile("/Apps/ecu/audio/fuel_critical.wav",AUDIO_IMMEDIATE)
             
                 elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning) then
 
-                    alarmsTriggered[tmpCfg.sensorname] = true
+                    alarmTriggeredTime[tmpCfg.sensorname]  = system.getTime() + 15
                     system.messageBox(string.format("%s (%s < %s)", 'fuel warning', SensorT[tmpCfg.sensorname].percent, tmpCfg.warning))
-                    system.playFile("/Apps/ecu/audio/generic/fuel_warning.wav",AUDIO_IMMEDIATE)
+                    system.playFile("/Apps/ecu/audio/fuel_warning.wav",AUDIO_IMMEDIATE)
                  end
             end
         end
@@ -447,16 +457,16 @@ local function processGeneric(tmpCfg, tmpSensorID)
             SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high, tmpCfg.low)
 
             if(enableAlarm) then
-                if(not alarmsTriggered[tmpCfg.sensorname]) then 
+                if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then 
                     if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high) then
-                        alarmsTriggered[tmpCfg.sensorname] = true
+                        alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
                         system.messageBox(string.format("%s high (%s > %s)", tmpCfg.sensorname, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high), 5)
-                        system.playFile(string.format("/Apps/ecu/audio/generic/%s_high.wav", tmpCfg.sensorname),AUDIO_IMMEDIATE)
+                        system.playFile(string.format("/Apps/ecu/audio/%s_high.wav", tmpCfg.sensorname),AUDIO_IMMEDIATE)
                 
                     elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low and alarmLowValuePassed[tmpCfg.sensorname]) then
-                        alarmsTriggered[tmpCfg.sensorname] = true
+                        alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
                         system.messageBox(string.format("%s low (%s < %s)", tmpCfg.sensorname, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low), 5)
-                        system.playFile(string.format("/Apps/ecu/audio/generic/%s_low.wav", tmpCfg.sensorname),AUDIO_IMMEDIATE)
+                        system.playFile(string.format("/Apps/ecu/audio/%s_low.wav", tmpCfg.sensorname),AUDIO_IMMEDIATE)
                     end
                 end
             end
@@ -483,8 +493,8 @@ local function processStatus(tmpCfg, tmpSensorID)
                 SensorT[tmpCfg.sensorname].text = string.format("Status %s", statusint)
             end
             system.messageBox(SensorT[tmpCfg.sensorname].text, 5) -- we always show a message that will be logged on status changed
-            print(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text))
-            system.playFile(string.format("/Apps/ecu/audio/%s/%s.wav", TurbineType, SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
+            print(string.format("/Apps/ecu/audio/%s.wav", SensorT[tmpCfg.sensorname].text))
+            system.playFile(string.format("/Apps/ecu/audio/%s.wav", SensorT[tmpCfg.sensorname].text),AUDIO_IMMEDIATE)
         end 
         prevStatusID = SensorT[tmpCfg.sensorname].text
         -------------------------------------------------------------
@@ -496,27 +506,17 @@ local function processStatus(tmpCfg, tmpSensorID)
 end
 
 ----------------------------------------------------------------------
--- Resets alarms so they will be triggered again every 30 seconds
-function resetAlarmCounter()
-    if(system.getTime() % 30 == 0) then
-        for name,value in pairs(alarmsTriggered) do 
-            alarmsTriggered[name] = false
-        end
-    end
-end
-
-----------------------------------------------------------------------
 -- Check if switch to enable alarms is set, sets global enableAlarm value
 local function enableAlarmCheck()
     switch = system.getSwitchInfo(alarmOffSwitch)
     if(switch) then
-        if(switch.value < 0 and enableAlarm) then  -- turned off by switch, will always override status handling
+        if(switch.value < 0) then  -- turned off by switch, will always override status handling
             enableAlarm      = false
-            print("switch off enableAlarms = false")
-        elseif(switch.value > 0 and not enableAlarm) then
+        else
             enableAlarm      = true
-            print("switch on enableAlarms = true")
         end
+    else
+        enableAlarm      = true
     end
 end
 
@@ -565,7 +565,7 @@ local function init()
     alarmOffSwitch    = system.pLoad("alarmOffSwitch")
     -- read all the config files
     loadConfig()
-    system.registerTelemetry(1, string.format("%s", lang.window1),2,window)
+    system.registerTelemetry(1, string.format("%s - 16", lang.window1),2,window)
     ctrlIdx = system.registerControl(1, "Turbine off switch","TurbOff")
     collectgarbage()
     print("Init finished: ", collectgarbage("count"))
@@ -575,7 +575,6 @@ end
 local function loop()
 
     if(SensorID ~= 0) then
-        resetAlarmCounter()
         enableAlarmCheck()
         readParamsFromSensor(SensorID) -- Real sensor values
         -- All converters has these sensors

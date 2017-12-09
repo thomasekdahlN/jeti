@@ -1,13 +1,13 @@
 {
     "sensorname": "status",
-    "DEV.DELAY"   : {
-        "text"      : "DEV.DELAY",
+    "Device delay"   : {
+        "text"      : "Device delay",
         "message"   : {
             "enable" : false,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Device delay.wav"
          },
@@ -18,8 +18,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "FLAME OUT"   : {
-        "text"      : "FLAME OUT",
+    "Flameout"   : {
+        "text"      : "Flameout",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -36,8 +36,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "EMERGENCY"   : {
-        "text"      : "EMERGENCY",
+    "Emergency"   : {
+        "text"      : "Emergency",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -54,8 +54,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "OFF"   : {
-        "text"      : "OFF",
+    "Off"   : {
+        "text"      : "Off",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -72,8 +72,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "ARMED"   : {
-        "text"      : "ARMED",
+    "Armed"   : {
+        "text"      : "Armed",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -90,8 +90,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "COOL-DOWN"   : {
-        "text"      : "COOL-DOWN",
+    "Cool down"   : {
+        "text"      : "Cool down",
         "message"   : {
             "enable" : false,
             "seconds": 5
@@ -108,14 +108,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "SLOW DOWN"   : {
-        "text"      : "SLOW DOWN",
+    "Slow down"   : {
+        "text"      : "Slow down",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Slow down.wav"
          },
@@ -126,14 +126,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "STANDBY"   : {
-        "text"      : "STANDBY",
+    "Standby"   : {
+        "text"      : "Standby",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Standby.wav"
          },
@@ -144,8 +144,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "PROP IGNIT"   : {
-        "text"      : "PROP IGNIT",
+    "Prop ignition"   : {
+        "text"      : "Prop ignition",
         "message"   : {
             "enable" : false,
             "seconds": 5
@@ -153,7 +153,7 @@
          "audio" : {
              "enable"    : false,
              "repeat"    : 1,
-             "file"      : "ignition on.wav"
+             "file"      : "Prop ignition.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -162,8 +162,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "PROP-HEAT"   : {
-        "text"      : "PROP-HEAT",
+    "Prop heat"   : {
+        "text"      : "Prop heat",
         "message"   : {
             "enable" : false,
             "seconds": 5
@@ -171,7 +171,7 @@
          "audio" : {
              "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Preheat1.wav"
+             "file"      : "Prop heat.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -180,8 +180,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "PUMPSTART"   : {
-        "text"      : "PUMPSTART",
+    "Pump start"   : {
+        "text"      : "Pump start",
         "message"   : {
             "enable" : false,
             "seconds": 5
@@ -198,8 +198,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "BURNER ON"   : {
-        "text"      : "BURNER ON",
+    "Burner on"   : {
+        "text"      : "Burner on",
         "message"   : {
             "enable" : false,
             "seconds": 5
@@ -216,8 +216,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "FUELIGNIT"   : {
-        "text"      : "FUELIGNIT",
+    "Fuel ignition"   : {
+        "text"      : "Fuel ignition",
         "message"   : {
             "enable" : false,
             "seconds": 5
@@ -234,14 +234,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "FUELHEAT"   : {
-        "text"      : "FUELHEAT",
+    "Fuel heat"   : {
+        "text"      : "Fuel heat",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Fuel heat.wav"
          },
@@ -252,14 +252,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "RAMP DELAY"   : {
-        "text"      : "RAMP DELAY",
+    "Ramp delay"   : {
+        "text"      : "Ramp delay",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Ramp delay.wav"
          },
@@ -270,14 +270,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "RAMP-UP"   : {
-        "text"      : "RAMP-UP",
+    "Ramp up"   : {
+        "text"      : "Ramp up",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Ramp up.wav"
          },
@@ -288,16 +288,16 @@
              "vibrationProfile"   : 4
          }
     },
-    "STEADYB"   : {
-        "text"      : "STEADYB",
+    "Steadyb"   : {
+        "text"      : "Steadyb",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Steady.wav"
+             "file"      : "Steadyb.wav"
          },
          "haptic"    : {
              "enable"    : false,
@@ -306,32 +306,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "CAL IDLE"   : {
-        "text"      : "CAL IDLE",
+    "Calibrate idle"   : {
+        "text"      : "Calibrate idle",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
-             "repeat"    : 1,
-             "file"      : "Idle.wav"
-         },
-         "haptic"    : {
              "enable"    : false,
-             "repeat"    : 1,
-             "stick"     : "left",
-             "vibrationProfile"   : 4
-         }
-    },
-    "CALIBRATE"   : {
-        "text"      : "CALIBRATE",
-        "message"   : {
-            "enable" : true,
-            "seconds": 5
-         },
-         "audio" : {
-             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Calibrate idle.wav"
          },
@@ -342,14 +324,32 @@
              "vibrationProfile"   : 4
          }
     },
-    "WAIT ACC"   : {
-        "text"      : "WAIT ACC",
+    "Calibrate"   : {
+        "text"      : "Calibrate",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Calibrate.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Wait acceleration"   : {
+        "text"      : "Wait acceleration",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Wait acceleration.wav"
          },
@@ -360,14 +360,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "GO IDLE"   : {
-        "text"      : "GO IDLE",
+    "Go idle"   : {
+        "text"      : "Go idle",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Go idle.wav"
          },
@@ -378,14 +378,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "AUTO"   : {
-        "text"      : "AUTO",
+    "Auto"   : {
+        "text"      : "Auto",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Auto.wav"
          },
@@ -396,14 +396,14 @@
              "vibrationProfile"   : 4
          }
     },
-    "AUTO Heat Control"   : {
-        "text"      : "AUTO Heat Control",
+    "Auto heat control"   : {
+        "text"      : "Auto heat control",
         "message"   : {
             "enable" : true,
             "seconds": 5
          },
          "audio" : {
-             "enable"    : true,
+             "enable"    : false,
              "repeat"    : 1,
              "file"      : "Auto heat control.wav"
          },

@@ -38,7 +38,7 @@ function fakesensor.makeSensorValues()
     SensorT.rpm.sensor.value  = 121239
     SensorT.rpm.sensor.max    = 156693
 
-    SensorT.rpm2.sensor.value = 2534
+    SensorT.rpm2.sensor.value = 9000
     SensorT.rpm2.sensor.max   = 5556
 
     SensorT.egt.sensor.value  = 634
@@ -59,24 +59,24 @@ function fakesensor.makeSensorValues()
     SensorT.status.sensor.max    = 0
     SensorT.status.text          = 'RC Off'
   else
-    SensorT.rpm.sensor.value  = 99999
+    SensorT.rpm.sensor.value  = 30000
     SensorT.rpm.sensor.max    = 156693
 
     SensorT.rpm2.sensor.value = 2433
     SensorT.rpm2.sensor.max   = 5252
 
-    SensorT.egt.sensor.value  = 435
+    SensorT.egt.sensor.value  = 900
     SensorT.egt.sensor.max    = 757
 
-    SensorT.fuel.sensor.value  = 2501
+    SensorT.fuel.sensor.value  = 250
     SensorT.fuel.sensor.max    = 2501
-    SensorT.fuel.percent       = 30
+    SensorT.fuel.percent       = 15
 
-    SensorT.ecuv.sensor.value  = 7.0
+    SensorT.ecuv.sensor.value  = 4.0
     SensorT.ecuv.sensor.max    = 7.5
     SensorT.ecuv.percent       = 20
 
-    SensorT.pumpv.sensor.value  = 0.7
+    SensorT.pumpv.sensor.value  = 0
     SensorT.pumpv.sensor.max    = 2.0
 
     SensorT.status.sensor.value  = 0

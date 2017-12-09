@@ -1,7 +1,7 @@
 {
     "sensorname": "status",
-    "- ERROR -"   : {
-        "text"      : "- ERROR -",
+    "ERROR"   : {
+        "text"      : "ERROR",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -18,8 +18,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- COOL -"   : {
-        "text"  : "- COOL -",
+    "COOL"   : {
+        "text"  : "COOL",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -36,8 +36,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- LOCK -"    : {
-        "text"  : "- LOCK -",
+    "LOCK"    : {
+        "text"  : "LOCK",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -54,8 +54,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- STOP -"     : {
-        "text"  : "- STOP -",
+    "STOP"     : {
+        "text"  : "STOP",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -90,8 +90,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: -Rel"    : {
-        "text"  : "TH: -Rel",
+    "TH:Rel"    : {
+        "text"  : "TH:Rel",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -108,8 +108,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- TEST -"    : {
-        "text"  : "- TEST -",
+    "TEST"    : {
+        "text"  : "TEST",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -126,8 +126,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- START -"    : {
-        "text"  : "- START -",
+    "START"    : {
+        "text"  : "START",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -144,8 +144,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- FIRE -"    : {
-        "text"  : "- FIRE -",
+    "FIRE"    : {
+        "text"  : "FIRE",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -162,8 +162,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "- IDLE _"    : {
-        "text"  : "- IDLE _",
+    "IDLE _"    : {
+        "text"  : "IDLE _",
         "message"   : {
             "enable" : true,
             "seconds": 5

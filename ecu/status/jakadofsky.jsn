@@ -18,8 +18,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: -off"   : {
-        "text"      : "TH: -off",
+    "-off"   : {
+        "text"      : "-off",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -36,8 +36,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: cool"   : {
-        "text"      : "TH: cool",
+    "cool"   : {
+        "text"      : "cool",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -54,8 +54,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: lock"   : {
-        "text"      : "TH: lock",
+    "lock"   : {
+        "text"      : "lock",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -72,26 +72,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: stop"   : {
-        "text"      : "TH: stop",
-        "message"   : {
-            "enable" : true,
-            "seconds": 5
-         },
-         "audio" : {
-             "enable"    : true,
-             "repeat"    : 1,
-             "file"      : "Failure.wav"
-         },
-         "haptic"    : {
-             "enable"    : false,
-             "repeat"    : 1,
-             "stick"     : "left",
-             "vibrationProfile"   : 4
-         }
-    },
-    "TH: run-"   : {
-        "text"      : "TH: run-",
+    "stop"   : {
+        "text"      : "stop",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -108,8 +90,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: rel-"   : {
-        "text"      : "TH: rel-",
+    "run-"   : {
+        "text"      : "run-",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -126,8 +108,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: glow"   : {
-        "text"      : "TH: glow",
+    "rel-"   : {
+        "text"      : "rel-",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -144,8 +126,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: spin"   : {
-        "text"      : "TH: spin",
+    "glow"   : {
+        "text"      : "glow",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -162,8 +144,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: fire"   : {
-        "text"      : "TH: fire",
+    "spin"   : {
+        "text"      : "spin",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -180,8 +162,26 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: ignt"   : {
-        "text"      : "TH: ignt",
+    "fire"   : {
+        "text"      : "fire",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Failure.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "ignt"   : {
+        "text"      : "ignt",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -199,8 +199,8 @@
          }
     },
 
-    "TH: heat"   : {
-        "text"      : "TH: heat",
+    "heat"   : {
+        "text"      : "heat",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -217,8 +217,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: acce"   : {
-        "text"      : "TH: acce",
+    "acce"   : {
+        "text"      : "acce",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -235,8 +235,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: cal."   : {
-        "text"      : "TH: cal.",
+    "cal."   : {
+        "text"      : "cal.",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -253,8 +253,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "TH: idel"   : {
-        "text"      : "TH: idel",
+    "idel"   : {
+        "text"      : "idel",
         "message"   : {
             "enable" : true,
             "seconds": 5

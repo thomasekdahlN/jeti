@@ -78,7 +78,7 @@ local function DrawFuelLow(percentage, ox, oy)
   end  
   
   -- percentage and warning
-  lcd.drawText(1+ox,49+oy, string.format("%s%s",tonumber(percentage),"%"), FONT_BOLD)    
+  lcd.drawText(1+ox,49+oy, string.format("%d%s",tonumber(percentage),"%"), FONT_BOLD)    
 end
 
 ----------------------------------------------------------------------

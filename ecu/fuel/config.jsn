@@ -14,7 +14,7 @@
         "audio" : {
             "enable"    : true,
             "repeat"    : 1,
-            "file"      : "Fuel level 20%.wav"
+            "file"      : "fuel_warning.wav"
         },
         "haptic"    : {
             "enable"    : true,
@@ -33,7 +33,7 @@
         "audio" : {
             "enable"    : true,
             "repeat"    : 1,
-            "file"      : "Fuel level 10%.wav"
+            "file"      : "fuel_critical.wav"
         },
         "haptic"    : {
             "enable"    : true,

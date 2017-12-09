@@ -16,7 +16,7 @@ local alarmhelper = {}
 -- 
 function alarmhelper.Message(tmpConfig,StatusText)
 
-    if(tmpConfig.enable) then
+    if(tmpConfig.enable and enableAlarmMessage) then
         system.messageBox(string.format("ECU: %s", StatusText),tmpConfig.seconds)
     end    
 end
@@ -25,7 +25,7 @@ end
 -- 
 function alarmhelper.Haptic(tmpConfig)
 
-    if(tmpConfig.enable) then
+    if(tmpConfig.enable and enableAlarmHaptic) then
         -- If vibration/haptic associated with status, we vibrate
         if(tmpConfig.stick == 'left') then
             system.vibration(false, tmpConfig.vibrationProfile);
@@ -41,10 +41,16 @@ end
 -- 
 function alarmhelper.Audio(tmpConfig)
 
-    if(tmpConfig.enable) then
+    if(tmpConfig.enable and enableAlarmAudio) then
         -- If audio file associated with status, we play it
         if(tmpConfig.file) then
-            system.playFile(string.format("/Apps/ecu/audio/%s", tmpConfig.file),AUDIO_IMMEDIATE)
+            system.playFile(string.format("/Apps/ecu/audio/%s", tmpConfig.file), AUDIO_QUEUE);
+
+            if(io.open(string.format("/Apps/ecu/audio/%s", tmpConfig.file), "r")) then
+
+            else
+                print(string.format("Missing Audio: %s", tmpConfig.file));
+            end
         end
     end
 end

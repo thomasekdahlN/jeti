@@ -18,14 +18,18 @@ local tableh     = require "ecu/lib/tablehelper"
 local alarmh     = require "ecu/lib/alarmhelper"
 local sensorh    = require "ecu/lib/sensorhelper"
 --local fake       = require "ecu/lib/fakesensor"
-local window1 = require "ecu/lib/telemetry_window1"
-local window2 = require "ecu/lib/telemetry_window2"
+local window1    = require "ecu/lib/telemetry_window1"
+local window2    = require "ecu/lib/telemetry_window2"
 --local window3 = require "ecu/lib/telemetry_window3"
 --local window4 = require "ecu/lib/telemetry_window4"
 
 -- Globals to be accessible also from libraries
-config          = {"..."} -- Complete turbine config object dynamically assembled
-sensorsOnline   = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one or more sensors offline
+config             = {"..."} -- Complete turbine config object dynamically assembled
+sensorsOnline      = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one or more sensors offline
+enableAlarmAudio   = true
+enableAlarmHaptic  = true
+enableAlarmMessage = true
+
 --SensorT = {    -- Sensor objects is globally stored here and accessible by sensorname as configured in ecu converter
 
 SensorT = {
@@ -39,13 +43,22 @@ SensorT = {
  }
 
 -- Locals for the application
-local enableAlarm                 = false
 local prevStatus, prevFuelLevel, TankSize = 0,0,0
-local alarmOffSwitch
+local audioOffSwitch, hapticOffSwitch, messageOffSwitch = 0,0,0
 
 local lang              = {"..."} -- Language read from file
 
-local alarmsTriggered   = {"..."} -- true on the alarm triggered, used to not repeat alarms to often
+local alarmTriggeredTime   = { -- stores latest datetime on the alarm triggered, used to not repeat alarms to often
+    rpm    = 0,
+    rpm2   = 0,
+    egt    = 0,
+    pumpv  = 0,
+    ecuv   = 0,
+    fuel   = 0,  -- in ml from ecu
+    status = 0,
+    offline= 0,
+    fuelsensorproblem = 0
+}
 
 local alarmLowValuePassed = { -- enables alarms that has passed the low treshold, to not get alarms before turbine is running properly. Status alarms, high alarms, fuel alarms , and ecu voltage alarms is always enabled.
     rpm    = false,
@@ -171,15 +184,16 @@ local function initForm(subform)
     form.addSelectbox(BatteryConfigTable, BatteryConfigIndex, true, BatteryConfigChanged)
 
     form.addRow(2)
-    form.addLabel({label=lang.alarmOffSwitch, width=200})
-    form.addInputbox(alarmOffSwitch,true, function(value) alarmOffSwitch=value; system.pSave("alarmOffSwitch",value) end ) 
+    form.addLabel({label=lang.AudioOffSwitch, width=200})
+    form.addInputbox(audioOffSwitch,true, function(value) audioOffSwitch=value; system.pSave("audioOffSwitch",value) end ) 
 
-    form.addRow(1)
-    if(enableAlarm) then
-        form.addLabel({label="Alarms: on"})
-    else
-        form.addLabel({label="Alarms: off"})
-    end
+    form.addRow(2)
+    form.addLabel({label=lang.HapticOffSwitch, width=200})
+    form.addInputbox(hapticOffSwitch,true, function(value) hapticOffSwitch=value; system.pSave("hapticOffSwitch",value) end ) 
+
+    form.addRow(2)
+    form.addLabel({label=lang.MessageOffSwitch, width=200})
+    form.addInputbox(messageOffSwitch,true, function(value) messageOffSwitch=value; system.pSave("messageOffSwitch",value) end ) 
 
     form.addRow(1)
     form.addLabel({label=string.format("ECU converter: %s",ConverterType)})
@@ -207,29 +221,36 @@ end
 -- Calculates: config.fuellevel.tanksize and config.fuellevel.interval and fuelpercent
 local function initFuelStatistics(tmpCfg)
 
-    -- print(string.format("fuel.value : %s",SensorT[tmpCfg.sensorname].sensor.value))
+    -- We only enable the low alarms after they have passed the low threshold
+    if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
+        alarmLowValuePassed[tmpCfg.sensorname] = true;
+    end
 
-    if(config.fuel.tanksize < 50) then -- Configure TankSize during first 50 cycles
+    if(config.fuel.tanksize < 50 and alarmLowValuePassed[tmpCfg.sensorname]) then -- Configure TankSize during first 50 cycles
         if(config.converter.fuel.countingdown) then
 
             -- Init: Automatic calculations done on the first run after we read the sensor value.
             config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
             TankSize             = config.fuel.tanksize 
             config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+            prevFuelLevel        = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
         else
             -- counting up, have to subtract
             config.fuel.tanksize = TankSize -- TankSize read from GUI not from ECU when counting up usage
             config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-            prevFuel             = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
+            prevFuelLevel        = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
         end 
     end
 
     -- Calculate fuel percentage remaining
-    if(config.converter.fuel.countingdown) then
-        SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+    if(config.fuel.tanksize > 50 and alarmLowValuePassed[tmpCfg.sensorname]) then
+        if(config.converter.fuel.countingdown) then
+            SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+        else
+            SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+        end
     else
-        SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
+        SensorT[tmpCfg.sensorname].percent = 0
     end
 end
 
@@ -242,44 +263,39 @@ local function processFuel(tmpCfg, tmpSensorID)
 
             initFuelStatistics(tmpCfg) -- Important
 
-            -- We only enable the low alarms after they have passed the low threshold
-            if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
-                alarmLowValuePassed[tmpCfg.sensorname] = true;
-            end
-
             -- Repeat fuel level audio at intervals
-            if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
-                prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?  
+            if(SensorT[tmpCfg.sensorname].sensor.value > 0) then
 
-                if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
+                -- print(string.format("Fuel: %s < %s", SensorT[tmpCfg.sensorname].sensor.value, prevFuelLevel))
+                if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
+                    prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?  
+                    print(string.format("Fuelplaynum :%s", prevFuelLevel))
                     system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
-                else
-                    system.messageBox("Error: Negative fuel interval", 5)
                 end
-            end
             
-            -- Check for alarm thresholds
-            if(prevFuelLevel >= 0) then -- If erratic calculation do not annoy user with negative values
-                if(enableAlarm and alarmLowValuePassed[tmpCfg.sensorname]) then
-                    if(not alarmsTriggered[tmpCfg.sensorname]) then
+                -- Check for alarm thresholds
+                if(alarmLowValuePassed[tmpCfg.sensorname]) then
+                    if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then
                         if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
 
-                            alarmsTriggered[tmpCfg.sensorname] = true
-                            alarmh.Message(tmpCfg.critical.message,string.format("%s (%s < %s)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
+                            alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 20
+                            alarmh.Message(tmpCfg.critical.message,string.format("%s (%d.2 < %d.2)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
                             alarmh.Haptic(tmpCfg.critical.haptic)
                             alarmh.Audio(tmpCfg.critical.audio)
                     
                         elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
 
-                            alarmsTriggered[tmpCfg.sensorname] = true
-                            alarmh.Message(tmpCfg.warning.message,string.format("%s (%s < %s)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
+                            alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 15
+                            alarmh.Message(tmpCfg.warning.message,string.format("%s (%d.2 < %d.2)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
                             alarmh.Haptic(tmpCfg.warning.haptic)
                             alarmh.Audio(tmpCfg.warning.audio)
                          end
                     end
                 end
-            else
-                alarmh.Message(tmpCfg.warning.message,string.format("Error in fuel sensor (level:%s,value:%s)", tmpCfg.warning.text, prevFuelLevel, SensorT[tmpCfg.sensorname].sensor.value))
+            elseif(alarmTriggeredTime.fuelsensorproblem < system.getTime()) then
+                alarmh.Message(tmpCfg.warning.message,string.format("FuelSensProbl  (level:%d.2,value:%d.2)", prevFuelLevel, SensorT[tmpCfg.sensorname].sensor.value))
+                system.playFile("/Apps/ecu/audio/Fuel sensor problem.wav", AUDIO_QUEUE)
+                alarmTriggeredTime.fuelsensorproblem = system.getTime() + 20
             end
         else
             SensorT[tmpCfg.sensorname].percent = 0
@@ -298,26 +314,24 @@ local function processGeneric(tmpCfg, tmpSensorID)
 
             -- We only enable the low alarms after they have passed the low threshold
             if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.low.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
-                alarmLowValuePassed[tmpCfg.sensorname] = true;
+                alarmLowValuePassed[tmpCfg.sensorname] = true
             end
 
             -- calculate percentage
             SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value, tmpCfg.low.value)
 
-            if(enableAlarm) then
-                if(not alarmsTriggered[tmpCfg.sensorname]) then 
-                    if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high.value) then
-                        alarmsTriggered[tmpCfg.sensorname] = true
-                        alarmh.Message(tmpCfg.high.message,string.format("%s (%s > %s)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
-                        alarmh.Haptic(tmpCfg.high.haptic)
-                        alarmh.Audio(tmpCfg.high.audio)
-                
-                    elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low.value and alarmLowValuePassed[tmpCfg.sensorname]) then
-                        alarmsTriggered[tmpCfg.sensorname] = true
-                        alarmh.Message(tmpCfg.high.message,string.format("%s (%s < %s)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
-                        alarmh.Haptic(tmpCfg.low.haptic)
-                        alarmh.Audio(tmpCfg.low.audio)
-                    end
+            if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then 
+                if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high.value) then
+                    alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
+                    alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 > %d.2)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
+                    alarmh.Haptic(tmpCfg.high.haptic)
+                    alarmh.Audio(tmpCfg.high.audio)
+            
+                elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low.value and alarmLowValuePassed[tmpCfg.sensorname]) then
+                    alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
+                    alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 < %d.2)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
+                    alarmh.Haptic(tmpCfg.low.haptic)
+                    alarmh.Audio(tmpCfg.low.audio)
                 end
             end
         end
@@ -339,18 +353,14 @@ local function processStatus(tmpCfg, tmpSensorID)
             print(string.format("status #%s#%s#", statusint, SensorT[tmpCfg.sensorname].text))
 
             if(not SensorT[tmpCfg.sensorname].text) then
-                SensorT[tmpCfg.sensorname].text = string.format("Missing status %s", statusint)
-                system.messageBox(SensorT[tmpCfg.sensorname].text, 5)
+                system.messageBox(string.format("Unknown ECU status #%s#", statusint), 3)
+            elseif(not config.status[SensorT[tmpCfg.sensorname].text]) then
+                system.messageBox(string.format("Unknown ECU status #%s#", SensorT[tmpCfg.sensorname].text), 3)
             else
-
                 alarmh.Message(config.status[SensorT[tmpCfg.sensorname].text].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
+                alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
+                alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
 
-                if(enableAlarm) then
-                    -- ToDo: Implement repeat of alarm
-                    print(string.format("Sensor: %s Status: %s", tmpCfg.sensorname, SensorT[tmpCfg.sensorname].text))
-                    alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
-                    alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
-                end
                 prevStatus = SensorT[tmpCfg.sensorname].text
             end
         end 
@@ -362,30 +372,19 @@ local function processStatus(tmpCfg, tmpSensorID)
     end
 end
 
-
-----------------------------------------------------------------------
--- Resets alarms so they will be triggered again every 30 seconds
-function resetAlarmCounter()
-    if(system.getTime() % 30 == 0) then
-        for name,value in pairs(alarmsTriggered) do 
-            alarmsTriggered[name] = false
-        end
-    end
-end
-
 ----------------------------------------------------------------------
 -- Check if switch to enable alarms is set, sets global enableAlarm value
-local function enableAlarmCheck()
-    switch = system.getSwitchInfo(alarmOffSwitch)
-    if(switch) then
-        if(switch.value < 0 and enableAlarm) then  -- turned off by switch, will always override status handling
-            enableAlarm      = false
-            print("switch off enableAlarms = false")
-        elseif(switch.value > 0 and not enableAlarm) then
-            enableAlarm      = true
-            print("switch on enableAlarms = true")
+local function enableAlarmCheck(OffSwitch, enableAlarm)
+    local Switch   = system.getSwitchInfo(OffSwitch)
+
+    if(Switch) then
+        if(Switch.value < 0) then  -- turned off by switch, will always override status handling
+            return false
+        else
+            return true
         end
     end
+    return true
 end
 
 ----------------------------------------------------------------------
@@ -425,15 +424,15 @@ local function readParamsFromSensor(tmpSensorID)
     if(countSensorsValid == countSensors) then
         sensorsOnline   = 1
 
-    elseif(sensorsOnline == 1 and enableAlarm and not alarmsTriggered.offline) then -- Only trigger if all sensors has been online
+    elseif(sensorsOnline == 1 and alarmTriggeredTime.offline < system.getTime()) then -- Only trigger if all sensors has been online
         -- If the valid number of sensors is not equal to the configured number of sensors, the ECU is somehow offline
         -- Will only trigger again if it goes online again and then offline again. Will not repeat.
-        alarmsTriggered.offline = true
+        alarmTriggeredTime.offline = system.getTime() + 30
 
         print(string.format("SensorsOffline: %s valid: %s", countSensors, countSensorsValid))
         sensorsOnline   = -1
-        system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 10)
-        system.playFile("/Apps/ecu/audio/generic/ECU reboot.wav",AUDIO_IMMEDIATE)
+        system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 3)
+        system.playFile("/Apps/ecu/audio/Ecu converter offline.wav", AUDIO_QUEUE)
         system.vibration(false, 4);
     end
 end
@@ -450,7 +449,9 @@ local function init()
     TurbineConfig     = system.pLoad("TurbineConfig", "generic")
     BatteryConfig     = system.pLoad("BatteryConfig", "lipo-2s")
     TankSize          = system.pLoad("TankSize", 0)
-    alarmOffSwitch    = system.pLoad("alarmOffSwitch")
+    audioOffSwitch    = system.pLoad("audioOffSwitch")
+    hapticOffSwitch   = system.pLoad("hapticOffSwitch")
+    messageOffSwitch  = system.pLoad("messageOffSwitch")
 
     -- read all the config files
     loadConfig()
@@ -472,8 +473,10 @@ local function loop()
 
     --fake.makeSensorValues()
     if(SensorID ~= 0) then
-        resetAlarmCounter()
-        enableAlarmCheck()
+        enableAlarmAudio   = enableAlarmCheck(audioOffSwitch, enableAlarmAudio)
+        enableAlarmHaptic  = enableAlarmCheck(hapticOffSwitch, enableAlarmHaptic)
+        enableAlarmMessage = enableAlarmCheck(messageOffSwitch, enableAlarmMessage)
+
         readParamsFromSensor(SensorID)
 
         -- All converters has these sensors
@@ -495,4 +498,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.2', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.3', name=lang.appName}

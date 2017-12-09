@@ -1,5 +1,5 @@
 {
-    "appName":"ECU Telemetry (beta)",
+    "appName":"ECU Dashboard",
     "cfgName":"ECU. Settings",
     "window1":"ECU: Fuel, status, volt",
     "window2":"ECU: Battery, RPM, EGT",
@@ -13,5 +13,7 @@
     "selectTurbineSensor":"ECU converter sensor",
     "selectLeftTurbineSensor":"ECU sensor turbine left",
     "selectRightTurbineSensor":"ECU sensor turbine right",
-    "alarmOffSwitch": "Alarms of switch"
+    "AudioOffSwitch": "Audio off switch",
+    "HapticOffSwitch": "Haptic off switch",
+    "MessageOffSwitch": "Message off switch"
 }

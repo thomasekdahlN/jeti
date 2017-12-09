@@ -12,7 +12,7 @@
         "audio" : {
             "enable"    : true,
             "repeat"    : 1,
-            "file"      : ""
+            "file"      : "ecuv_high.wav"
         },
         "haptic"    : {
             "enable"    : false,
@@ -29,7 +29,7 @@
         },
         "audio" : {
             "enable"    : true,
-            "file"      : ""
+            "file"      : "ecuv_low.wav"
         },
         "haptic"    : {
             "enable"    : true,

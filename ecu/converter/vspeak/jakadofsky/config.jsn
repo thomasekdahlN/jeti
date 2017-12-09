@@ -13,20 +13,20 @@
         "countingdown" : false
     },
     "statusmap" : {
-        "-30"   : "- ERROR -",
-        "-20"   : "TH: -off",
-        "-10"   : "TH: cool",
-        "-1"    : "TH: lock",
-        "0"     : "TH: stop",
-        "10"    : "TH: run-",
-        "20"    : "TH: rel-",
-        "25"    : "TH: glow",
-        "30"    : "TH: spin",
-        "40"    : "TH: fire",
-        "45"    : "TH: ignt",
-        "50"    : "TH: heat",
-        "60"    : "TH: acce",
-        "65"    : "TH: cal.",
-        "70"    : "TH: idel"
+        "-30"   : "Error,
+        "-20"   : "Off",
+        "-10"   : "Cool down",
+        "-1"    : "Lock",
+        "0"     : "Stop",
+        "10"    : "Run",
+        "20"    : "Rel",
+        "25"    : "Glow",
+        "30"    : "Spin",
+        "40"    : "Fire",
+        "45"    : "Ignition",
+        "50"    : "Heat",
+        "60"    : "Accelerate",
+        "65"    : "Calibrate",
+        "70"    : "Idle"
     }
 }

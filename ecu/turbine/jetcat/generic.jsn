@@ -20,7 +20,7 @@
         },
         "low"   : {
             "text"      : "Turbine RPM low",
-            "value"     : 43000,
+            "value"     : 40000,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
@@ -76,14 +76,14 @@
     "egt" : {
         "sensorname": "egt",
         "high"  : {
-            "text"      : "Turbine temperature high",
+            "text"      : "EGT high",
             "value"     : 750,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
             },
             "audio" : {
-                "enable"    : false,
+                "enable"    : true,
                 "file"      : "egt_high.wav"
             },
             "haptic"    : {
@@ -93,7 +93,7 @@
             }
         },
         "low"   : {
-            "text"      : "Turbine temperature low",
+            "text"      : "EGT low",
             "value"     : 150,
             "message"   : {
                 "enable" : true,
@@ -131,14 +131,14 @@
         },
         "low"   : {
             "text"      : "Flameout",
-            "value"     : 0.2,
+            "value"     : 0.1,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
             },
             "audio" : {
                 "enable"    : true,
-                "file"      : "pumpv_low"
+                "file"      : "pumpv_low.wav"
             },
             "haptic"    : {
                 "enable"    : true,

@@ -13,15 +13,15 @@
         "countingdown" : false
     },
     "statusmap" : {
-        "-30"   : "- ERROR -",
-        "-10"   : "- COOL -",
-        "-1"    : "- LOCK -",
-        "0"     : "- STOP -",
-        "10"    : "TH: Idle",
-        "20"    : "TH: -Rel",
-        "25"    : "- TEST -",
-        "30"    : "- START -",
-        "40"    : "- FIRE -",
-        "70"    : "- IDLE -"
+        "-30"   : "Error",
+        "-10"   : "Cool down",
+        "-1"    : "Lock",
+        "0"     : "Stop",
+        "10"    : "Idle",
+        "20"    : "Rel",
+        "25"    : "Test",
+        "30"    : "Start",
+        "40"    : "Fire",
+        "70"    : "Idle"
     }
 }
