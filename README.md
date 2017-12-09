@@ -1,9 +1,9 @@
-# Jeti Turbine ECU Telemetry (Beta version)
-Jeti Advanced ECU LUA Script. Easy setup based on best practise, advanced alarms that are silent until really needed and very configurable from configuration files if you need to (default best practise setup should be enough for most people).
+# Jeti ECU Turbine Telemetry Lua Script
+Jeti ECU LUA Script. Silent/Black-Cockpit alarms (sound/alert/haptic/logg) that are silent until needed on Turbine Status, RPM, RPM2, PUMPV, BATT, FUEL, EGT, Flameout. Dashboard presentation of all turbine parameters and visualised fuel and battery. The idea is no alarms on the ground, only alarms when the shit hits the fan to help to save your costly model. Easy setup based on choise of best practise configuration files. 
 
-NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and kill switch - and you will probably have the most advanced turbine surveilance available to RC turbine models today.
+NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and throttle kill switch - and you will have the most advanced turbine surveilance available to RC turbine models today.
 
-Now supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter, jetcat ecu converter and experimental support for CB-Electroniks and Xicoy converters (needs testers).
+Supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter, jetcat ecu converter and experimental support for CB-Electroniks and Xicoy converters (needs testers). Manufactures of turbine ECU converters are welcome to contact me, to add support for their equipment. The idea is to support all Turbines and Turbine ECU converters that exists - with
 
 Only works with Jeti transmitter FW 4.22 or better. 
 
@@ -23,6 +23,7 @@ Only works with Jeti transmitter FW 4.22 or better.
 Developers, testers and helpers wanted. PM me.
 
 #Now supporting the following ecu converters and turbines:
+- Vspeak - FW 1.0 - AMT
 - Vspeak - FW 1.0 - JetCat
 - Vspeak - FW 2.2 - Hornet
 - Vspeak - FW 2.1 - Jakadofsky
@@ -45,20 +46,16 @@ Developers, testers and helpers wanted. PM me.
 - Xicoy - FW ??  - Xicoy v10 (Experimental)
 - Orbit 
 
-- Just make a copy of a config file, adjust the parameters and put it in the ecu folder, and you can start using a new make of turbine or your own special config. Config files are read dynamically from ecu folder.
-
-Supporting a new ecu converter is as easy as adding some json configuration files and you get all the bells and whistles
-
 #Turbine status functionality:
 - Configurable which ECU statuses to be read by voice, shown on the display and logged to the flight logg and vibrate (not for -16)
-- All alarms enabled with one switch (recommed to use the same switch as throttle cut for turbine, then alarms are on when turbine is armed)
+- Alarms audio/haptic/alert turned off with separate switches (recommed to use the same switch as throttle cut for turbine, then alarms are on when turbine is armed)
 - Status alarms only given on status change
 - Configurable which turbine status has audio alarms, haptic alarms (not for -16) or message alarms.
 - Status - Individually configurable parameters for EVERY turbine STATUS (not for -16)
-- Status - Audio alarm (information in female voice, warnings in male voice), possibility to change audio file. Configurable (not for -16)
+- Status - Audio alarm, possibility to change audio file. Configurable (not for -16)
 - Status - Haptic feedback, which stick, which vibration profile, on/off. Configurable (not for -16).
 - Status - Display warning. on/off - shows the status text as a warning. Will also log the turbine status to the normal Jeti flight log (this is super cool). Configurable (not for -16).
-- Hundreds og audio files included with all statuses and alarms ready to be said.
+- 139 audio files included with all statuses and alarms.
 
 The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
 - Some alarms like low rpm, low rpm2, low pumpvolt, low temp are not enabled until the low threshold is exceeded. This makes for no annoying low alarms before turbine is running, but they will also be shut off by the global switch.
@@ -66,8 +63,8 @@ The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
 - Turbine RPM low - only enabled after RPM has exceeded Turbine RPM low
 - Shaft RPM high
 - Shaft RPM low - only enabled after shaft RPM has exceeded Shaft RPM low
-- Ecu voltage high (not for -16)
-- Ecu voltage low - only enabled after ECU voltage has exceeded Ecu voltage low (not for -16)
+- Ecu voltage high
+- Ecu voltage low - only enabled after ECU voltage has exceeded Ecu voltage low
 - EGT high
 - EGT low - only enabled after EGT has exceeded EGT low 
 - Pump voltage high
@@ -76,12 +73,12 @@ The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
 - Fuel critical alarm (configured at 10% fuel level)
 - Fuel - Audio messaage with remaining fuellevel 10 times pr tank (automaticially set intervals based on tanksize read from ECU)
 - Fuel - Automatic reading of tanksize from ECU (shown in telemetry window)
-- = Fuel = Zero configuration neccessary (on vspeak with jetcat, hornet, and all digitech - the rest have to input TankSize) to have very advanced information and alarms on tank level
+- = Fuel = Zero configuration neccessary on vspeak with jetcat, hornet, and all digitech - the rest have to input TankSize
 - Calculates  percentages from the interval between high and low config values)
-Alarms will be repeated every 30 second if error condition is sustained
+Alarms will only be repeated every 30 second if error condition is sustained
 
 Other alarms
-- Monitors that all sensors are online and gives a offline alarm (due to converter not working, ecu not working or ecu without power). will only sound once pr offline incidence.
+- Monitors that all sensors are online and gives a offline alarm (due to converter not working, ecu not working or ecu without power).
 
 Configuration possibilities
 - Separate configuration file for each ECU converter type (sensor mapping and status mapping to common format)
@@ -105,7 +102,6 @@ Thinking of implementing:
 #Help needed:
 - Translation
 - Configuration of "best practice" turbine alarms and setup for the supported ecus.
-- Generation of audio files for all statuses and situations
 - Testing
 - Jeti Params for different ECUs (we only have to choose one sensor, we find the rest automatically by param)
 - Making videos of running system
