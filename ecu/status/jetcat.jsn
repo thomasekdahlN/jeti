@@ -450,24 +450,6 @@
              "vibrationProfile"   : 4
          }
     },
-    "Low rpm"   : {
-        "text"      : "Low rpm",
-        "message"   : {
-            "enable" : true,
-            "seconds": 3
-         },
-         "audio" : {
-             "enable"    : true,
-             "repeat"    : 1,
-             "file"      : "Low rpm"
-         },
-         "haptic"    : {
-             "enable"    : true,
-             "repeat"    : 1,
-             "stick"     : "left",
-             "vibrationProfile"   : 4
-         }
-    },
     "Over rpm"   : {
         "text"      : "Over rpm",
         "message"   : {

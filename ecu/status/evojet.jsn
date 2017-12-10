@@ -25,7 +25,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Off.wav"
          },
@@ -43,7 +43,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Cool.wav"
          },
@@ -61,7 +61,7 @@
             "seconds": 5
          },
          "audio" : {
-             "enable"    : false,
+             "enable"    : true,
              "repeat"    : 1,
              "file"      : "Lock.wav"
          },

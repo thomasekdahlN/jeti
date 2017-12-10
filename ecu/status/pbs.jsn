@@ -18,8 +18,8 @@
              "vibrationProfile"   : 4
          }
     },
-    "Cool"   : {
-        "text"  : "Cool",
+    "Cool down"   : {
+        "text"  : "Cool down",
         "message"   : {
             "enable" : true,
             "seconds": 5
@@ -27,7 +27,7 @@
          "audio" : {
              "enable"    : false,
              "repeat"    : 1,
-             "file"      : "Cool.wav"
+             "file"      : "Cool down.wav"
          },
          "haptic"    : {
              "enable"    : true,

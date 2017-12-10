@@ -310,31 +310,39 @@ end
 local function processGeneric(tmpCfg, tmpSensorID)
 
     if(tmpCfg) then
-        if(SensorT[tmpCfg.sensorname].sensor and SensorT[tmpCfg.sensorname].sensor.valid) then
+        if(SensorT[tmpCfg.sensorname]) then
+            if(SensorT[tmpCfg.sensorname].sensor and SensorT[tmpCfg.sensorname].sensor.valid) then
 
-            -- We only enable the low alarms after they have passed the low threshold
-            if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.low.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
-                alarmLowValuePassed[tmpCfg.sensorname] = true
-            end
-
-            -- calculate percentage
-            SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value, tmpCfg.low.value)
-
-            if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then 
-                if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high.value) then
-                    alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
-                    alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 > %d.2)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
-                    alarmh.Haptic(tmpCfg.high.haptic)
-                    alarmh.Audio(tmpCfg.high.audio)
-            
-                elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low.value and alarmLowValuePassed[tmpCfg.sensorname]) then
-                    alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
-                    alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 < %d.2)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
-                    alarmh.Haptic(tmpCfg.low.haptic)
-                    alarmh.Audio(tmpCfg.low.audio)
+                -- We only enable the low alarms after they have passed the low threshold
+                if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.low.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
+                    alarmLowValuePassed[tmpCfg.sensorname] = true
                 end
+
+                -- calculate percentage
+                SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value, tmpCfg.low.value)
+
+                if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then 
+                    if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high.value) then
+                        alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
+                        alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 > %d.2)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
+                        alarmh.Haptic(tmpCfg.high.haptic)
+                        alarmh.Audio(tmpCfg.high.audio)
+                
+                    elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low.value and alarmLowValuePassed[tmpCfg.sensorname]) then
+                        alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
+                        alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 < %d.2)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
+                        alarmh.Haptic(tmpCfg.low.haptic)
+                        alarmh.Audio(tmpCfg.low.audio)
+                    end
+                end
+            else
+                -- system.messageBox(string.format("PG Sensor not valid : %s", tmpSensorID), 3) -- Also happens when unpowered
             end
+        else
+            system.messageBox(string.format("PG Missing sensorname : %s", tmpSensorID), 3)
         end
+    else
+        system.messageBox(string.format("PG Missing tmpCfg : %s", tmpSensorID), 3)
     end
 end
 
@@ -343,32 +351,46 @@ local function processStatus(tmpCfg, tmpSensorID)
     local statusint     = 0 -- sensor statusid
     local switch
 
-    if(SensorT[tmpCfg.sensorname].sensor.valid) then
-        statusint    = string.format("%s", math.floor(SensorT[tmpCfg.sensorname].sensor.value))
-        SensorT[tmpCfg.sensorname].text  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
+    if(tmpCfg) then
+        if(SensorT[tmpCfg.sensorname]) then
 
-        -------------------------------------------------------------_
-        -- Check if status is changed since the last time
-        if(prevStatus ~= SensorT[tmpCfg.sensorname].text) then
-            print(string.format("status #%s#%s#", statusint, SensorT[tmpCfg.sensorname].text))
+            if(SensorT[tmpCfg.sensorname].sensor.valid) then
+                statusint    = string.format("%s", math.floor(SensorT[tmpCfg.sensorname].sensor.value))
+                SensorT[tmpCfg.sensorname].text  = config.converter.statusmap[statusint] -- convert converters integers to turbine manufacturers text status
 
-            if(not SensorT[tmpCfg.sensorname].text) then
-                system.messageBox(string.format("Unknown ECU status #%s#", statusint), 3)
-            elseif(not config.status[SensorT[tmpCfg.sensorname].text]) then
-                system.messageBox(string.format("Unknown ECU status #%s#", SensorT[tmpCfg.sensorname].text), 3)
-            else
-                alarmh.Message(config.status[SensorT[tmpCfg.sensorname].text].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
-                alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
-                alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
+                -------------------------------------------------------------_
+                -- Check if status is changed since the last time
+                if(SensorT[tmpCfg.sensorname].text) then
+                    if(prevStatus ~= SensorT[tmpCfg.sensorname].text) then
+                        print(string.format("status #%s#%s#", statusint, SensorT[tmpCfg.sensorname].text))
 
-                prevStatus = SensorT[tmpCfg.sensorname].text
+                        if(not config.status[SensorT[tmpCfg.sensorname].text]) then
+                            system.messageBox(string.format("Unknown status config #%s#", SensorT[tmpCfg.sensorname].text), 3)
+                            system.playFile("/Apps/ecu/audio/Unknown status configuration.wav", AUDIO_QUEUE)
+                            prevStatus = SensorT[tmpCfg.sensorname].text
+
+                        else
+                            alarmh.Message(config.status[SensorT[tmpCfg.sensorname].text].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
+                            alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
+                            alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
+                            prevStatus = SensorT[tmpCfg.sensorname].text
+
+                        end
+                    end
+                else
+                    system.messageBox(string.format("Unknown status code #%s#", statusint), 2)
+                end 
+                -------------------------------------------------------------
+                -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
+                -- This should get rid of all annoying alarms
+            else 
+                SensorT[tmpCfg.sensorname].text = "OFFLINE"
             end
-        end 
-        -------------------------------------------------------------
-        -- If user has enabled alarms, the status has an alarm, the status has changed since last time - sound the alarm
-        -- This should get rid of all annoying alarms
-    else 
-        SensorT[tmpCfg.sensorname].text = "OFFLINE"
+        else
+            system.messageBox(string.format("Sensor mapping error"), 2)
+        end
+    else
+        system.messageBox(string.format("Status missing tmpCfg : %s", tmpSensorID), 3)
     end
 end
 

@@ -15,7 +15,7 @@
         "countingdown" : false
     },
     "statusmap" : {
-        "-30"   : "Error,
+        "-30"   : "Error",
         "-20"   : "Off",
         "-10"   : "Cool down",
         "-1"    : "Lock",

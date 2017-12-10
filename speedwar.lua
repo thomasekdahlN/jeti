@@ -62,11 +62,7 @@ local function initForm(subform)
             end
         end
     end
-
-    print("SensorID   : ", SensorID)
-    print("SensorParam: ", SensorParam)
-
-
+    
     collectgarbage()
 
     form.addRow(2)
@@ -127,10 +123,12 @@ end
 local function loop()
 
     if(SensorID ~= 0) then
-        local sensor = system.getSensorByID(SensorID, 2)
+        local sensor = system.getSensorByID(SensorID, SensorParam)
 
         if(sensor.valid) then
             local speed = sensor.value
+
+            print(string.format("Speed : #%s#", speed))
 
             if (speed > MinimumSafeSpeed) then
                 tresholdPassed.minimum  = true
