@@ -9,16 +9,16 @@ Only works with Jeti transmitter FW 4.22 or better.
 
 Videoes of setup, , flight with lots of erros and of how this is tested.
 
-# Videoes of setup
+## Videoes of setup
 https://youtu.be/tsEkAW4Y2tU
 
-# Video simulating normal usage
+## Video simulating normal usage
 https://youtu.be/evyAzlbLs68
 
-# Video simulation a flight with lots of alarms triggered
+## Video simulation a flight with lots of alarms triggered
 https://youtu.be/_tN6GDu43rU
 
-# Video of how this advanced lua script is tested with an ECU simulator made with Arduino Pro Mini
+## Video of how this advanced lua script is tested with an ECU simulator made with Arduino Pro Mini
 https://youtu.be/EmGTHrpVQJE
 
 ![alarm - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081407/87552642-234a-11e7-897d-e4f2ae4de45f.jpg)
