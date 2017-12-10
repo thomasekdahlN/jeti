@@ -7,6 +7,16 @@ Supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu
 
 Only works with Jeti transmitter FW 4.22 or better. 
 
+Videoes of setup, normal usage, flight with lots of erros and of how this is tested.
+
+https://youtu.be/tsEkAW4Y2tU
+
+https://youtu.be/evyAzlbLs68
+
+https://youtu.be/_tN6GDu43rU
+
+https://youtu.be/EmGTHrpVQJE
+
 ![alarm - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081407/87552642-234a-11e7-897d-e4f2ae4de45f.jpg)
 ![gui - configuration](https://cloud.githubusercontent.com/assets/26059207/25081408/875af9a0-234a-11e7-8c05-8a3d246c3d4a.jpg)
 ![alarm - rc off](https://cloud.githubusercontent.com/assets/26059207/25081412/8a63e396-234a-11e7-821d-f0bab51e141d.jpg)
