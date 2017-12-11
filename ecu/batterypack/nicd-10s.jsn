@@ -1,7 +1,7 @@
 {
     "sensorname": "ecuv",
-    "type" : "lipo",
-    "cells" : 3,
+    "type" : "nicd",
+    "cells" : 10,
     "high"  : {
         "text"      : "ECU Battery high",
         "value"     : 12.0,
@@ -22,7 +22,7 @@
     },
     "low"   : {
         "text"      : "ECU Battery low",
-        "value"     : 10.0,
+        "value"     : 9.0,
         "message"   : {
             "enable" : true,
             "seconds": 5
