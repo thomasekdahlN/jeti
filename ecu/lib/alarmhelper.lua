@@ -12,6 +12,16 @@
 
 local alarmhelper = {}
 
+
+----------------------------------------------------------------------
+-- 
+function alarmhelper.All(tmpConfig,StatusText)
+  alarmhelper.Message(tmpConfig.message, StatusText)
+  alarmhelper.Haptic(tmpConfig.haptic)
+  alarmhelper.Audio(tmpConfig.audio)
+
+end
+
 ----------------------------------------------------------------------
 -- 
 function alarmhelper.Message(tmpConfig,StatusText)

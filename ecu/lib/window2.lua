@@ -76,7 +76,7 @@ end
 -- Print the telemetry values
 function telemetry_window2.show(width, height) 
 
-    if(sensorsOnline == 1) then
+    if(sensorsOnline > 0) then
       -- field separator lines
       lcd.drawLine(45,2,45,66)  
       --lcd.drawLine(70,36,148,36)  

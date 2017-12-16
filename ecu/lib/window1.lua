@@ -93,10 +93,10 @@ function telemetry_window1.show(width, height)
 
         if(config.converter.sensormap.fuel) then
           if(SensorT.fuel.percent) then
-            if(SensorT.fuel.percent > config.fuel.warning.value) then
-              DrawFuelGauge(SensorT.fuel.percent, 1, 0)   
+            if(SensorT.fuel.percent > 20) then
+              DrawFuelGauge(SensorT.fuel.percent, 1, 0)
             else
-              DrawFuelLow(SensorT.fuel.percent, 1, 0) 
+              DrawFuelLow(SensorT.fuel.percent, 1, 0)
             end
           end
         end

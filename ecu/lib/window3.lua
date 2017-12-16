@@ -18,7 +18,7 @@ function telemetry_window3.show(width, height)
     local yc    = tonumber((height / 3) + 20)
     local diam  = tonumber((height / 2) - 10)
     
-    if(sensorsOnline == 1) then
+    if(sensorsOnline > 0) then
 
       -- print(string.format("width: %s, height: %s", width, height))
 

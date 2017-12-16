@@ -17,12 +17,14 @@ local loadh      = require "ecu/lib/loadhelper"
 local tableh     = require "ecu/lib/tablehelper"
 local alarmh     = require "ecu/lib/alarmhelper"
 local sensorh    = require "ecu/lib/sensorhelper"
+local fuelh      = require "ecu/lib/fuelhelper"
 --local fake       = require "ecu/lib/fakesensor"
-local window1    = require "ecu/lib/telemetry_window1"
-local window2    = require "ecu/lib/telemetry_window2"
---local window3 = require "ecu/lib/telemetry_window3"
---local window4 = require "ecu/lib/telemetry_window4"
+local window1    = require "ecu/lib/window1"
+local window2    = require "ecu/lib/window2"
+--local window3 = require "ecu/lib/window3"
+--local window4 = require "ecu/lib/window4"
 
+-----------------------------------------------------------------------------
 -- Globals to be accessible also from libraries
 config             = {"..."} -- Complete turbine config object dynamically assembled
 sensorsOnline      = 0 -- 0 not ready yet, 1 = all sensors confirmed online, -1 one or more sensors offline
@@ -42,8 +44,12 @@ SensorT = {
     status = {"..."}
  }
 
+fuelAlarm = {}
+TankSize  = 0
+
+-----------------------------------------------------------------------------
 -- Locals for the application
-local prevStatus, prevFuelLevel, TankSize = 0,0,0
+local prevStatus = 0
 local audioOffSwitch, hapticOffSwitch, messageOffSwitch = 0,0,0
 
 local lang              = {"..."} -- Language read from file
@@ -209,93 +215,33 @@ local function keyPressed(key)
     form.reinit(1)
 end
 
-local function calcPercent(current, high, low)
-    local percent = ((current - low) / (high - low)) * 100
-    if(percent < 0) then 
-            percent = 0
-    end
-    return percent
-end
-
 ----------------------------------------------------------------------
--- Calculates: config.fuellevel.tanksize and config.fuellevel.interval and fuelpercent
-local function initFuelStatistics(tmpCfg)
-
-    -- We only enable the low alarms after they have passed the low threshold
-    if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.warning.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
-        alarmLowValuePassed[tmpCfg.sensorname] = true;
-    end
-
-    if(config.fuel.tanksize < 50 and alarmLowValuePassed[tmpCfg.sensorname]) then -- Configure TankSize during first 50 cycles
-        if(config.converter.fuel.countingdown) then
-
-            -- Init: Automatic calculations done on the first run after we read the sensor value.
-            config.fuel.tanksize = SensorT[tmpCfg.sensorname].sensor.value -- new or max?
-            TankSize             = config.fuel.tanksize 
-            config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-            prevFuelLevel        = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
-        else
-            -- counting up, have to subtract
-            config.fuel.tanksize = TankSize -- TankSize read from GUI not from ECU when counting up usage
-            config.fuel.interval = config.fuel.tanksize / 10 -- Calculate 10 fuel intervals for reporting announcing automatically of remaining tank
-            prevFuelLevel        = config.fuel.tanksize - config.fuel.interval -- init full tank reporting, but do not start before next interval
-        end 
-    end
-
-    -- Calculate fuel percentage remaining
-    if(config.fuel.tanksize > 50 and alarmLowValuePassed[tmpCfg.sensorname]) then
-        if(config.converter.fuel.countingdown) then
-            SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
-        else
-            SensorT[tmpCfg.sensorname].percent = calcPercent(config.fuel.tanksize - SensorT[tmpCfg.sensorname].sensor.value, config.fuel.tanksize, 0)
-        end
-    else
-        SensorT[tmpCfg.sensorname].percent = 0
-    end
-end
-
-----------------------------------------------------------------------
---
+-- Process fuel Alarms
 local function processFuel(tmpCfg, tmpSensorID)
 
     if(SensorT[tmpCfg.sensorname]) then
         if(SensorT[tmpCfg.sensorname].sensor.valid) then
 
-            initFuelStatistics(tmpCfg) -- Important
-
             -- Repeat fuel level audio at intervals
             if(SensorT[tmpCfg.sensorname].sensor.value >= 0) then
 
-                -- print(string.format("Fuel: %s < %s", SensorT[tmpCfg.sensorname].sensor.value, prevFuelLevel))
-                if(SensorT[tmpCfg.sensorname].sensor.value < prevFuelLevel and alarmLowValuePassed[tmpCfg.sensorname]) then
-                    prevFuelLevel = prevFuelLevel - tmpCfg.interval -- Only work in intervals, should we calculate intervals from tanksize? 10 informations pr tank?  
-                    print(string.format("Fuelplaynum :%s", prevFuelLevel))
-                    system.playNumber(prevFuelLevel / 1000, tmpCfg.decimals, tmpCfg.unit, tmpCfg.label) -- Read out the numbers from the interval, not the value - to get better clearity
-                end
-            
+                fuelh.initFuelSetup(tmpCfg) -- Important, runs only on startup
+                SensorT[tmpCfg.sensorname].percent = fuelh.calculateFuelPercent(tmpCfg)
+
+                ----------------------------------------------------------------------
                 -- Check for alarm thresholds
-                if(alarmLowValuePassed[tmpCfg.sensorname]) then
-                    if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then
-                        if(SensorT[tmpCfg.sensorname].percent < tmpCfg.critical.value) then
+                local thresholdI, thresholdV = fuelh.FuelThresholdPassed(tmpCfg)
 
-                            alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 20
-                            alarmh.Message(tmpCfg.critical.message,string.format("%s (%d.2 < %d.2)", tmpCfg.critical.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.critical.value))
-                            alarmh.Haptic(tmpCfg.critical.haptic)
-                            alarmh.Audio(tmpCfg.critical.audio)
-                    
-                        elseif(SensorT[tmpCfg.sensorname].percent < tmpCfg.warning.value) then
+                if(not fuelAlarm[thresholdV] and alarmTriggeredTime.fuel < system.getTime() and thresholdV < 100) then
 
-                            alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 15
-                            alarmh.Message(tmpCfg.warning.message,string.format("%s (%d.2 < %d.2)", tmpCfg.warning.text, SensorT[tmpCfg.sensorname].percent, tmpCfg.warning.value))
-                            alarmh.Haptic(tmpCfg.warning.haptic)
-                            alarmh.Audio(tmpCfg.warning.audio)
-                         end
-                    end
-                end
+                    fuelAlarm[thresholdV] = true -- Alarm has been given, never repeat
+                    alarmh.All(tmpCfg.alarms[thresholdI],string.format("%s (%d.2 < %d.2)", tmpCfg.alarms[thresholdI].text, SensorT[tmpCfg.sensorname].percent, thresholdV))
+                    alarmTriggeredTime.fuel = system.getTime() + 5 -- 5 seconds pause until next alarm
+                 end
             elseif(alarmTriggeredTime.fuelsensorproblem < system.getTime()) then
-                alarmh.Message(tmpCfg.warning.message,string.format("FuelSensProbl  (level:%d.2,value:%d.2)", prevFuelLevel, SensorT[tmpCfg.sensorname].sensor.value))
-                system.playFile("/Apps/ecu/audio/Fuel sensor problem.wav", AUDIO_QUEUE)
-                alarmTriggeredTime.fuelsensorproblem = system.getTime() + 20
+                -- Reading negative fuel values, trouble with sensor
+                alarmh.All(tmpCfg.sensorproblem,string.format("%s : %d.2)", tmpCfg.sensorproblem.text, SensorT[tmpCfg.sensorname].sensor.value))
+                alarmTriggeredTime.fuelsensorproblem = system.getTime() + 15 -- 15 seconds pause until next alarm
             end
         else
             SensorT[tmpCfg.sensorname].percent = 0
@@ -319,20 +265,16 @@ local function processGeneric(tmpCfg, tmpSensorID)
                 end
 
                 -- calculate percentage
-                SensorT[tmpCfg.sensorname].percent = calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value, tmpCfg.low.value)
+                SensorT[tmpCfg.sensorname].percent = fuelh.calcPercent(SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value, tmpCfg.low.value)
 
                 if(alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then 
                     if(SensorT[tmpCfg.sensorname].sensor.value > tmpCfg.high.value) then
                         alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
-                        alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 > %d.2)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
-                        alarmh.Haptic(tmpCfg.high.haptic)
-                        alarmh.Audio(tmpCfg.high.audio)
+                        alarmh.All(tmpCfg.high,string.format("%s (%d.2 > %d.2)", tmpCfg.high.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.high.value))
                 
                     elseif(SensorT[tmpCfg.sensorname].sensor.value < tmpCfg.low.value and alarmLowValuePassed[tmpCfg.sensorname]) then
                         alarmTriggeredTime[tmpCfg.sensorname] = system.getTime() + 30
-                        alarmh.Message(tmpCfg.high.message,string.format("%s (%d.2 < %d.2)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
-                        alarmh.Haptic(tmpCfg.low.haptic)
-                        alarmh.Audio(tmpCfg.low.audio)
+                        alarmh.All(tmpCfg.low,string.format("%s (%d.2 < %d.2)", tmpCfg.low.text, SensorT[tmpCfg.sensorname].sensor.value, tmpCfg.low.value))
                     end
                 end
             else
@@ -361,7 +303,7 @@ local function processStatus(tmpCfg, tmpSensorID)
                 -------------------------------------------------------------_
                 -- Check if status is changed since the last time
                 if(SensorT[tmpCfg.sensorname].text) then
-                    if(prevStatus ~= SensorT[tmpCfg.sensorname].text) then
+                    if(prevStatus ~= SensorT[tmpCfg.sensorname].text and alarmTriggeredTime[tmpCfg.sensorname] < system.getTime()) then
                         print(string.format("status #%s#%s#", statusint, SensorT[tmpCfg.sensorname].text))
 
                         if(not config.status[SensorT[tmpCfg.sensorname].text]) then
@@ -370,9 +312,7 @@ local function processStatus(tmpCfg, tmpSensorID)
                             prevStatus = SensorT[tmpCfg.sensorname].text
 
                         else
-                            alarmh.Message(config.status[SensorT[tmpCfg.sensorname].text].message, SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
-                            alarmh.Haptic(config.status[SensorT[tmpCfg.sensorname].text].haptic)
-                            alarmh.Audio(config.status[SensorT[tmpCfg.sensorname].text].audio)
+                            alarmh.All(config.status[SensorT[tmpCfg.sensorname].text], SensorT[tmpCfg.sensorname].text) -- we always show a message that will be logged on status changed
                             prevStatus = SensorT[tmpCfg.sensorname].text
 
                         end
@@ -410,6 +350,15 @@ local function enableAlarmCheck(OffSwitch, enableAlarm)
 end
 
 ----------------------------------------------------------------------
+-- Reset all alarms with 10 seconds pause until telemetry systems is stabilised after first loop with all sensors read
+local function resetAlarmTriggeredTime(delay)
+
+    for tmpName, tmpValue in pairs(alarmTriggeredTime) do
+        alarmTriggeredTime[tmpName] = system.getTime() + delay
+    end
+end
+
+----------------------------------------------------------------------
 -- Read and map all sensors to names instead of param values for easier processing
 local function readParamsFromSensor(tmpSensorID)
 
@@ -444,9 +393,11 @@ local function readParamsFromSensor(tmpSensorID)
 
     --print(string.format("configured: %s valid: %s", #config.converter.sensormap, countSensorsValid))
     if(countSensorsValid == countSensors) then
-        sensorsOnline   = 1
-
-    elseif(sensorsOnline == 1 and alarmTriggeredTime.offline < system.getTime()) then -- Only trigger if all sensors has been online
+        sensorsOnline = sensorsOnline + 1;
+        if(sensorsOnline == 1) then
+            resetAlarmTriggeredTime(15) -- Reset when all sensors are valid and init finshed, (but only run the first time)
+        end
+    elseif(sensorsOnline > 0 and alarmTriggeredTime.offline < system.getTime()) then -- Only trigger if all sensors has been online
         -- If the valid number of sensors is not equal to the configured number of sensors, the ECU is somehow offline
         -- Will only trigger again if it goes online again and then offline again. Will not repeat.
         alarmTriggeredTime.offline = system.getTime() + 30
@@ -456,14 +407,6 @@ local function readParamsFromSensor(tmpSensorID)
         system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 3)
         system.playFile("/Apps/ecu/audio/Ecu converter offline.wav", AUDIO_QUEUE)
         system.vibration(false, 4);
-    end
-end
-
--- Delay all alarms 10 seconds until telemetry systems is stabilised
-local function initAlarmTriggeredTime()
-
-    for tmpName, tmpValue in pairs(alarmTriggeredTime) do
-        alarmTriggeredTime.tmpName = system.getTime() + 10
     end
 end
 
@@ -492,7 +435,7 @@ local function init()
     --system.registerTelemetry(2, lang.window1, 2, telemetry1.window)  
     --system.registerTelemetry(2, "Large", 4, window4.show)  - Full screen 
 
-    initAlarmTriggeredTime()
+    resetAlarmTriggeredTime(10800) -- No alarms until 3 hours after turn on, or another reset event (like all sensors online)
 
     collectgarbage()
     print("Init finished: ", collectgarbage("count"))
@@ -529,4 +472,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.3', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.4', name=lang.appName}
