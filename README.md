@@ -56,14 +56,15 @@ Developers, testers and helpers wanted. PM me.
 - CB-Electroniks - FW ??  - JetCat (Experimental)
 - Xicoy - FW ??  - Xicoy v6 (Experimental)
 - Xicoy - FW ??  - Xicoy v10 (Experimental)
-- Orbit 
+- Orbit (Experimental)
 
 #Turbine status functionality:
-- Configurable which ECU statuses to be read by voice, shown on the display and logged to the flight logg and vibrate (not for -16)
+- Waits 15 seconds to stabilize all telemetric input before alarms are activated
+- Configuration files for which ECU statuses to be read by voice, shown on the display and logged to the flight logg and vibrate (not for -16)
 - Alarms audio/haptic/alert turned off with separate switches (recommed to use the same switch as throttle cut for turbine, then alarms are on when turbine is armed)
 - Status alarms only given on status change
 - Configurable which turbine status has audio alarms, haptic alarms (not for -16) or message alarms.
-- Status - Individually configurable parameters for EVERY turbine STATUS (not for -16)
+- Status - Individually configurable in configuration files parameters for EVERY turbine STATUS (not for -16)
 - Status - Audio alarm, possibility to change audio file. Configurable (not for -16)
 - Status - Haptic feedback, which stick, which vibration profile, on/off. Configurable (not for -16).
 - Status - Display warning. on/off - shows the status text as a warning. Will also log the turbine status to the normal Jeti flight log (this is super cool). Configurable (not for -16).
@@ -81,10 +82,10 @@ The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
 - EGT low - only enabled after EGT has exceeded EGT low 
 - Pump voltage high
 - Pump voltage low - only enabled after Pump voltage has exceeded Pump voltage low
-- Fuel warning alarm (configured at 20% fuel level)
-- Fuel critical alarm (configured at 10% fuel level)
-- Fuel - Audio messaage with remaining fuellevel 10 times pr tank (automaticially set intervals based on tanksize read from ECU)
+- Fuel alarms default setup: 75% (audio), 50% (audio), 30% (audio), 20% (audio and haptic), 10% (audio and haptic), 5% (audio and haptic)
+- Fuel alarms customizable in configuration file to what % of fuel level you need an alarm, the audio file, haptich profile and message to bo shown and logged.
 - Fuel - Automatic reading of tanksize from ECU (shown in telemetry window)
+- Fuel sensor problem warning if fuelsensor goes below 0
 - = Fuel = Zero configuration neccessary on vspeak with jetcat, hornet, and all digitech - the rest have to input TankSize
 - Calculates  percentages from the interval between high and low config values)
 Alarms will only be repeated every 30 second if error condition is sustained
@@ -93,29 +94,29 @@ Other alarms
 - Monitors that all sensors are online and gives a offline alarm (due to converter not working, ecu not working or ecu without power).
 
 Configuration possibilities
-- Separate configuration file for each ECU converter type (sensor mapping and status mapping to common format)
-- Separate configuration file for each Turbine type with best practise configuration.
-- Separate configuration file for each Turbine types statuses with best practise configuration. (not for -16)
-- Separate configuration file for each BatteryPack type with best practise configuration. (2s-lipo, 3s-lipo, 2s-life, 3s-life, 2-s-a123, 3s-a123) (not for -16)
+- Separate customizable file for each ECU converter type (sensor mapping and status mapping to common format)
+- Separate customizable file for each Turbine type with best practise configuration.
+- Separate customizable file for each Turbine types statuses with best practise configuration. (not for -16)
+- Separate customizable file for each BatteryPack type with best practise configuration. (2s-lipo, 3s-lipo, 2s-life, 3s-life, 2-s-a123, 3s-a123) (not for -16)
 - Separate configuration file for fuellevel setup with best practise configuration.
 
 Telemetry display visual
-- Fuel gauge, pump volt, ECU volt and status double window , code borrowed from "ECU data display" for Orbit made by Bernd Woköck
-- Battery gauge, RPM, RPM2, EGT and status double window , code borrowed from "ECU data display" for Orbit made by Bernd Woköck (not for -16)
+- Fuel gauge, pump volt, ECU volt and status double window , based on code from "ECU data display" for Orbit made by Bernd Woköck
+- Battery gauge, RPM, RPM2, EGT and status double window , based on code from "ECU data display" for Orbit made by Bernd Woköck (not for -16)
 - Experimental RPM and TEMP round gauge (very cool, but not tested) (not for -16)
 - Experimental full screen GUI (Only for -24)
 
 Thinking of implementing:
-- Warning if you try to shutdown turbine while it is too hot (if possible to implement)
-- Sound volume control connected to warnings and critical alarms
-- Any alarms that should be enabled even when shut down?
-- Even smarter battery monitoring based on lookup tables on voltages and percent left (p.t it only calculates battery percentages from the interval between high and low values)
+1. Smarter battery monitoring based smoothing out voltages to not get alarms on short battery dips
+2. Warning if you try to shutdown turbine while it is too hot (if possible to implement)
+3. Sound volume control connected to warnings and critical alarms
 
 #Help needed:
 - Translation
 - Configuration of "best practice" turbine alarms and setup for the supported ecus.
 - Testing
 - Jeti Params for different ECUs (we only have to choose one sensor, we find the rest automatically by param)
+- Turbine setups for different turbines
 - Making videos of running system
 
 #Idea and goals
