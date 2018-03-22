@@ -5,6 +5,7 @@ echo "\nPackage LUA Apps for Jeti App Store"
 rm ekdahl.zip
 mkdir ekdahl
 
+
 cp Apps.csv ekdahl/Apps.csv
 cp logo.png ekdahl/logo.png
 
@@ -23,3 +24,7 @@ rm ekdahl/ecu/lib/*.lua
 cp speedwar ekdahl/speedwar
 cp speedwar.lc ekdahl/speedwar.lc
 
+cd ekdahl
+find . -name .DS_Store -print0 | xargs -0 git rm -f --ignore-unmatch
+
+cd ..
