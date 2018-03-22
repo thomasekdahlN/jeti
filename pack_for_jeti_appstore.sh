@@ -3,7 +3,7 @@
 echo "\nPackage LUA Apps for Jeti App Store"
 
 #Remove old dir
-rm -rf ekdahl
+rm ekdahl
 rm ekdahl.tar.bz2
 
 #Create new dir
@@ -19,8 +19,8 @@ cp ecu.lc ekdahl/ecu.lc
 cp ecu_16.lc ekdahl/ecu_16.lc
 
 #Remove unneccessary folders
-rm -rf ekdahl/ecu/Arduino
-rm -rf ekdahl/ecu/docs/screenshots
+rm ekdahl/ecu/Arduino
+rm ekdahl/ecu/docs/screenshots
 rm ekdahl/ecu/lib/*.lua
 
 #Make SpeedWar App for Jeti App Store

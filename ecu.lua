@@ -472,4 +472,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.4', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.5', name=lang.appName}
