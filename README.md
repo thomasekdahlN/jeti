@@ -129,11 +129,31 @@ For the people who love to tinker it is infinitely extensive and changeable in a
 - Connect transmitter to PC/Mac
 - Go to menu: Tools => Transmitter Wizard => Lua App Manager. Choose the ECU App and press install.
 - Disconnect transmitter from PC/Mac
-- Start Transmitter.
-- Add Application ecu.
-
-
-
+Disconnect USB from transmitter, start transmitter normally and choose the Application menu<br>
+![install - 12 - choose application menu on transmitter](https://user-images.githubusercontent.com/26059207/31859261-ac5fabf8-b709-11e7-9470-003703fc3d70.png)<br><br>
+Choose user application menu on transmitter<br>
+![install - 13 - choose user applications on transmitter](https://user-images.githubusercontent.com/26059207/31859262-ac78476c-b709-11e7-9009-1ec81c33a3e4.png)<br><br>
+Press + (plus) sign to add application<br>
+![install - 14 - press plus sign on transmitter](https://user-images.githubusercontent.com/26059207/31859263-ac92cdc6-b709-11e7-81b0-8ef1f92ed9c7.png)<br>
+Copy the ecu.lc file to Apps folder on transmitter if you have ds-24 or dc-24<br>
+![install - 15 - choose ecu if you have a ds-24 or dc-24](https://user-images.githubusercontent.com/26059207/31859264-acacc7da-b709-11e7-9c44-d7d78ac191ab.png)<br>
+Copy the ecu_16.lc file to Apps folder on transmitter if you have ds-16 or dc-16<br>
+![install - 15 - choose ecu_16 if you have a ds-16 or dc-16 png](https://user-images.githubusercontent.com/26059207/31859265-acc57ca8-b709-11e7-930c-6e74ea00fc0f.png)<br><br>
+If it says Err instead of OK on the App status. Press the CMD button to see the debug log. Important: If reporting errors to me, you have to include a screenshot of this debug screen.<br>
+![install - 16 - application added and running](https://user-images.githubusercontent.com/26059207/31859266-ace26e62-b709-11e7-8dd3-b01205e7d07a.png)<br><br>
+Answear yes<br>
+![install - 17 - answear yes](https://user-images.githubusercontent.com/26059207/31859267-acfb08b4-b709-11e7-9282-8a951d3ddc21.png)<br><br>
+Debug console log screen - you have to send me a screendump of this console log if you have problems running the app<br>
+![install - 18 - debug info after pressing the command button](https://user-images.githubusercontent.com/26059207/31859268-ad135fd6-b709-11e7-8338-7fd456c0731d.png)<br><br>
+![install - 19 - after choosing the applicatiomn](https://user-images.githubusercontent.com/26059207/31859269-ad2ce8de-b709-11e7-912c-3512f655e07d.png)<br><br>
+![install - 20 - choose telemetry converter](https://user-images.githubusercontent.com/26059207/31859270-ad46d6ea-b709-11e7-9cb6-bac3a4210ffd.png)<br><br>
+![install - 21 - choose ecu type](https://user-images.githubusercontent.com/26059207/31859271-ad60c0aa-b709-11e7-8a4b-a453fc5410e3.png)<br><br>
+![install - 22 - choose ecu](https://user-images.githubusercontent.com/26059207/31859272-ad7bacda-b709-11e7-92da-fdc63814e50d.png)<br><br>
+![install - 23 - choose turbine config generic](https://user-images.githubusercontent.com/26059207/31859273-ad94b90a-b709-11e7-91ab-423dadd7eb15.png)<br><br>
+![install - 24 - choose battery type](https://user-images.githubusercontent.com/26059207/31859274-adadf56e-b709-11e7-8d72-439fd461da98.png)<br><br>
+![install - 25 - choose battery type](https://user-images.githubusercontent.com/26059207/31859275-adc5fde4-b709-11e7-8ad7-b4ac63837835.png)<br><br>
+![install - 26 - choose ecu sensor](https://user-images.githubusercontent.com/26059207/31859276-adde240a-b709-11e7-8779-741c5ca2eae8.png)<br><br>
+![install - 27 - choose alarms off switch - same as throttle kill recommended](https://user-images.githubusercontent.com/26059207/31859277-adf65c5a-b709-11e7-8cdf-59f457522c7a.png)<br>
 
 
 If you have any more ideas about needs for turbine alarms, please let me know.
