@@ -18,6 +18,11 @@ local sensorsAvailable      = {"..."}
 local SensorID              = 0
 local SensorParam           = 0
 
+local OverSpeedI;      
+local MinimumSafeSpeedI;
+local TakeOffSpeedI;
+local StallSpeedI;
+
 local alarmTriggeredTime   = { -- stores latest datetime on the alarm triggered, used to not repeat alarms to often
     over    = 0,
     minimum = 0,
@@ -31,6 +36,50 @@ local tresholdPassed = { -- enables alarms that has passed the low treshold, to 
     takeoff  = true,
     stall    = false,
 }
+
+local function OverSpeedHapticChanged(value) 
+    OverSpeedHaptic=not value 
+    form.setValue(OverSpeedI,OverSpeedHaptic)
+
+    if(OverSpeedHaptic) then
+        system.pSave("OverSpeedHaptic", 1)
+        else
+        system.pSave("OverSpeedHaptic", 0)
+    end
+end
+
+local function StallSpeedChanged(value) 
+    StallSpeedHaptic=not value 
+    form.setValue(OverSpeedI,StallSpeedHaptic)
+
+    if(OverSpeedHaptic) then
+        system.pSave("StallSpeedHaptic", 1)
+        else
+        system.pSave("StallSpeedHaptic", 0)
+    end
+end
+
+local function MinimumSafeSpeedHapticChanged(value) 
+    MinimumSafeSpeedHaptic=not value 
+    form.setValue(OverSpeedI,MinimumSafeSpeedHaptic)
+
+    if(MinimumSafeSpeedHaptic) then
+        system.pSave("MinimumSafeSpeedHaptic", 1)
+        else
+        system.pSave("MinimumSafeSpeedHaptic", 0)
+    end
+end
+
+local function TakeOffSpeedHapticChanged(value) 
+    TakeOffSpeedHaptic=not value 
+    form.setValue(OverSpeedI,TakeOffSpeedHaptic)
+
+    if(TakeOffSpeedHaptic) then
+        system.pSave("TakeOffSpeedHaptic", 1)
+        else
+        system.pSave("TakeOffSpeedHaptic", 0)
+    end
+end
 
 --------------------------------------------------------------------
 -- Store settings when changed by user
@@ -70,20 +119,67 @@ local function initForm(subform)
     form.addSelectbox(list, curIndex, true, sensorChanged)
 
     form.addRow(2)
+    form.addLabel({label='-----------------------------------------------------------------------', width=300})
+
+    form.addRow(2)
     form.addLabel({label='Over speed (m/s)', width=200})
-    form.addIntbox(OverSpeed,0,150,0,0,1,function(value) OverSpeed=value; system.pSave("OverSpeed",value) end )
+    form.addIntbox(OverSpeed,0,150,0,0,1, function(value) OverSpeed=value; system.pSave("OverSpeed",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Audio alarm', width=200})
+    form.addAudioFilebox(OverSpeedFile or "", function(value) OverSpeedFile=value; system.pSave("OverSpeedFile",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Haptisk varsling', width=200})
+    OverSpeedI = form.addCheckbox(OverSpeedHaptic, OverSpeedHapticChanged)
+
+    form.addRow(2)
+    form.addLabel({label='-----------------------------------------------------------------------', width=300})
 
     form.addRow(2)
     form.addLabel({label='Minimum safe speed (m/s)', width=200})
-    form.addIntbox(MinimumSafeSpeed,0,150,0,0,1,function(value) MinimumSafeSpeed=value; system.pSave("MinimumSafeSpeed",value) end )
+    form.addIntbox(MinimumSafeSpeed,0,150,0,0,1, function(value) MinimumSafeSpeed=value; system.pSave("MinimumSafeSpeed",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Audio alarm', width=200})
+    form.addAudioFilebox(MinimumSafeSpeedFile or "", function(value) MinimumSafeSpeedFile=value; system.pSave("MinimumSafeSpeedFile",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Haptisk varsling', width=200})
+    MinimumSafeSpeedI = form.addCheckbox(MinimumSafeSpeedHaptic, MinimumSafeSpeedHapticChanged)
+
+    form.addRow(2)
+    form.addLabel({label='-----------------------------------------------------------------------', width=300})
 
     form.addRow(2)
     form.addLabel({label='Stall speed (m/s)', width=200})
-    form.addIntbox(StallSpeed,0,150,0,0,1,function(value) StallSpeed=value; system.pSave("StallSpeed",value) end )
+    form.addIntbox(StallSpeed,0,150,0,0,1, function(value) StallSpeed=value; system.pSave("StallSpeed",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Audio alarm', width=200})
+    form.addAudioFilebox(StallSpeedFile or "", function(value) StallSpeedFile=value; system.pSave("StallSpeedFile",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Haptisk varsling', width=200})
+    StallSpeedI = form.addCheckbox(StallSpeedHaptic, StallSpeedHapticChanged)
+
+    form.addRow(2)
+    form.addLabel({label='-----------------------------------------------------------------------', width=300})
 
     form.addRow(2)
     form.addLabel({label='Take off speed (m/s)', width=200})
-    form.addIntbox(TakeOffSpeed,0,150,0,0,1,function(value) TakeOffSpeed=value; system.pSave("TakeOffSpeed",value) end )
+    form.addIntbox(TakeOffSpeed,0,150,0,0,1, function(value) TakeOffSpeed=value; system.pSave("TakeOffSpeed",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Audio alarm', width=200})
+    form.addAudioFilebox(TakeOffSpeedFile or "", function(value) TakeOffSpeedFile=value; system.pSave("TakeOffSpeedFile",value) end )
+
+    form.addRow(2)
+    form.addLabel({label='Haptisk varsling', width=200})
+    TakeOffSpeedI = form.addCheckbox(TakeOffSpeedHaptic, TakeOffSpeedHapticChanged)
+
+    form.addRow(2)
+    form.addLabel({label='-----------------------------------------------------------------------', width=300})
 
     form.addRow(2)
     form.addLabel({label="Off switch", width=200})
@@ -106,13 +202,50 @@ local function init()
     -- Load translation files  
     system.registerForm(1,MENU_APPS,"Speed warnings", initForm, keyPressed)
 
-    SensorID            = system.pLoad("SensorID", 0)
-    SensorParam         = system.pLoad("SensorParam", 0)
-    OverSpeed           = system.pLoad("OverSpeed", 0)
-    MinimumSafeSpeed    = system.pLoad("MinimumSafeSpeed", 0)
-    TakeOffSpeed        = system.pLoad("TakeOffSpeed", 0)
-    StallSpeed          = system.pLoad("StallSpeed", 0)    
-    OffSwitch           = system.pLoad("OffSwitch")
+    SensorID                = system.pLoad("SensorID", 0)
+    SensorParam             = system.pLoad("SensorParam", 0)
+
+    OverSpeed               = system.pLoad("OverSpeed", 0)
+    OverSpeedFile           = system.pLoad("OverSpeedFile", "")
+    OverSpeedHaptic         = system.pLoad("OverSpeedHaptic", 0)
+
+    if(OverSpeedHaptic == 1) then
+        OverSpeedHaptic = true
+    else
+        OverSpeedHaptic = false
+    end
+
+    MinimumSafeSpeed        = system.pLoad("MinimumSafeSpeed", 0)
+    MinimumSafeSpeedFile    = system.pLoad("MinimumSafeSpeedFile", "")
+    MinimumSafeSpeedHaptic  = system.pLoad("MinimumSafeSpeedHaptic", 0)
+
+    if(OverSpeedHaptic == 1) then
+        OverSpeedHaptic = true
+    else
+        OverSpeedHaptic = false
+    end
+
+    TakeOffSpeed            = system.pLoad("TakeOffSpeed", 0)
+    TakeOffSpeedFile        = system.pLoad("TakeOffSpeedFile", "")
+    TakeOffSpeedHaptic      = system.pLoad("TakeOffSpeedHaptic", 0)
+
+    if(TakeOffSpeedHaptic == 1) then
+        TakeOffSpeedHaptic = true
+    else
+        TakeOffSpeedHaptic = false
+    end
+
+    StallSpeed              = system.pLoad("StallSpeed", 0)    
+    StallSpeedFile          = system.pLoad("StallSpeedFile", "")    
+    StallSpeedHaptic        = system.pLoad("StallSpeedHaptic", 0)    
+
+    if(StallSpeedHaptic == 1) then
+        StallSpeedHaptic = true
+    else
+        StallSpeedHaptic = false
+    end
+
+    OffSwitch               = system.pLoad("OffSwitch")
 
     ctrlIdx = system.registerControl(1, "Speed off switch","SpeedOff")
     collectgarbage()
@@ -141,27 +274,44 @@ local function loop()
 
             if(tresholdPassed.minimum and speed < MinimumSafeSpeed) then
                 tresholdPassed.minimum = false
-                system.playFile("/audio/en/0-MinimumSafeSpeed", AUDIO_QUEUE)
+                system.playFile(MinimumSafeSpeedFile, AUDIO_QUEUE)
                 system.messageBox('MinimumSafeSpeed', 2)
+
+                if(MinimumSafeSpeedHaptic) then
+                    system.vibration(false, 1);
+                end
             end
 
             if(tresholdPassed.stall and speed < StallSpeed) then
                 tresholdPassed.stall = false
-                system.playFile("/audio/en/0-StallSpeed.wav", AUDIO_QUEUE)
+                system.playFile(StallSpeedFile, AUDIO_QUEUE)
                 system.messageBox('StallSpeed', 2)
+
+                if(StallSpeedHaptic) then
+                    system.vibration(false, 1);
+                end
             end
 
             if(tresholdPassed.over and speed > OverSpeed and alarmTriggeredTime.over < system.getTime()) then
                 alarmTriggeredTime.over = system.getTime() + 5
-                system.playFile("/audio/en/0-OverSpeed.wav", AUDIO_QUEUE)
+                system.playFile(OverSpeedFile, AUDIO_QUEUE)
                 system.messageBox('OverSpeed', 2)
+
+                if(OverSpeedHaptic) then
+                    system.vibration(false, 1);
+                end
             end
 
             -- Kjøres en gang, inntil 10 sekunder under satt verdi, da aktiveres den igjen.
             if(tresholdPassed.takeoff and speed >= TakeOffSpeed) then
                 tresholdPassed.takeoff = false
-                system.playFile("/audio/en/0-TakeOffSpeed.wav", AUDIO_QUEUE)
+                system.playFile(TakeOffSpeedFile, AUDIO_QUEUE)
                 system.messageBox('TakeOffSpeed', 2)
+
+                if(TakeOffSpeedHaptic) then
+                    system.vibration(false, 1);
+                end
+
             elseif (speed > TakeOffSpeed) then
                 alarmTriggeredTime.takeoff = system.getTime()
             end

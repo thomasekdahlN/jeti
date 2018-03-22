@@ -1,0 +1,3 @@
+NAME;AUTHOR;VERSION;HARDWARE;DATE;DESCRIPTION;FILES_FOLDERS
+{"en":"ECU Turbine Telemetry", "cz":"ECU Turbine Telemetry","de":"ECU Turbine Telemetry","fr":"ECU Turbine Telemetry"};Thomas Ekdahl;"2.4";678,679;17-03-2018;{"en":"ecu/docs/en.html", "cz":"ecu/docs/en.html","de":"ecu/docs/en.html","fr":"ecu/docs/en.html"};ecu.lc,ecu;logo.png
+{"en":"Speed Warnings", "cz":"Speed Warnings","de":"Speed Warnings","fr":"Speed Warnings"};Thomas Ekdahl;"0.1";674,675;17-03-2018;{"en":"ecu/docs/en.html", "cz":"ecu/docs/en.html","de":"ecu/docs/en.html","fr":"ecu/docs/en.html"};speedwar.lua;logo.png
