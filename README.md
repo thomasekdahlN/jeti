@@ -125,13 +125,12 @@ So the idea is that with this lua script you will get all needed turbine alarms 
 For the people who love to tinker it is infinitely extensive and changeable in a easy manner in the configuration file pr ecu. But the distributed configuration file should be best practise for all others.
 
 #Installation
-Download Jeti Stuido from http://www.jetimodel.com/en/JETI-Studio-2/
-
-Connect transmitter to PC/Mac
-
-Go to menu: Tools => Transmitter Wizard => Lua App Manager. Choose the ECU App and press install.
-
-Voila
+- Download Jeti Studio from http://www.jetimodel.com/en/JETI-Studio-2/
+- Connect transmitter to PC/Mac
+- Go to menu: Tools => Transmitter Wizard => Lua App Manager. Choose the ECU App and press install.
+- Disconnect transmitter from PC/Mac
+- Start Transmitter.
+- Add Application ecu.
 
 
 
