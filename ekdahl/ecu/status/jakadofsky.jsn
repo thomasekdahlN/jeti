@@ -1,0 +1,273 @@
+{
+    "sensorname": "status",
+    "Error"   : {
+        "text"      : "Error",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "file"      : "Error.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Off"   : {
+        "text"      : "Off",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Off.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Cool"   : {
+        "text"      : "Cool",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Cool.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Lock"   : {
+        "text"      : "Lock",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Lock.wav"
+         },
+         "haptic"    : {
+             "enable"    : true,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Stop"   : {
+        "text"      : "Stop",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Stop.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Run"   : {
+        "text"      : "Run",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Run.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Rel"   : {
+        "text"      : "Rel",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Rel.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Glow"   : {
+        "text"      : "Glow",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Glow.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Spin"   : {
+        "text"      : "Spin",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Spin.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Fire"   : {
+        "text"      : "Fire",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Fire.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Ignition"   : {
+        "text"      : "Ignition",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Ignition.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Heat"   : {
+        "text"      : "Heat",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Heat.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Accelerate"   : {
+        "text"      : "Accelerate",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Accelerate.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Calibrate"   : {
+        "text"      : "Calibrate",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Calibrate.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    },
+    "Idle"   : {
+        "text"      : "Idle",
+        "message"   : {
+            "enable" : true,
+            "seconds": 5
+         },
+         "audio" : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "file"      : "Idle.wav"
+         },
+         "haptic"    : {
+             "enable"    : false,
+             "repeat"    : 1,
+             "stick"     : "left",
+             "vibrationProfile"   : 4
+         }
+    }
+}

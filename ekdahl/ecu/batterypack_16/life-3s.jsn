@@ -1,0 +1,7 @@
+{
+    "sensorname": "ecuv",
+    "type" : "life",
+    "cells" : 3,
+    "high" : 10.8,
+    "low"  : 9
+}

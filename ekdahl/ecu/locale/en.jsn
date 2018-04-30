@@ -1,0 +1,19 @@
+{
+    "appName":"ECU Dashboard",
+    "cfgName":"ECU. Settings",
+    "window1":"ECU: Fuel, status, volt",
+    "window2":"ECU: Battery, RPM, EGT",
+    "window3":"ECU: RPM and TEMP gauge",
+    "left": "left",
+    "right": "right",
+    "selectConverterType":"ECU telemetry converter",
+    "selectTurbineType":"ECU type",
+    "selectTurbineConfig":"Turbine config",
+    "selectBatteryConfig":"Battery type",
+    "selectTurbineSensor":"ECU converter sensor",
+    "selectLeftTurbineSensor":"ECU sensor turbine left",
+    "selectRightTurbineSensor":"ECU sensor turbine right",
+    "AudioOffSwitch": "Audio off switch",
+    "HapticOffSwitch": "Haptic off switch",
+    "MessageOffSwitch": "Message off switch"
+}
