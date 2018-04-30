@@ -1,18 +1,10 @@
 {
     "sensormap" : {
-		"EGT" : "1",
-		"Speed" : "2",
-		"Bat." : "3",
-		"Pump" : "4",
-		"Throttle" : "5",
-		"Fuel" : "6",
-		"Speed_TP" : "7",
-		"AirSpeed" : "8",
-		"FlowMeter" : "9",
-		"EGT_II" : "10",
-		"Speed_II" : "11",
-		"Bat_II" : "12",
-		"Pump_II" : "13"
+		"egt" 	: "1",
+		"rpm" : "2",
+		"ecuv" 	: "3",
+		"pumpv" : "4",
+		"fuel" 	: "6"
 	},
 	"fuel" : {
         "countingdown" : true
