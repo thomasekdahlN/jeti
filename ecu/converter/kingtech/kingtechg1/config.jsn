@@ -1,7 +1,7 @@
 {
     "sensormap" : {
 		"egt" 	: "1",
-		"rpm" : "2",
+		"rpm" 	: "2",
 		"ecuv" 	: "3",
 		"pumpv" : "4",
 		"fuel" 	: "6"

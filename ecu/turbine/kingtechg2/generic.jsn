@@ -20,7 +20,7 @@
         },
         "low"   : {
             "text"      : "Turbine RPM low",
-            "value"     : 40000,
+            "value"     : 32000,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
