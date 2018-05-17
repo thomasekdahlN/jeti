@@ -1,25 +1,26 @@
 /*
   -----------------------------------------------------------
-            Jeti GPS Sensor v 1.5
+            Jeti ECU Simulator 2
   -----------------------------------------------------------
 
    Based on the "Jeti EX MegaSensor for Teensy 3.x"
    from Bernd Wokoeck 2016
-
-   Uses affordable Arduino Pro Mini + Ublox NEO-6M GPS-module
-
+   Based on Tero Salminen RC-Thoughts.com (c) 2017 www.rc-thoughts.com
+   
+   Uses affordable Arduino Pro Mini
+   
    Libraries needed
    - AltSoftSerial by Paul Stoffregen
    - Jeti Sensor EX Telemetry C++ Library by Bernd Wokoeck
 
-   Tero Salminen RC-Thoughts.com (c) 2017 www.rc-thoughts.com
+  Thomas Ekdahl, Norway
 
   -----------------------------------------------------------
 
                     Versatile features:
 
   -----------------------------------------------------------
-      Shared under MIT-license by Tero Salminen (c) 2017
+      Shared under MIT-license by Thomas Ekdahl (c) 2018
   -----------------------------------------------------------
 */
 
@@ -37,6 +38,8 @@ int pot2Pin = 2; //Potmeter that changes RPM from 0 - 250.000RPM
 int pot3Pin = 3; //Potmeter that changes PUMPV from 0 - 4V
 int pot4Pin = 4; //Potmeter that changes BATT from 0 - 20V
 int pot5Pin = 5; //Potmeter that chanhes FUEL from -0.5 - 10L (some sensors gives negatvie fule, so have to test it)
+int pot6Pin = 6; //Potmeter that changes SPEED from 0 - 300km/h (To test speed scripts)
+int pot7Pin = 7; //Potmeter that changes PRESSURE from 0 - 10BAR (To test pressure scripts)
 
 int offlinePin = 11; //Button that sets all sensors to offline status
 
@@ -56,6 +59,7 @@ enum
   ID_THROTTLE  = 7,
   ID_SPEED     = 8,
   ID_RPM2      = 9,
+  ID_PRESSURE  = 10,
 };
 
 // For sensors
@@ -68,6 +72,7 @@ long sens6 = 0; //FUEL
 int sens7 = 0; //THROTTLE
 int sens8 = 0; //SPEED
 unsigned long sens9 = 0; //RPM2
+int sens10 = 0; //PRESSURE
 
 int buttonOffline = 0; 
 
@@ -83,6 +88,7 @@ JETISENSOR_CONST sensors[] PROGMEM =
   { ID_THROTTLE,    "Throttle",   " ",          JetiSensor::TYPE_14b, 0 },
   { ID_SPEED,       "Speed",      "m/s",        JetiSensor::TYPE_14b, 0 },
   { ID_RPM2,        "Rpm2",       "/min",       JetiSensor::TYPE_22b, 0 },
+  { ID_PRESSURE,    "Pressure",   "kPa",       JetiSensor::TYPE_14b, 0 },
   { 0 }
 };
 
@@ -108,7 +114,7 @@ void setup()
 {
   pinMode(offlinePin, INPUT);
   jetiEx.SetDeviceId( 0x75, 0x31 );
-  jetiEx.Start( "ECU", sensors, JetiExProtocol::SERIAL2 );
+  jetiEx.Start( "ECUSim", sensors, JetiExProtocol::SERIAL2 );
 }
 
 void loop()
@@ -117,26 +123,29 @@ void loop()
     buttonOffline  = digitalRead(offlinePin);
   
     // Read potentiometers
-    sens1 = map(analogRead(pot1Pin), 0, 1023, -10, 1000);   //EGT
-    sens2 = map(analogRead(pot2Pin), 0, 1023, 0, 250000);   //RPM
-    readStatusFromKeyPad();                                 //STATUS - varaible set globally
-    sens4 = map(analogRead(pot3Pin), 0, 1023, 0, 400);      //PUMPV
-    sens5 = map(analogRead(pot4Pin), 0, 1023, 0, 2000);     //BATT
-    sens6 = map(analogRead(pot5Pin), 0, 1023, -500, 10000); //FUEL
-    sens7 = 1510;                                           //THRO
-    sens8 = 200;                                            //SPEED
-    sens9 = map(analogRead(pot0Pin), 0, 1023, 0, 10000);    //RPM2
+    sens1  = map(analogRead(pot1Pin), 0, 1023, -10, 1000);   //EGT
+    sens2  = map(analogRead(pot2Pin), 0, 1023, 0, 200000);   //RPM
+    readStatusFromKeyPad();                                  //STATUS - varaible set globally
+    sens4  = map(analogRead(pot3Pin), 0, 1023, 0, 400);      //PUMPV
+    sens5  = map(analogRead(pot4Pin), 0, 1023, 0, 2000);     //BATT
+    sens6  = map(analogRead(pot5Pin), 0, 1023, -500, 10000); //FUEL
+    sens7  = 1510;                                           //THRO
+    sens8  = map(analogRead(pot6Pin), 0, 1023, 0, 300);      //SPEED
+    sens9  = map(analogRead(pot0Pin), 0, 1023, 0, 10000);    //RPM2
+    sens10 = map(analogRead(pot7Pin), 0, 1023, 0, 1000);     //PRESSURE
+
 
     if (buttonOffline == LOW) {
-      jetiEx.SetSensorValue( ID_EGT,    sens1);
-      jetiEx.SetSensorValue( ID_RPM,    sens2);
-      jetiEx.SetSensorValue( ID_STATUS, sens3);
-      jetiEx.SetSensorValue( ID_PUMPV,  sens4 );
-      jetiEx.SetSensorValue( ID_BATT,   sens5);
-      jetiEx.SetSensorValue( ID_FUEL,   sens6);
+      jetiEx.SetSensorValue( ID_EGT,      sens1);
+      jetiEx.SetSensorValue( ID_RPM,      sens2);
+      jetiEx.SetSensorValue( ID_STATUS,   sens3);
+      jetiEx.SetSensorValue( ID_PUMPV,    sens4);
+      jetiEx.SetSensorValue( ID_BATT,     sens5);
+      jetiEx.SetSensorValue( ID_FUEL,     sens6);
       jetiEx.SetSensorValue( ID_THROTTLE, sens7);
-      jetiEx.SetSensorValue( ID_SPEED,  sens8);
-      jetiEx.SetSensorValue( ID_RPM2,   sens9);
+      jetiEx.SetSensorValue( ID_SPEED,    sens8);
+      jetiEx.SetSensorValue( ID_RPM2,     sens9);
+      jetiEx.SetSensorValue( ID_PRESSURE, sens10);
 
       jetiEx.DoJetiSend();
     }

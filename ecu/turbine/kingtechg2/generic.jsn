@@ -114,7 +114,7 @@
         "sensorname": "pumpv",
         "high"  : {
             "text"      : "Pump volt high",
-            "value"     : 2.5,
+            "value"     : 2000,
             "message"   : {
                 "enable" : true,
                 "seconds": 5
