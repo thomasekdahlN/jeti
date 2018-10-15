@@ -44,7 +44,7 @@
         "-4"    : "Accelerate time out",
         "-3"    : "Manual off",
         "-2"    : "Auto off",
-        "-1"    : "RC off",
+        "-1"    : "Rc off",
         "0"     : "Off",
         "1"     : "Slow down",
         "2"     : "Switch off",

@@ -1,0 +1,48 @@
+{
+    "sensormap" : {
+        "status"    : "1",
+        "egt"       : "2",
+        "throttle"  : "3",
+        "pumpv"     : "4",
+        "fuel"      : "5",
+        "fuelflow"  : "6",
+        "fuelflow"  : "ecuv",
+        "rpm"       : "8"
+    },
+    "fuel" : {
+        "countingdown" : true
+    },
+    "statusmap":{
+        "-20"   : "Error",
+        "-19"   : "Unknown",
+        "-12"   : "Flameout",
+        "-11"   : "High temp",
+        "-10"   : "Speed low",
+        "-9"    : "Failsafe",
+        "-8"    : "RxPwFail",
+        "-7"    : "Overload",
+        "-6"    : "Battery low",
+        "-5"    : "Start bad",
+        "-4"    : "Weak gas",
+        "-3"    : "Timeout",
+        "-2"    : "Ignition failure",
+        "-1"    : "Glow bad",
+        "0"     : "Trim low",
+        "1"     : "User off",
+        "2"     : "Stop",
+        "3"     : "Cooling",
+        "4"     : "Ready",
+        "5"     : "GdReady",
+        "6"     : "Glow test",
+        "7"     : "Stick low",
+        "8"     : "PrimeVap",
+        "9"     : "Burner on",
+        "10"    : "Start on",
+        "11"    : "Ignition",
+        "12"    : "Stage1",
+        "13"    : "Stage2",
+        "14"    : "Stage3",
+        "20"    : "Running",
+        "22"    : "Restart"
+    },
+}

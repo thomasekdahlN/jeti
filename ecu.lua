@@ -10,7 +10,7 @@
 -- # Can be used and changed non commercial, but feel free to send us changes back to be incorporated in the main code.
 -- # If using parts of this project elsewhere, please give me credit for it
 -- #                       
--- # Version: 2.2
+-- # Version: 2.6
 -- ############################################################################# 
 
 local loadh      = require "ecu/lib/loadhelper"
@@ -336,7 +336,7 @@ end
 
 ----------------------------------------------------------------------
 -- Check if switch to enable alarms is set, sets global enableAlarm value
-local function enableAlarmCheck(OffSwitch, enableAlarm)
+local function enableAlarmCheck(OffSwitch)
     local Switch   = system.getSwitchInfo(OffSwitch)
 
     if(Switch) then
@@ -404,9 +404,18 @@ local function readParamsFromSensor(tmpSensorID)
 
         print(string.format("SensorsOffline: %s valid: %s", countSensors, countSensorsValid))
         sensorsOnline   = -1
-        system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 3)
-        system.playFile("/Apps/ecu/audio/Ecu converter offline.wav", AUDIO_QUEUE)
-        system.vibration(false, 4);
+
+        if(enableAlarmMessage) then
+            system.messageBox(string.format("ECU Offline - configured: %s valid: %s", countSensors, countSensorsValid), 3)
+        end
+
+        if(enableAlarmAudio) then
+            system.playFile("/Apps/ecu/audio/Ecu converter offline.wav", AUDIO_QUEUE)
+        end 
+
+        if(enableAlarmHaptic) then
+            system.vibration(false, 4);
+        end
     end
 end
 
@@ -447,9 +456,9 @@ local function loop()
 
     --fake.makeSensorValues()
     if(SensorID ~= 0) then
-        enableAlarmAudio   = enableAlarmCheck(audioOffSwitch, enableAlarmAudio)
-        enableAlarmHaptic  = enableAlarmCheck(hapticOffSwitch, enableAlarmHaptic)
-        enableAlarmMessage = enableAlarmCheck(messageOffSwitch, enableAlarmMessage)
+        enableAlarmAudio   = enableAlarmCheck(audioOffSwitch)
+        enableAlarmHaptic  = enableAlarmCheck(hapticOffSwitch)
+        enableAlarmMessage = enableAlarmCheck(messageOffSwitch)
 
         readParamsFromSensor(SensorID)
 
@@ -472,4 +481,4 @@ end
 
 lang = loadh.fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.5', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.4', name=lang.appName}

@@ -9,7 +9,7 @@
 -- # License: Share alike                                       
 -- # Can be used and changed non commercial, but feel free to send us changes back to be incorporated in the main code.
 -- #                       
--- # 0.9 - Initial release
+-- # 2.6 - Initial release
 -- ############################################################################# 
 
 -- Globals to be accessible also from libraries
