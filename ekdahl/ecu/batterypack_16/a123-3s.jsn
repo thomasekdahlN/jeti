@@ -1,7 +1,0 @@
-{
-    "sensorname": "ecuv",
-    "type" : "a123",
-    "cells" : 3,
-    "high" : 10.8,
-    "low"  : 9
-}

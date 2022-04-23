@@ -1,9 +1,0 @@
-{
-    "sensorname": "fuel",
-    "tanksize"  : 0,
-    "decimals"  : 1,
-    "unit"      : "l",
-    "label"     : "R.volume",
-    "warning"   :  20,
-    "critical"  :  10
-}
