@@ -6,7 +6,7 @@
         "pumpv"     : "4",
         "fuel"      : "5",
         "fuelflow"  : "6",
-        "fuelflow"  : "ecuv",
+        "none"      : "7",
         "rpm"       : "8"
     },
     "fuel" : {
@@ -44,5 +44,5 @@
         "14"    : "Stage3",
         "20"    : "Running",
         "22"    : "Restart"
-    },
+    }
 }

@@ -2,6 +2,6 @@
     "sensorname": "ecuv",
     "type" : "life",
     "cells" : 3,
-    "high" : 10.8,
+    "high" : 10.3,
     "low"  : 9
 }

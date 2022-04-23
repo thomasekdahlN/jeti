@@ -8,12 +8,11 @@
 <h1>Turbine ECU LUA Script - supporting many turbine manufacturers</h1>
  Silent/Black-Cockpit alarms (sound/alert/haptic/logg) that are silent until needed on Turbine Status, RPM, RPM2, PUMPV, BATT, FUEL, EGT, Flameout. Dashboard presentation of all turbine parameters and visualised fuel and battery. The idea is no alarms on the ground, only alarms when the shit hits the fan to help to save your costly model. Fast setup based on choice of best practie configuration files.
 <p>
+<img src="normal.jpg">
 <img src="alarm - shaft rpm low.jpg">
-<img src="Alarm ECU battery high.png">
-<img src="Alarm low turbine rpm.jpg">
-<img src="FlightLogg - RunReg.jpg">
-<img src="Normal - RunReg5.jpg">
-<img src="Status - preheat1.jpg">
+<img src="alarm - turbine rpm low.jpg">
+<img src="configuration.jpg">
+<img src="logging.jpg">
 <p>
 NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and throttle kill switch - and you will have the most advanced turbine surveilance available to RC turbine models today.
 <p>
@@ -26,6 +25,7 @@ alarm shaft rpm low flightogg - keros full normal - runreg4 status - keros full
 
 <h2>Supporting the following ecu converters and turbines:</h2>
 <ul>
+<li>Vspeak - FW 1.0 - Kingtech</li>
 <li>Vspeak - FW 1.0 - AMT</li>
 <li>Vspeak - FW 1.0 - JetCat</li>
 <li>Vspeak - FW 2.2 - Hornet</li>
@@ -48,6 +48,7 @@ alarm shaft rpm low flightogg - keros full normal - runreg4 status - keros full
 <li>Xicoy - FW ?? - Xicoy v6 (Experimental)</li>
 <li>Xicoy - FW ?? - Xicoy v10 (Experimental)</li>
 <li>Orbit (Experimental)</li>
+<li>Kingtech (Experimental)</li>
 </ul>
 
 <h2>Turbine status functionality:</h2>
@@ -107,5 +108,11 @@ Fuel gauge, pump volt, ECU volt and status double window , based on code from "E
 Battery gauge, RPM, RPM2, EGT and status double window , based on code from "ECU data display" for Orbit made by Bernd Woköck (not for -16)</br>
 Experimental RPM and TEMP round gauge (very cool, but not tested) (not for -16)</br>
 Experimental full screen GUI (Only for -24)</br>
+
+<h2>Releasenotes</h2>
+<ul>
+<li>2.6 - Support for vspeak kingtech converter, kingtech converter and ecu converter offline alarm now respects setup switches (no alarm if used on same switch as turbine off), lots of new sounds, and a few tweeks on default config files</li>
+</ul>
+
 </body>
 </html>

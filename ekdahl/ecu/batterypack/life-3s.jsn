@@ -4,7 +4,7 @@
     "cells" : 3,
     "high"  : {
         "text"      : "ECU Battery high",
-        "value"     : 10.8,
+        "value"     : 10.3,
         "message"   : {
             "enable" : true,
             "seconds": 5
