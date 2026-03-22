@@ -1,7 +1,0 @@
-{
-    "sensorname": "ecuv",
-    "type" : "nicd",
-    "cells" : 3,
-    "high" : 12.0,
-    "low"  : 10.0
-}

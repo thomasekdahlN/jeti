@@ -1,23 +1,304 @@
-# Jeti ECU Turbine Telemetry Lua Script
-Jeti ECU LUA Script. Silent/Black-Cockpit alarms (sound/alert/haptic/logg) that are silent until needed on Turbine Status, RPM, RPM2, PUMPV, BATT, FUEL, EGT, Flameout. Dashboard presentation of all turbine parameters and visualised fuel and battery. The idea is no alarms on the ground, only alarms when the shit hits the fan to help to save your costly model. Easy setup based on choise of best practise configuration files. 
+# Jeti ECU Turbine Telemetry
 
-NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and throttle kill switch - and you will have the most advanced turbine surveilance available to RC turbine models today.
+Jeti Lua application for turbine ECU monitoring, alarm handling, and telemetry presentation on Jeti transmitters.
 
-Supports vspeak ecu converter (my personal favorite ECU converter), Digitech ecu converter, jetcat ecu converter and experimental support for CB-Electroniks and Xicoy converters (needs testers). Manufactures of turbine ECU converters are welcome to contact me, to add support for their equipment. The idea is to support all Turbines and Turbine ECU converters that exists - with
+The project provides a configurable dashboard for turbine status, RPM, EGT, ECU voltage, pump voltage, and fuel, with support for voice alerts, message popups, haptic feedback where available, and centralized debug logging.
 
-Only works with Jeti transmitter FW 4.22 or better. 
+## Quick start
 
-#### Video of installation and setup
-https://youtu.be/tsEkAW4Y2tU
+If you want the shortest path to a working setup:
 
-#### Video simulating normal usage
-https://youtu.be/evyAzlbLs68
+1. copy `ecu.lc` or `ecu_16.lc` to the transmitter
+2. copy the full `ecu/` directory to the transmitter
+3. add the ECU app from the transmitter Applications menu
+4. choose converter family, turbine family, turbine config, battery config, and ECU sensor
+5. verify the app starts without `Err`
+6. if it shows `Err`, open the debug console and use the log output to find the failing config or sensor mapping
 
-#### Video simulation a flight with lots of alarms triggered
-https://youtu.be/_tN6GDu43rU
+## Features
 
-#### Video of how this advanced lua script is tested with an ECU simulator made with Arduino Pro Mini
-https://youtu.be/EmGTHrpVQJE
+- reads telemetry from a selected ECU sensor source
+- maps converter-specific parameters into a common runtime format
+- applies turbine-specific alarm and status rules from JSON configuration files
+- renders dedicated telemetry windows for live turbine monitoring
+- delays alarm activation during startup stabilization
+- supports status-driven voice, message, and haptic alerts where available
+- suppresses repeated alarms with timed cooldown behavior
+- handles fuel threshold warnings and critical alerts
+- detects ECU offline conditions after signal loss
+- reports important faults through a shared logger to make debugging easier
+
+## Feature sets
+
+| Feature set | Target | Notes |
+| --- | --- | --- |
+| `ecu.lua` | Jeti transmitters with more memory | Main full-featured entrypoint |
+| `ecu_16.lua` | Older/lower-memory Jeti transmitters | Leaner runtime with reduced feature footprint |
+| `ecu.lc` | Compiled install for newer transmitters | Compiled artifact of `ecu.lua` |
+| `ecu_16.lc` | Compiled install for older transmitters | Compiled artifact of `ecu_16.lua` |
+
+The root entrypoints above are the active scripts.
+
+## Telemetry windows and visualization
+
+The active telemetry presentation is intentionally simple and fast to render on the transmitter.
+
+### Full app: `ecu.lua`
+
+The full app registers **two telemetry windows**.
+
+#### Window 1
+
+Shows the most important in-flight status information:
+
+- **fuel level** on the left
+- **turbine status text** at the upper right
+- **pump voltage** and **ECU voltage** at the lower right
+
+Visualization:
+
+- fuel is shown as a **vertical segmented gauge** with `F` and `E` markers
+- when fuel is critically low, the normal gauge is replaced by a **blinking warning triangle** with the remaining percentage
+- turbine status is shown as large text such as normal status, `UNKNOWN`, `UNCONFIG`, `NO CONFIG`, or `OFFLINE`
+- pump and ECU voltages are shown as direct numeric voltage readouts
+
+#### Window 2
+
+Shows live engine values and peak values:
+
+- **ECU battery/voltage level** as a gauge on the left
+- **RPM** current and maximum values
+- **RPM2** current and maximum values
+- **EGT** current and maximum values
+
+Visualization:
+
+- ECU voltage is shown as a **vertical segmented battery-style gauge**
+- RPM, RPM2, and EGT are shown in a compact **table layout** with `SENS`, `NOW`, and `MAX` columns
+- RPM is abbreviated in **thousands** using `K`
+- EGT is shown in **degrees C**
+
+### Low-memory app: `ecu_16.lua`
+
+The `-16` version registers **one telemetry window**, roughly equivalent to Window 1 in the full app:
+
+- fuel gauge on the left
+- turbine status text on the upper right
+- pump and ECU voltage readouts on the lower right
+
+This keeps the low-memory transmitter version focused on the most important operational data.
+
+### Experimental windows
+
+There are additional experimental/legacy window modules in the repository, but they are **not registered by default** in the active runtime.
+
+## Supported configuration families
+
+The repository currently contains configuration folders for these converter families:
+
+- `vspeak`
+- `digitech`
+- `jetcat`
+- `kingtech`
+- `xicoy`
+- `cbelectroniks`
+- `ecusimulator`
+
+The turbine profile folders currently include families such as:
+
+- `amt`
+- `behotec`
+- `colibri`
+- `evojet`
+- `graupner`
+- `hammer`
+- `hornet`
+- `jakadofsky`
+- `jetcat`
+- `kingtech*`
+- `lambert`
+- `orbit`
+- `pbs`
+- `xicoy*`
+
+## Supported combinations grid
+
+This grid reflects the current converter-to-turbine combinations present in the repository configuration folders.
+
+| Converter \ Turbine | `amt` | `evojet` | `graupner` | `hammer` | `hornet` | `jakadofsky` | `jetcat` | `kingtech` | `kingtechg1` | `kingtechg2` | `lambert` | `pbs` | `xicoyv6` | `xicoyv10` | `xicoyvx` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `cbelectroniks` | — | — | — | — | — | — | ✅ | — | — | — | — | — | ✅ | ✅ | — |
+| `digitech` | — | ✅ | ✅ | ✅ | ✅ | — | ✅ | — | ✅ | ✅ | ✅ | — | ✅ | ✅ | — |
+| `ecusimulator` | ✅ | ✅ | — | — | ✅ | ✅ | ✅ | — | — | — | — | ✅ | — | — | — |
+| `jetcat` | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — |
+| `kingtech` | — | — | — | — | — | — | — | — | ✅ | ✅ | — | — | — | — | — |
+| `vspeak` | ✅ | ✅ | — | — | ✅ | ✅ | ✅ | ✅ | — | — | — | ✅ | — | — | — |
+| `xicoy` | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | ✅ | ✅ |
+
+Notes:
+
+- `✅` means a matching converter/turbine folder combination exists in the repo
+- `—` means there is no matching converter mapping folder currently in the repo
+- turbine profile folders such as `behotec`, `colibri`, `orbit`, `kingtechg3`, `kingtechg4`, and `kingtechg5` exist, but they do not currently appear in converter-family mapping folders
+- some names intentionally differ between converter and turbine families, for example `vspeak -> kingtech` and `kingtech -> kingtechg1` / `kingtechg2`
+- this grid describes configuration presence in the repo, not a guarantee that every combination has been equally flight-tested
+
+## Installation on a transmitter
+
+### Option 1: Install with Jeti Studio
+
+1. Install Jeti Studio.
+2. Connect the transmitter to your computer.
+3. Open the Lua App Manager in Jeti Studio.
+4. Install the ECU app.
+5. Copy the matching compiled file to the transmitter:
+   - use `ecu.lc` for newer transmitters with more memory
+   - use `ecu_16.lc` for older lower-memory transmitters
+6. Ensure the `ecu/` asset folder is also present on the transmitter.
+
+### Option 2: Manual file copy
+
+Copy these items to the transmitter application storage:
+
+- `ecu.lc` or `ecu_16.lc`
+- the full `ecu/` directory
+
+After that:
+
+1. start the transmitter normally
+2. open the Applications menu
+3. add the ECU app
+4. select converter type, turbine type, turbine config, battery config, and ECU sensor
+
+## First-time setup on the transmitter
+
+Typical setup steps:
+
+1. choose the converter family
+2. choose turbine family
+3. choose turbine config preset
+4. choose battery config
+5. choose the ECU telemetry sensor
+6. set tank size if required by the selected configuration
+7. assign alarm-off / message-off / audio-off / haptic-off switches where supported
+
+Most combinations are designed so you do not need to edit JSON manually.
+
+## Logging and debugging
+
+The codebase now includes centralized logging through `ecu/lib/loghelper.lua`.
+
+That means important faults such as these are logged consistently:
+
+- missing config files
+- invalid JSON
+- missing audio files
+- missing sensor mappings
+- unknown status codes
+- missing status configuration
+- offline transition issues
+
+If the app reports `Err` on the transmitter:
+
+1. open the app entry
+2. press the transmitter command/debug button
+3. capture the debug console output
+4. include that output when reporting issues
+
+## Errors, crashes, and troubleshooting on the transmitter
+
+### Common error situations
+
+The app now logs important failure paths such as:
+
+- missing config files
+- invalid JSON config content
+- missing audio files
+- missing sensor mappings
+- unknown turbine status codes
+- missing status configuration
+- ECU/sensor offline conditions
+- incomplete or invalid runtime configuration
+
+### Where the logs are
+
+Runtime logs are written with `print(...)` through the shared logger and appear in the transmitter's **application debug / command console**.
+
+If the app shows `Err` or appears to fail during startup:
+
+1. open the transmitter **Applications** menu
+2. highlight the ECU app
+3. press the **CMD / command** button
+4. read or photograph the displayed debug log
+
+Typical log lines look like this:
+
+- `[ECU][ERROR][validateConfig] Missing converter sensor map`
+- `[ECU][ERROR][loadhelper.fileJson] File not found: ...`
+- `[ECU-16][WARN][processStatus] Unknown status code: ...`
+
+### How to solve transmitter startup failures or crashes
+
+Use this checklist in order:
+
+1. **Confirm the correct compiled file is installed**
+   - newer transmitters: `ecu.lc`
+   - older/lower-memory transmitters: `ecu_16.lc`
+
+2. **Confirm the full `ecu/` asset folder was copied**
+   - missing JSON, locale, or audio files can break startup or leave the app unusable
+
+3. **Open the debug console log**
+   - the first `ERROR` line usually points to the failing file, sensor map, or status config
+
+4. **Re-copy the app files if the update may have been partial**
+   - replace both the compiled file and the `ecu/` directory together
+
+5. **Check the selected configuration on the transmitter**
+   - verify converter family, turbine family, turbine config, battery config, and ECU sensor were selected correctly
+
+6. **If the app says `NO CONFIG` or `UNCONFIG`**
+   - reopen setup and select the missing configuration items again
+   - verify that the chosen converter/turbine combination actually exists in the repo-supported config set
+
+7. **If the app says `OFFLINE`**
+   - the app started, but the expected telemetry is not currently valid
+   - verify the ECU is powered, the converter is connected, and the correct telemetry sensor was selected
+
+8. **If the log mentions missing or invalid JSON**
+   - re-copy the affected configuration files
+   - if you customized JSON manually, validate the syntax and restore a known-good file if needed
+
+9. **If the log mentions missing audio files**
+   - re-copy the `ecu/audio/` content or the full `ecu/` folder
+
+10. **If the app still crashes after a clean copy**
+    - remove the app entry from the transmitter
+    - copy the files again
+    - add the app again
+    - collect a fresh debug log before changing other settings
+
+### Best way to report a crash
+
+When reporting a transmitter crash or startup failure, include:
+
+- transmitter model
+- whether you used `ecu.lc` or `ecu_16.lc`
+- selected converter family
+- selected turbine family/config
+- a photo or screenshot of the **CMD/debug console log**
+- whether the app showed `Err`, `NO CONFIG`, `UNCONFIG`, or `OFFLINE`
+
+## Legacy videos
+
+- Installation and setup: https://youtu.be/tsEkAW4Y2tU
+- Normal usage simulation: https://youtu.be/evyAzlbLs68
+- Alarm-heavy flight simulation: https://youtu.be/_tN6GDu43rU
+- ECU simulator test rig: https://youtu.be/EmGTHrpVQJE
+
+## Screenshots
+
+Representative screenshots from installation, alarms, and telemetry presentation:
 
 ![alarm - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081407/87552642-234a-11e7-897d-e4f2ae4de45f.jpg)
 ![gui - configuration](https://cloud.githubusercontent.com/assets/26059207/25081408/875af9a0-234a-11e7-8c05-8a3d246c3d4a.jpg)
@@ -25,135 +306,162 @@ https://youtu.be/EmGTHrpVQJE
 ![alarm - shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/25081413/8a64ccf2-234a-11e7-8d4c-b7ea80fa20b6.jpg)
 ![display - ecu battery and fuel indicators](https://cloud.githubusercontent.com/assets/26059207/25081414/8a7c2f32-234a-11e7-832a-1a6286d56952.jpg)
 ![display - ecu offline](https://cloud.githubusercontent.com/assets/26059207/25081415/8a7fcb42-234a-11e7-8dcd-ee8d33662952.jpg)
+![install - application added and running](https://user-images.githubusercontent.com/26059207/31859266-ace26e62-b709-11e7-8dd3-b01205e7d07a.png)
+![install - debug info after pressing the command button](https://user-images.githubusercontent.com/26059207/31859268-ad135fd6-b709-11e7-8338-7fd456c0731d.png)
 
-![alarm shaft rpm low](https://cloud.githubusercontent.com/assets/26059207/24649940/f58155b8-1928-11e7-94e5-781be6503be5.png)
-![flightogg - keros full](https://cloud.githubusercontent.com/assets/26059207/24649948/fb132074-1928-11e7-9d7e-8c54485448e0.jpg)
-![normal - runreg4](https://cloud.githubusercontent.com/assets/26059207/24649952/fda3b114-1928-11e7-889e-91476eb2ab75.jpg)
-![status - keros full](https://cloud.githubusercontent.com/assets/26059207/24649955/fff2e55c-1928-11e7-9ca3-790427c19f9d.jpg)
+## Technical reference
 
+### Runtime architecture
 
-Developers, testers and helpers wanted. PM me.
+```mermaid
+flowchart LR
+    A[Selected ECU sensor] --> B[Converter sensor map]
+    B --> C[Normalized runtime state]
+    C --> D[Fuel processing]
+    C --> E[Generic sensor alarms]
+    C --> F[Status decoding]
+    D --> G[Alarm helper]
+    E --> G
+    F --> G
+    C --> H[Telemetry windows]
+    D --> I[Log helper]
+    E --> I
+    F --> I
+    G --> J[Audio / message / haptic]
+```
 
-#Now supporting the following ecu converters and turbines:
-- Vspeak - FW 1.0 - AMT
-- Vspeak - FW 1.0 - JetCat
-- Vspeak - FW 2.2 - Hornet
-- Vspeak - FW 2.1 - Jakadofsky
-- Vspeak - FW 2.1 - evoJet / Pahl 
-- Vspeak - FW 1.1 - PBS
-- Digitech - FW 1.2 - Evojet
-- Digitech - FW 1.2  - Graupner G-Booster
-- Digitech - FW 1.2  - Hammer
-- Digitech - FW 1.2  - Hornet
-- Digitech - FW 1.2  - JetCat
-- Digitech - FW 1.2  - Kingtech g1
-- Digitech - FW 1.2  - Kingtech g2
-- Digitech - FW 1.2  - Lambert
-- Digitech - FW 1.2  - Xicoy v6
-- Digitech - FW 1.2  - Xicoy v10
-- CB-Electroniks - FW ??  - Xicoy v10 (Experimental)
-- CB-Electroniks - FW ??  - Xicoy v6 (Experimental)
-- CB-Electroniks - FW ??  - JetCat (Experimental)
-- Xicoy - FW ??  - Xicoy v6 (Experimental)
-- Xicoy - FW ??  - Xicoy v10 (Experimental)
-- Orbit (Experimental)
+### Startup flow
 
-#Turbine status functionality:
-- Waits 15 seconds to stabilize all telemetric input before alarms are activated
-- Configuration files for which ECU statuses to be read by voice, shown on the display and logged to the flight logg and vibrate (not for -16)
-- Alarms audio/haptic/alert turned off with separate switches (recommed to use the same switch as throttle cut for turbine, then alarms are on when turbine is armed)
-- Status alarms only given on status change
-- Configurable which turbine status has audio alarms, haptic alarms (not for -16) or message alarms.
-- Status - Individually configurable in configuration files parameters for EVERY turbine STATUS (not for -16)
-- Status - Audio alarm, possibility to change audio file. Configurable (not for -16)
-- Status - Haptic feedback, which stick, which vibration profile, on/off. Configurable (not for -16).
-- Status - Display warning. on/off - shows the status text as a warning. Will also log the turbine status to the normal Jeti flight log (this is super cool). Configurable (not for -16).
-- 139 audio files included with all statuses and alarms.
+```mermaid
+flowchart TD
+    A[App init] --> B[Load persisted selections]
+    B --> C[Refresh available converter and turbine choices]
+    C --> D[Load JSON configuration files]
+    D --> E{Configuration valid?}
+    E -->|Yes| F[Register telemetry windows]
+    F --> G[Enter runtime loop]
+    E -->|No| H[Log error and show message]
+```
 
-The usual alarms (rpm, rpm2, egt, ecuv, fuellevel), but easier setup
-- Some alarms like low rpm, low rpm2, low pumpvolt, low temp are not enabled until the low threshold is exceeded. This makes for no annoying low alarms before turbine is running, but they will also be shut off by the global switch.
-- Turbine RPM high
-- Turbine RPM low - only enabled after RPM has exceeded Turbine RPM low
-- Shaft RPM high
-- Shaft RPM low - only enabled after shaft RPM has exceeded Shaft RPM low
-- Ecu voltage high
-- Ecu voltage low - only enabled after ECU voltage has exceeded Ecu voltage low
-- EGT high
-- EGT low - only enabled after EGT has exceeded EGT low 
-- Pump voltage high
-- Pump voltage low - only enabled after Pump voltage has exceeded Pump voltage low
-- Fuel alarms default setup: 75% (audio), 50% (audio), 30% (audio), 20% (audio and haptic), 10% (audio and haptic), 5% (audio and haptic)
-- Fuel alarms customizable in configuration file to what % of fuel level you need an alarm, the audio file, haptich profile and message to bo shown and logged.
-- Fuel - Automatic reading of tanksize from ECU (shown in telemetry window)
-- Fuel sensor problem warning if fuelsensor goes below 0
-- = Fuel = Zero configuration neccessary on vspeak with jetcat, hornet, and all digitech - the rest have to input TankSize
-- Calculates  percentages from the interval between high and low config values)
-Alarms will only be repeated every 30 second if error condition is sustained
+### Configuration model
 
-Other alarms
-- Monitors that all sensors are online and gives a offline alarm (due to converter not working, ecu not working or ecu without power).
+The app is built around configuration files instead of per-user code edits.
 
-Configuration possibilities
-- Separate customizable file for each ECU converter type (sensor mapping and status mapping to common format)
-- Separate customizable file for each Turbine type with best practise configuration.
-- Separate customizable file for each Turbine types statuses with best practise configuration. (not for -16)
-- Separate customizable file for each BatteryPack type with best practise configuration. (2s-lipo, 3s-lipo, 2s-life, 3s-life, 2-s-a123, 3s-a123) (not for -16)
-- Separate configuration file for fuellevel setup with best practise configuration.
+At startup the selected combination is assembled from:
 
-Telemetry display visual
-- Fuel gauge, pump volt, ECU volt and status double window , based on code from "ECU data display" for Orbit made by Bernd Woköck
-- Battery gauge, RPM, RPM2, EGT and status double window , based on code from "ECU data display" for Orbit made by Bernd Woköck (not for -16)
-- Experimental RPM and TEMP round gauge (very cool, but not tested) (not for -16)
-- Experimental full screen GUI (Only for -24)
+- converter config in `ecu/converter/.../config.jsn`
+- turbine config in `ecu/turbine/.../*.jsn` or `ecu/turbine_16/.../*.jsn`
+- battery config in `ecu/batterypack/*.jsn` or `ecu/batterypack_16/*.jsn`
+- fuel config in `ecu/fuel/config.jsn` or `ecu/fuel_16/config.jsn`
+- status config in `ecu/status/*.jsn`
+- locale config in `ecu/locale/*.jsn`
 
-Thinking of implementing:
-1. Smarter battery monitoring based smoothing out voltages to not get alarms on short battery dips
-2. Warning if you try to shutdown turbine while it is too hot (if possible to implement)
-3. Sound volume control connected to warnings and critical alarms
+This makes it possible to support many converter and turbine combinations without changing Lua code for each setup.
 
-#Help needed:
-- Translation
-- Configuration of "best practice" turbine alarms and setup for the supported ecus.
-- Testing
-- Jeti Params for different ECUs (we only have to choose one sensor, we find the rest automatically by param)
-- Turbine setups for different turbines
-- Making videos of running system
+### Repository layout
 
-#Idea and goals
-So the idea is that with this lua script you will get all needed turbine alarms setup in under 5 minutes (download lua script and install it- chooce ECU type, choose status telemetry sensor - you are done), with our collective best effort on defining whats the best way to have turbine alarms and telemetry.
+```text
+.
+├── ecu.lua                # Main full-featured entrypoint
+├── ecu_16.lua             # Lower-memory entrypoint
+├── ecu.lc                 # Compiled app for newer transmitters
+├── ecu_16.lc              # Compiled app for older transmitters
+├── docs/                  # Jeti Lua API documentation
+├── ecu/
+│   ├── audio/             # Alarm/status audio files
+│   ├── batterypack/       # Battery config for full app
+│   ├── batterypack_16/    # Battery config for low-memory app
+│   ├── converter/         # Converter-specific sensor/status mapping
+│   ├── fuel/              # Fuel config for full app
+│   ├── fuel_16/           # Fuel config for low-memory app
+│   ├── lib/               # Shared helpers used by entrypoints
+│   ├── locale/            # Language files
+│   ├── status/            # Turbine status definitions
+│   ├── turbine/           # Turbine profiles for full app
+│   └── turbine_16/        # Turbine profiles for low-memory app
+└── jeti.sh                # Packaging helper for app-store archive
+```
 
-For the people who love to tinker it is infinitely extensive and changeable in a easy manner in the configuration file pr ecu. But the distributed configuration file should be best practise for all others.
+### Shared helper modules
 
-#Installation
-- Download Jeti Studio from http://www.jetimodel.com/en/JETI-Studio-2/
-- Connect transmitter to PC/Mac
-- Go to menu: Tools => Transmitter Wizard => Lua App Manager. Choose the ECU App and press install.
-- Disconnect transmitter from PC/Mac
-Disconnect USB from transmitter, start transmitter normally and choose the Application menu<br>
-![install - 12 - choose application menu on transmitter](https://user-images.githubusercontent.com/26059207/31859261-ac5fabf8-b709-11e7-9470-003703fc3d70.png)<br><br>
-Choose user application menu on transmitter<br>
-![install - 13 - choose user applications on transmitter](https://user-images.githubusercontent.com/26059207/31859262-ac78476c-b709-11e7-9009-1ec81c33a3e4.png)<br><br>
-Press + (plus) sign to add application<br>
-![install - 14 - press plus sign on transmitter](https://user-images.githubusercontent.com/26059207/31859263-ac92cdc6-b709-11e7-81b0-8ef1f92ed9c7.png)<br>
-Copy the ecu.lc file to Apps folder on transmitter if you have ds-24 or dc-24<br>
-![install - 15 - choose ecu if you have a ds-24 or dc-24](https://user-images.githubusercontent.com/26059207/31859264-acacc7da-b709-11e7-9c44-d7d78ac191ab.png)<br>
-Copy the ecu_16.lc file to Apps folder on transmitter if you have ds-16 or dc-16<br>
-![install - 15 - choose ecu_16 if you have a ds-16 or dc-16 png](https://user-images.githubusercontent.com/26059207/31859265-acc57ca8-b709-11e7-930c-6e74ea00fc0f.png)<br><br>
-If it says Err instead of OK on the App status. Press the CMD button to see the debug log. Important: If reporting errors to me, you have to include a screenshot of this debug screen.<br>
-![install - 16 - application added and running](https://user-images.githubusercontent.com/26059207/31859266-ace26e62-b709-11e7-8dd3-b01205e7d07a.png)<br><br>
-Answear yes<br>
-![install - 17 - answear yes](https://user-images.githubusercontent.com/26059207/31859267-acfb08b4-b709-11e7-9282-8a951d3ddc21.png)<br><br>
-Debug console log screen - you have to send me a screendump of this console log if you have problems running the app<br>
-![install - 18 - debug info after pressing the command button](https://user-images.githubusercontent.com/26059207/31859268-ad135fd6-b709-11e7-8338-7fd456c0731d.png)<br><br>
-![install - 19 - after choosing the applicatiomn](https://user-images.githubusercontent.com/26059207/31859269-ad2ce8de-b709-11e7-912c-3512f655e07d.png)<br><br>
-![install - 20 - choose telemetry converter](https://user-images.githubusercontent.com/26059207/31859270-ad46d6ea-b709-11e7-9cb6-bac3a4210ffd.png)<br><br>
-![install - 21 - choose ecu type](https://user-images.githubusercontent.com/26059207/31859271-ad60c0aa-b709-11e7-8a4b-a453fc5410e3.png)<br><br>
-![install - 22 - choose ecu](https://user-images.githubusercontent.com/26059207/31859272-ad7bacda-b709-11e7-92da-fdc63814e50d.png)<br><br>
-![install - 23 - choose turbine config generic](https://user-images.githubusercontent.com/26059207/31859273-ad94b90a-b709-11e7-91ab-423dadd7eb15.png)<br><br>
-![install - 24 - choose battery type](https://user-images.githubusercontent.com/26059207/31859274-adadf56e-b709-11e7-8d72-439fd461da98.png)<br><br>
-![install - 25 - choose battery type](https://user-images.githubusercontent.com/26059207/31859275-adc5fde4-b709-11e7-8ad7-b4ac63837835.png)<br><br>
-![install - 26 - choose ecu sensor](https://user-images.githubusercontent.com/26059207/31859276-adde240a-b709-11e7-8779-741c5ca2eae8.png)<br><br>
-![install - 27 - choose alarms off switch - same as throttle kill recommended](https://user-images.githubusercontent.com/26059207/31859277-adf65c5a-b709-11e7-8cdf-59f457522c7a.png)<br>
+Important helpers under `ecu/lib/`:
 
+- `alarmhelper.lua` - audio, message, and haptic alarm dispatch
+- `drawhelper.lua` - shared telemetry drawing helpers
+- `fuelhelper.lua` - fuel calculations and threshold helpers
+- `loadhelper.lua` - JSON/file loading helpers
+- `loghelper.lua` - centralized `info`, `warn`, and `error` logging
+- `sensorhelper.lua` - sensor discovery/menu helpers
+- `tablehelper.lua` - directory/file-backed selection list helpers
+- `window1.lua` and `window2.lua` - active telemetry window renderers
 
-If you have any more ideas about needs for turbine alarms, please let me know.
+### Local development
+
+#### Lua version
+
+This project targets **Lua 5.3** behavior, matching the Jeti Lua environment documented in `docs/JETIDCDS_Lua_API_1.5.pdf`.
+
+#### Recommended macOS tooling
+
+Install local tools with Homebrew:
+
+```bash
+brew install lua stylua luacheck
+lua -v
+luac -v
+stylua --version
+luacheck --version
+```
+
+#### Useful validation commands
+
+Run syntax checks on the active entrypoints and key helpers:
+
+```bash
+luac -p ecu.lua
+luac -p ecu_16.lua
+luac -p ecu/lib/loadhelper.lua
+luac -p ecu/lib/alarmhelper.lua
+luac -p ecu/lib/loghelper.lua
+```
+
+Run linting if `luacheck` is installed:
+
+```bash
+luacheck ecu.lua ecu_16.lua ecu/lib
+```
+
+Format code when you want a formatting pass:
+
+```bash
+stylua ecu.lua ecu_16.lua ecu/lib
+```
+
+### Packaging
+
+The repository includes helper scripts for preparing a Jeti app-store style archive:
+
+- `jeti.sh`
+- `pack_for_jeti_appstore.sh`
+
+These scripts collect the compiled `.lc` files, the `ecu/` assets, and supporting metadata into a distributable archive.
+
+### External documentation
+
+- Jeti Lua API PDF: `docs/JETIDCDS_Lua_API_1.5.pdf`
+- Jeti website: http://jetimodel.com/
+
+### Contributing
+
+Useful contributions include:
+
+- testing on additional ECU converters and turbines
+- validating alarm thresholds and best-practice presets
+- improving translations in `ecu/locale/`
+- reporting reproducible debug logs from transmitter or emulator runs
+
+When changing code, keep these priorities in mind:
+
+- memory usage matters
+- stability matters more than clever abstractions
+- `ecu.lua` and `ecu_16.lua` must remain intentionally separate entrypoints

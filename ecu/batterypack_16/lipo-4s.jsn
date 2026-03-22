@@ -1,7 +1,0 @@
-{
-    "sensorname": "ecuv",
-    "type" : "lipo",
-    "cells" : 4,
-    "high" : 16.8,
-    "low"  : 12.4
-}
