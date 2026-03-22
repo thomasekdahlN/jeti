@@ -1,0 +1,32 @@
+{
+    "sensormap" : {
+        "egt"       : "1",
+        "rpm"       : "2",
+        "throttle"  : "3",
+        "pumpv"     : "4",
+        "ecuv"      : "5",
+        "fuel"      : "6",
+        "fuelflow"  : "7",
+        "status"    : "8"
+    },
+    "fuel" : {
+        "countingdown" : false
+    },
+    "statusmap" : {
+        "-30"   : "Error",
+        "-20"   : "Off",
+        "-10"   : "Cool down",
+        "-1"    : "Lock",
+        "0"     : "Stop",
+        "10"    : "Run",
+        "20"    : "Rel",
+        "25"    : "Glow",
+        "30"    : "Spin",
+        "40"    : "Fire",
+        "45"    : "Ignition",
+        "50"    : "Heat",
+        "60"    : "Accelerate",
+        "65"    : "Calibrate",
+        "70"    : "Idle"
+    }
+}

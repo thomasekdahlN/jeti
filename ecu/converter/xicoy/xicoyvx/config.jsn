@@ -1,0 +1,41 @@
+{
+    "sensormap" : {
+        "EGT" : "1",
+        "Speed" : "2",
+        "Bat." : "3",
+        "Pump" : "4",
+        "Throttle" : "5",
+        "Fuel" : "6",
+        "Status" : "7",
+        "Rotor" : "8",
+        "GearBoxT" : "9"
+    },
+    "fuel" : {
+        "countingdown" : false
+    },
+    "statusmap" : {
+        "0"   : "Trim low",
+        "1"   : "Ready",
+        "2"   : "Stick low",
+        "3"   : "Glow test",
+        "4"   : "Start on",
+        "5"   : "Ignition",
+        "6"   : "Preheat",
+        "7"   : "Fuel ramp",
+        "8"   : "Running",
+        "9"   : "Stop",
+        "10"  : "Cooling",
+        "11"  : "Glow bad",
+        "12"  : "Start bad",
+        "13"  : "Low rpm",        
+        "14"  : "High temp",
+        "15"  : "Flameout",
+        "16"  : "Set idle",
+        "17"  : "Burner on",        
+        "18"  : "Start on",          
+        "19"  : "Ignition failure",  
+        "20"  : "Ignitor bad",         
+        "21"  : "Battery low",         
+        "22"  : "Unknown"        
+    }
+}

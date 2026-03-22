@@ -1,0 +1,38 @@
+{
+    "sensormap" : {
+        "fuel"     : "1",
+        "rpm"      : "2",
+        "egt"      : "3",
+        "speed"    : "4",
+        "ecuv"     : "5",
+        "pumpv"    : "6",
+        "throttle" : "7",
+        "rpm2"     : "8",
+        "status"   : "9"
+    },
+    "fuel" : {
+        "countingdown" : true
+    },
+    "statusmap" : {
+        "0"  : "Off",
+        "1"  : "Standby start",
+        "2"  : "Ignite",
+        "3"  : "Accelerate",
+        "4"  : "Stabilise",
+        "5"  : "Learn high",
+        "6"  : "Learn low",
+        "7"  : "Unknown",
+        "8"  : "Slow down",
+        "9"  : "Unknown",
+        "10" : "Auto off",
+        "11" : "Run",
+        "12" : "Accelerate delay",
+        "13" : "Speed control",
+        "14" : "Ts registered",
+        "15" : "Pre heat1",
+        "16" : "Pre heat2",
+        "17" : "Main fuel start",
+        "18" : "Unknown",
+        "19" : "Kerosin full"        
+    }
+}
