@@ -224,6 +224,8 @@ The app now logs important failure paths such as:
 
 Runtime logs are written with `print(...)` through the shared logger and appear in the transmitter's **application debug / command console**.
 
+They are also available through Jeti logging, so the log messages can be reviewed later when you analyze recorded telemetry data.
+
 If the app shows `Err` or appears to fail during startup:
 
 1. open the transmitter **Applications** menu
@@ -347,7 +349,7 @@ flowchart TD
 
 The app is built around configuration files instead of per-user code edits.
 
-At startup the selected combination is assembled from:
+At startup, the selected combination is assembled from:
 
 - converter config in `ecu/converter/.../config.jsn`
 - turbine config in `ecu/turbine/.../*.jsn` or `ecu/turbine_16/.../*.jsn`
@@ -356,7 +358,256 @@ At startup the selected combination is assembled from:
 - status config in `ecu/status/*.jsn`
 - locale config in `ecu/locale/*.jsn`
 
-This makes it possible to support many converter and turbine combinations without changing Lua code for each setup.
+`ecu.lua` uses the full `turbine/`, `batterypack/`, and `fuel/` schemas. `ecu_16.lua` uses the reduced `turbine_16/`, `batterypack_16/`, and `fuel_16/` schemas to save memory.
+
+The menus on the transmitter are filesystem-driven:
+
+- converter menu = folders in `ecu/converter/`
+- turbine menu = folders inside `ecu/converter/<converter>/`
+- turbine config menu = `.jsn` files in `ecu/turbine/<turbine>/` or `ecu/turbine_16/<turbine>/`
+- battery menu = `.jsn` files in `ecu/batterypack/` or `ecu/batterypack_16/`
+
+This means a new turbine will not appear in setup unless the expected folders and files exist in the right places.
+
+All `.jsn` files are parsed as strict JSON. Keep them strict:
+
+- no trailing commas
+- no comments inside JSON
+- quoted keys and string values
+- matching braces and brackets
+
+One malformed `.jsn` file is enough to break startup or leave the app in an unusable configuration.
+
+### Using `senslist.lua` to add support for a new turbine
+
+`senslist.lua` is a discovery helper for learning how a converter/ECU exposes telemetry on Jeti. Use it when you need to build or verify a converter mapping for a new turbine or converter family.
+
+What it does:
+
+- reads `system.getSensors()`
+- prints each top-level telemetry sensor label and each child telemetry label with its `param`
+- writes a helper file named `Apps/<sensor-label>.jsn`
+
+What it does **not** do:
+
+- it does not generate a finished runtime config for `ecu/`
+- it does not discover the meaning of each numeric ECU status code for you
+- it does not replace testing on live telemetry or in the emulator
+
+Important note: the generated `Apps/<sensor-label>.jsn` file is a scratch file only. It starts a JSON-like `statusmap` block, but it is not a finished valid config file and should not be copied directly into `ecu/`.
+
+Recommended workflow:
+
+1. copy `senslist.lua` to the transmitter or emulator as a temporary app
+2. power the ECU/converter so live telemetry is available
+3. run `senslist.lua`
+4. note the top-level sensor label (`param == 0`)
+5. note each child telemetry label and its `param`
+6. translate those child labels into the ECU app runtime names:
+   - `rpm` = turbine rpm
+   - `rpm2` = shaft rpm or secondary rpm
+   - `egt` = exhaust gas temperature
+   - `pumpv` = pump voltage
+   - `ecuv` = ECU voltage / ECU battery voltage
+   - `fuel` = remaining fuel or consumed fuel
+   - `status` = raw ECU status code
+7. create or update `ecu/converter/<converter>/<turbine>/config.jsn`
+8. observe the raw `status` sensor while the ECU changes state, then build `statusmap` from numeric code to status text
+9. create or update the matching turbine, status, battery, and fuel JSON files
+10. test in the emulator or on the transmitter and watch the debug log for missing keys, unknown statuses, or missing files
+
+The ECU app itself stores the selected top-level sensor `id` when the user chooses the ECU sensor in setup, so configuration authors usually only need the discovered `param` numbers from `senslist.lua`.
+
+In practice:
+
+- if a turbine uses an existing converter layout and the same status naming, you may only need new presets under `ecu/turbine/` and `ecu/turbine_16/`
+- if the telemetry layout or status codes differ, you also need a new `ecu/converter/<converter>/<turbine>/config.jsn`
+- if the named statuses differ, you also need a matching `ecu/status/<turbine>.jsn`
+
+### JSON file reference
+
+#### `ecu/converter/<converter>/<turbine>/config.jsn`
+
+Purpose:
+
+- maps converter-specific telemetry params into the common runtime names
+- tells the fuel helper whether the raw fuel value counts down or up
+- translates raw numeric status codes into named statuses
+
+Expected keys:
+
+- `sensormap`
+  - object keyed by runtime sensor name
+  - values are Jeti `param` numbers, usually stored as strings
+  - use `0` or omit a key if a sensor is not provided by the converter
+- `fuel.countingdown`
+  - `true` when the ECU reports remaining fuel directly
+  - `false` when the ECU reports consumed fuel and the app must calculate fuel remaining
+- `statusmap`
+  - object keyed by raw numeric status codes as strings
+  - values are human-readable status names
+
+Common `sensormap` keys are:
+
+- `rpm`
+- `rpm2`
+- `egt`
+- `pumpv`
+- `ecuv`
+- `fuel`
+- `status`
+
+#### `ecu/turbine/<turbine>/*.jsn`
+
+Purpose:
+
+- defines full-version turbine sensor thresholds and alarm behavior for `ecu.lua`
+
+Typical top-level keys are:
+
+- `rpm`
+- `rpm2`
+- `egt`
+- `pumpv`
+
+Each sensor block uses this shape:
+
+- `sensorname`
+- `high`
+- `low`
+
+Each `high` and `low` block contains alarm metadata such as:
+
+- `text` - human-readable alarm label used when the warning is presented, for example `EGT high` or `RPM low`
+- `value` - numeric threshold that triggers the alarm
+- `message.enable` - enables or disables the Jeti popup message for that threshold
+- `message.seconds` - how long the popup message stays visible
+- `audio.enable` - enables or disables playback of the configured warning sound
+- `audio.file` - `.wav` file to play from `Apps/ecu/audio/`
+- `haptic.enable` - enables or disables transmitter vibration for that threshold
+- `haptic.stick` - which side should vibrate, typically `left` or `right`
+- `haptic.vibrationProfile` - Jeti vibration pattern/profile number used for the haptic alert
+
+The intended operating model is a **silent cockpit**: in normal operation the app should stay quiet from sound and vibration, and only produce audio/haptic alerts when a real warning, failure, or other meaningful abnormal condition occurs. Normal running states can still use text messages when useful, but audio and vibration should remain reserved for real issues.
+
+These files normally cover turbine-specific limits only. Battery, fuel, and status behavior are merged in from separate JSON files.
+
+#### `ecu/turbine_16/<turbine>/*.jsn`
+
+Purpose:
+
+- defines the reduced threshold schema used by `ecu_16.lua`
+
+Schema difference from the full version:
+
+- uses plain numeric `high` and `low` values instead of nested alarm objects
+- typically includes `rpm`, `rpm2`, `egt`, `pumpv`, and `status`
+- `status` usually only needs `sensorname`
+
+#### `ecu/batterypack/*.jsn`
+
+Purpose:
+
+- defines ECU battery alarm thresholds and actions for the full app
+
+Schema:
+
+- same general alarm-block structure as the full turbine sensor files
+- `sensorname` is normally `ecuv`
+- includes metadata such as `type` and `cells`
+
+#### `ecu/batterypack_16/*.jsn`
+
+Purpose:
+
+- defines simplified ECU battery thresholds for the low-memory app
+
+Schema:
+
+- `sensorname`
+- `type`
+- `cells`
+- numeric `high`
+- numeric `low`
+
+#### `ecu/fuel/config.jsn`
+
+Purpose:
+
+- defines full-version fuel handling and fuel alarms
+
+Keys:
+
+- `sensorname`
+- `tanksize`
+- `unit`
+- `sensorproblem`
+- `alarms`
+
+`alarms` is an array of alarm objects. Keep the array ordered from the lowest remaining-fuel threshold to the highest threshold, because the runtime uses the first threshold that matches.
+
+`fuelhelper` combines this file with `converter.fuel.countingdown` to decide whether the raw fuel value represents remaining fuel or consumed fuel.
+
+#### `ecu/fuel_16/config.jsn`
+
+Purpose:
+
+- defines the low-memory fuel display and warning thresholds
+
+Keys:
+
+- `sensorname`
+- `tanksize`
+- `decimals`
+- `unit`
+- `label`
+- `warning`
+- `critical`
+
+#### `ecu/status/<turbine>.jsn`
+
+Purpose:
+
+- defines what the app should do when the ECU enters a named status
+
+Schema:
+
+- top-level `sensorname` is `status`
+- every other top-level key is a named ECU status such as `Run`, `Off`, `Failure`, or `Accelerate`
+- each status entry defines `text`, `message`, `audio`, and `haptic` behavior
+
+The values in `converter/.../config.jsn -> statusmap` should match these status keys exactly. If they do not match, the app logs the status as unknown or missing configuration.
+
+#### `ecu/locale/<language>.jsn`
+
+Purpose:
+
+- stores translated UI text
+
+Used for:
+
+- app name
+- setup menu labels
+- telemetry window titles
+- switch labels
+
+The app first tries `system.getLocale()` and then falls back to `ecu/locale/en.jsn`.
+
+### Minimal file set when adding support
+
+For a new full-version converter/turbine combination, the usual minimum is:
+
+- `ecu/converter/<converter>/<turbine>/config.jsn`
+- `ecu/turbine/<turbine>/<preset>.jsn`
+- `ecu/status/<turbine>.jsn`
+
+For the low-memory version, add:
+
+- `ecu/turbine_16/<turbine>/<preset>.jsn`
+
+Usually you can reuse the shared battery and fuel presets unless the converter requires a genuinely different battery or fuel interpretation.
+
+If you want the same turbine family to be selectable in both active entrypoints, keep `ecu/turbine/<turbine>/` and `ecu/turbine_16/<turbine>/` aligned.
 
 ### Repository layout
 

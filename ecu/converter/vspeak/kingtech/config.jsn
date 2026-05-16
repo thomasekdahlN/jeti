@@ -6,8 +6,9 @@
         "pumpv"     : "4",
         "fuel"      : "5",
         "fuelflow"  : "6",
-        "none"      : "7",
-        "rpm"       : "8"
+        "ecuv"      : "7",
+        "rpm"       : "8",
+        "rpm2"      : "9"
     },
     "fuel" : {
         "countingdown" : true
