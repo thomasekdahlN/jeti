@@ -93,7 +93,7 @@ function alarmhelper.Audio(tmpConfig)
         audioFile = io.open(audioPath, "r")
 
         if(audioFile) then
-            audioFile:close()
+            pcall(function() audioFile:close() end)
             system.playFile(audioPath, AUDIO_QUEUE)
         else
             logh.warn("alarmhelper.Audio", string.format("Missing audio file: %s", audioPath))
