@@ -11,6 +11,9 @@
 local GPS_TYPES = { [5] = true, [9] = true }
 
 local sensorGroups = {}  -- { id, label, children={param,label,unit,type,decimals,value,max,valid} }
+local rows         = {}  -- flat display list built from sensorGroups
+local scrollOffset = 0
+local ROWS_PER_PAGE = 8  -- rows visible at once in the form
 local statusMsg    = ""
 local statusExpiry = 0
 
@@ -40,7 +43,16 @@ local function collectSensors()
         end
     end
 
-    print(string.format("[senslist] Found %d sensor group(s)", #sensorGroups))
+    -- Build flat row list for paginated display
+    rows = {}
+    for _, g in ipairs(sensorGroups) do
+        rows[#rows + 1] = { isHeader = true, label = g.label }
+        for _, c in ipairs(g.children) do
+            rows[#rows + 1] = { isHeader = false, child = c }
+        end
+    end
+
+    print(string.format("[senslist] Found %d sensor group(s), %d rows", #sensorGroups, #rows))
 end
 
 -- ---------------------------------------------------------------------------
@@ -102,26 +114,33 @@ end
 
 -- ---------------------------------------------------------------------------
 local function initForm(subform)
-    -- Status line or instructions
+    -- Clamp scroll offset
+    local maxOffset = math.max(0, #rows - ROWS_PER_PAGE)
+    if scrollOffset > maxOffset then scrollOffset = maxOffset end
+    if scrollOffset < 0 then scrollOffset = 0 end
+
+    -- Status or navigation hint
     if statusExpiry > system.getTime() then
         form.addLabel({ label = statusMsg, font = FONT_MINI })
+    elseif #rows == 0 then
+        form.addLabel({ label = "No sensors found", font = FONT_MINI })
     else
-        form.addLabel({ label = "F1=Refresh  F5=Save JSON files", font = FONT_MINI })
+        local last = math.min(scrollOffset + ROWS_PER_PAGE, #rows)
+        form.addLabel({ label = string.format("Up/Dn=Scroll  F5=Save  [%d-%d/%d]", scrollOffset + 1, last, #rows), font = FONT_MINI })
     end
 
-    -- One row per sensor
-    for _, g in ipairs(sensorGroups) do
-        form.addLabel({ label = string.format("--- %s (id=%s) ---", g.label, tostring(g.id)), font = FONT_MINI })
-        for _, c in ipairs(g.children) do
+    -- Render only the visible slice of rows
+    for i = scrollOffset + 1, math.min(scrollOffset + ROWS_PER_PAGE, #rows) do
+        local row = rows[i]
+        if row.isHeader then
+            form.addLabel({ label = string.format("--- %s ---", row.label), font = FONT_MINI })
+        else
+            local c   = row.child
             local fmt = "%." .. tostring(c.decimals) .. "f"
             local val = string.format(fmt, c.value or 0)
             local flg = c.valid and "" or " ?"
             form.addLabel({ label = string.format("P%-2s %-10s %s%s %s", c.param, c.label, val, flg, c.unit), font = FONT_MINI })
         end
-    end
-
-    if #sensorGroups == 0 then
-        form.addLabel({ label = "No sensors found", font = FONT_MINI })
     end
 end
 
@@ -129,8 +148,12 @@ end
 local function keyPressed(key)
     if key == KEY_5 then
         writeAllFiles()
+    elseif key == KEY_UP then
+        scrollOffset = math.max(0, scrollOffset - 1)
+    elseif key == KEY_DOWN then
+        scrollOffset = math.min(math.max(0, #rows - ROWS_PER_PAGE), scrollOffset + 1)
     end
-    form.reinit(1)  -- always refresh the form so values and status update
+    form.reinit(1)
 end
 
 -- ---------------------------------------------------------------------------
