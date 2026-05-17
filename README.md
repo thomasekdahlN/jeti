@@ -39,6 +39,24 @@ If you want the shortest path to a working setup:
 
 The root entrypoints above are the active scripts.
 
+### Differences between `ecu.lua` and `ecu_16.lua`
+
+| Capability | `ecu.lua` | `ecu_16.lua` |
+| --- | --- | --- |
+| Telemetry windows | 2 (status/fuel and RPM/EGT/battery) | 1 (status/fuel/battery) |
+| RPM2 / shaft RPM | ✅ | — |
+| Alarm audio control switch | separate per-channel switch | single on/off switch for all alarms |
+| Alarm message control switch | separate per-channel switch | — |
+| Alarm haptic control switch | separate per-channel switch | — |
+| Alarm config format | nested objects with `audio`, `message`, `haptic` | plain numeric `high` / `low` thresholds |
+| Fuel alarms | multi-threshold array with full alarm objects | percentage `warning` and `critical` thresholds |
+| Config validation | strict, with logged errors per field | minimal, fails silently |
+| Config load protection | `pcall`-guarded | unguarded |
+| Centralized logging | `loghelper.lua` (info/warn/error) | `print()` only |
+| Helper libraries | external `require` modules | all helpers inlined |
+| Transmitter control channel | — | registers a turbine-off control output |
+| Config directories | `turbine/`, `batterypack/`, `fuel/` | `turbine_16/`, `batterypack_16/`, `fuel_16/` |
+
 ## Telemetry windows and visualization
 
 The active telemetry presentation is intentionally simple and fast to render on the transmitter.
@@ -80,13 +98,13 @@ Visualization:
 
 ### Low-memory app: `ecu_16.lua`
 
-The `-16` version registers **one telemetry window**, roughly equivalent to Window 1 in the full app:
+The `-16` version registers **one telemetry window**:
 
 - fuel gauge on the left
 - turbine status text on the upper right
 - pump and ECU voltage readouts on the lower right
 
-This keeps the low-memory transmitter version focused on the most important operational data.
+RPM and EGT are not shown in the telemetry window in the low-memory version. The alarm system fires audio and a message box directly using `AUDIO_IMMEDIATE` rather than going through the shared alarm helper.
 
 ### Experimental windows
 
@@ -177,12 +195,26 @@ Typical setup steps:
 1. choose the converter family
 2. choose turbine family
 3. choose turbine config preset
-4. choose battery config
-5. choose the ECU telemetry sensor
-6. set tank size if required by the selected configuration
-7. assign alarm-off / message-off / audio-off / haptic-off switches where supported
+4. choose the ECU telemetry sensor
+5. set tank size
+6. choose battery config
+7. assign alarm control switches
 
 Most combinations are designed so you do not need to edit JSON manually.
+
+### Alarm control switches
+
+`ecu.lua` exposes three independent switches in the setup form:
+
+- **Audio off switch** — disables all warning sounds when active
+- **Haptic off switch** — disables all vibration alerts when active
+- **Message off switch** — disables all popup messages when active
+
+`ecu_16.lua` exposes a single switch:
+
+- **Alarm off switch** — disables all alarms (audio and message) when active
+
+Assigning a switch is optional. If no switch is assigned, alarms are always enabled.
 
 ## Logging and debugging
 
@@ -380,47 +412,73 @@ One malformed `.jsn` file is enough to break startup or leave the app in an unus
 
 ### Using `senslist.lua` to add support for a new turbine
 
-`senslist.lua` is a discovery helper for learning how a converter/ECU exposes telemetry on Jeti. Use it when you need to build or verify a converter mapping for a new turbine or converter family.
+`senslist.lua` is a discovery utility for learning how a converter or ECU exposes telemetry on Jeti. Install it as a temporary app when you need to build or verify a converter mapping for a new turbine or converter family.
 
-What it does:
+#### What it does
 
-- reads `system.getSensors()`
-- prints each top-level telemetry sensor label and each child telemetry label with its `param`
-- writes a helper file named `Apps/<sensor-label>.jsn`
+- reads all telemetry sensors from `system.getSensors()` and polls live values via `system.getSensorByID()` every loop cycle
+- displays all sensor groups and their parameters with live values in the **Applications menu** (Menu → Applications → SensorList)
+- shows `param`, `label`, `unit`, `type`, `decimals`, live `value`, peak `max`, and a `?` indicator for sensors not yet reporting valid data
+- on **F1**: refreshes the display with the latest polled values
+- on **F5**: writes one valid JSON discovery file per top-level sensor group to `Apps/<sensor-label>.jsn`, overwriting any existing file
+- prints a formatted summary to the debug console
 
-What it does **not** do:
+#### What it does not do
 
 - it does not generate a finished runtime config for `ecu/`
-- it does not discover the meaning of each numeric ECU status code for you
+- it does not discover the meaning of each numeric ECU status code
 - it does not replace testing on live telemetry or in the emulator
 
-Important note: the generated `Apps/<sensor-label>.jsn` file is a scratch file only. It starts a JSON-like `statusmap` block, but it is not a finished valid config file and should not be copied directly into `ecu/`.
+#### Output file format
 
-Recommended workflow:
+Each `Apps/<sensor-label>.jsn` contains the full descriptor and last-polled live values for every sub-sensor in that group:
+
+```json
+{
+    "id"      : 12345,
+    "label"   : "Vspeak",
+    "sensors" : {
+        "EGT" : {
+            "param"    : 2,
+            "unit"     : "°C",
+            "type"     : 1,
+            "decimals" : 0,
+            "value"    : 634.0,
+            "max"      : 856.0,
+            "valid"    : true
+        }
+    }
+}
+```
+
+This file is a discovery record only. It is not a finished `ecu/converter/` config file and must not be copied directly into `ecu/`.
+
+#### Recommended workflow
 
 1. copy `senslist.lua` to the transmitter or emulator as a temporary app
-2. power the ECU/converter so live telemetry is available
-3. run `senslist.lua`
-4. note the top-level sensor label (`param == 0`)
-5. note each child telemetry label and its `param`
-6. translate those child labels into the ECU app runtime names:
-   - `rpm` = turbine rpm
-   - `rpm2` = shaft rpm or secondary rpm
-   - `egt` = exhaust gas temperature
-   - `pumpv` = pump voltage
-   - `ecuv` = ECU voltage / ECU battery voltage
-   - `fuel` = remaining fuel or consumed fuel
-   - `status` = raw ECU status code
-7. create or update `ecu/converter/<converter>/<turbine>/config.jsn`
-8. observe the raw `status` sensor while the ECU changes state, then build `statusmap` from numeric code to status text
-9. create or update the matching turbine, status, battery, and fuel JSON files
-10. test in the emulator or on the transmitter and watch the debug log for missing keys, unknown statuses, or missing files
+2. power the ECU and converter so live telemetry is available
+3. open Menu → Applications → SensorList
+4. wait until the live values in the form look stable and reasonable
+5. press **F5** to write the JSON discovery files to `Apps/`
+6. note the top-level sensor label and each child parameter
+7. translate child labels into ECU app runtime names:
+   - `rpm` — turbine RPM
+   - `rpm2` — shaft RPM or secondary RPM
+   - `egt` — exhaust gas temperature
+   - `pumpv` — pump voltage
+   - `ecuv` — ECU battery voltage
+   - `fuel` — remaining or consumed fuel
+   - `status` — raw numeric ECU status code
+8. create or update `ecu/converter/<converter>/<turbine>/config.jsn` with the discovered `param` numbers
+9. observe the raw `status` sensor value as the ECU changes state and build `statusmap` from numeric codes to status text
+10. create or update the matching turbine, status, battery, and fuel JSON files
+11. test in the emulator or on the transmitter and watch the debug log for missing keys, unknown statuses, or missing files
 
-The ECU app itself stores the selected top-level sensor `id` when the user chooses the ECU sensor in setup, so configuration authors usually only need the discovered `param` numbers from `senslist.lua`.
+The ECU app stores the selected top-level sensor `id` when the user picks the ECU sensor in setup. Configuration authors normally only need the `param` numbers from `senslist.lua`.
 
 In practice:
 
-- if a turbine uses an existing converter layout and the same status naming, you may only need new presets under `ecu/turbine/` and `ecu/turbine_16/`
+- if a turbine uses an existing converter layout with the same status naming, you may only need new presets under `ecu/turbine/` and `ecu/turbine_16/`
 - if the telemetry layout or status codes differ, you also need a new `ecu/converter/<converter>/<turbine>/config.jsn`
 - if the named statuses differ, you also need a matching `ecu/status/<turbine>.jsn`
 
@@ -617,6 +675,7 @@ If you want the same turbine family to be selectable in both active entrypoints,
 ├── ecu_16.lua             # Lower-memory entrypoint
 ├── ecu.lc                 # Compiled app for newer transmitters
 ├── ecu_16.lc              # Compiled app for older transmitters
+├── senslist.lua           # Sensor discovery utility (temporary app)
 ├── docs/                  # Jeti Lua API documentation
 ├── ecu/
 │   ├── audio/             # Alarm/status audio files
