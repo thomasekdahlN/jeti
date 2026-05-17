@@ -79,12 +79,12 @@ local alarmTriggeredTime   = { -- stores latest datetime on the alarm triggered,
     fuelsensorproblem = 0
 }
 
-local alarmLowValuePassed = { -- enables alarms that has passed the low treshold, to not get alarms before turbine is running properly. Status alarms, high alarms, fuel alarms , and ecu voltage alarms is always enabled.
+local alarmLowValuePassed = { -- enables alarms once a sensor has reported a real value. Status alarm is always enabled. All others require a non-zero reading first so initialisation artifacts (0.0) never trigger false alarms.
     rpm    = false,
     rpm2   = false,
     egt    = false,
     pumpv  = false,
-    ecuv   = true,
+    ecuv   = false,  -- armed on first non-zero reading (not on low.value) so a 0.0 init reading never triggers
     fuel   = false,  -- in ml from ecu
     status = true
 }
@@ -114,7 +114,7 @@ local SensorMenuSensors     = {"..."}
 -- Reset low-value alarm activation flags.
 local function resetAlarmLowValuePassed()
     for sensorName, _ in pairs(alarmLowValuePassed) do
-        alarmLowValuePassed[sensorName] = (sensorName == "ecuv" or sensorName == "status")
+        alarmLowValuePassed[sensorName] = (sensorName == "status")
     end
 end
 
@@ -522,14 +522,19 @@ local function processGeneric(tmpCfg)
         return
     end
 
-    if(sensor.value > tmpCfg.low.value and not alarmLowValuePassed[tmpCfg.sensorname]) then
-        alarmLowValuePassed[tmpCfg.sensorname] = true
-    end
-
     sensorEntry.percent = fuelh.calcPercent(sensor.value, tmpCfg.high.value, tmpCfg.low.value)
 
     if(alarmTriggeredTime[tmpCfg.sensorname] >= system.getTime()) then
         return
+    end
+
+    -- Arm low-alarm guard only after the startup grace period has passed, so transient
+    -- sensor values during ECU self-test cannot pre-arm the flag before real data arrives.
+    -- ecuv uses > 0 so any real voltage (even a low battery) arms it immediately.
+    -- All other sensors require exceeding the low threshold first.
+    local armThreshold = (tmpCfg.sensorname == "ecuv") and 0 or tmpCfg.low.value
+    if(sensor.value > armThreshold and not alarmLowValuePassed[tmpCfg.sensorname]) then
+        alarmLowValuePassed[tmpCfg.sensorname] = true
     end
 
     if(sensor.value > tmpCfg.high.value) then
@@ -574,7 +579,17 @@ local function processStatus(tmpCfg)
         return
     end
 
-    if(prevStatus == statusText or alarmTriggeredTime[tmpCfg.sensorname] >= system.getTime()) then
+    -- If status hasn't changed since last check, nothing to do
+    if(prevStatus == statusText) then
+        return
+    end
+
+    -- Always track the current status, even during startup suppression,
+    -- so that stable at-rest states don't trigger an alarm when suppression lifts
+    prevStatus = statusText
+
+    -- If still inside the startup cooldown, suppress the alarm output
+    if(alarmTriggeredTime[tmpCfg.sensorname] >= system.getTime()) then
         return
     end
 
@@ -583,12 +598,10 @@ local function processStatus(tmpCfg)
         if(enableAlarmAudio) then
             alarmh.Audio({enable = true, file = "Unknown status configuration.wav"})
         end
-        prevStatus = statusText
         return
     end
 
     alarmh.All(config.status[statusText], statusText)
-    prevStatus = statusText
 end
 
 ----------------------------------------------------------------------
@@ -667,7 +680,7 @@ local function readParamsFromSensor(tmpSensorID)
     if(sensorState.allOnline) then
         if(not sensorState.hadFullSignal) then
             sensorState.hadFullSignal = true
-            resetAlarmTriggeredTime(15) -- Reset when all sensors are valid and init finshed, (but only run the first time)
+            resetAlarmTriggeredTime(30) -- Suppress all alarms for 30 s after first full signal to let ECU boot states settle
         end
     elseif(sensorState.hadFullSignal and alarmTriggeredTime.offline < system.getTime()) then -- Only trigger if all sensors has been online
         -- If the valid number of sensors is not equal to the configured number of sensors, the ECU is somehow offline
