@@ -1,2 +1,2 @@
 NAME;AUTHOR;VERSION;HARDWARE;DATE;DESCRIPTION;FILES_FOLDERS
-{"en":"ECU Turbine Telemetry", "cz":"ECU Turbine Telemetry","de":"ECU Turbine Telemetry","fr":"ECU Turbine Telemetry"};Thomas Ekdahl;"3.0";678,679;30-07-2026;{"en":"ecu/docs/en.html", "cz":"ecu/docs/en.html","de":"ecu/docs/de.html","fr":"ecu/docs/fr.html"};ecu.lc,ecu;logo.png
+{"en":"ECU Turbine Telemetry", "cz":"ECU Turbine Telemetry","de":"ECU Turbine Telemetry","fr":"ECU Turbine Telemetry"};Thomas Ekdahl;"3.0";678,679,652,653,3857,3858,3859,3860,3861,3862,3863,3864,3865,3866;30-07-2026;{"en":"ecu/docs/en.html", "cz":"ecu/docs/en.html","de":"ecu/docs/de.html","fr":"ecu/docs/fr.html"};ecu.lc,ecu;logo.png
