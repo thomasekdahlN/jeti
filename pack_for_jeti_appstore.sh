@@ -25,12 +25,12 @@ rm ekdahl/ecu/lib/*.lua
 rm ekdahl/ecu/lib/fakesensor.lc
 
 #Make SpeedWar App for Jeti App Store
-cp -r speedwar ekdahl/speedwar
-cp speedwar.lc ekdahl/speedwar.lc
+#cp -r speedwar ekdahl/speedwar
+#cp speedwar.lc ekdahl/speedwar.lc
 
 #Make FullStop App for Jeti App Store
-cp -r fullstopp ekdahl/fullstopp
-cp fullstopp.lc ekdahl/fullstopp.lc
+#cp -r fullstopp ekdahl/fullstopp
+#cp fullstopp.lc ekdahl/fullstopp.lc
 
 cd ekdahl
 find . -name '.DS_Store' -type f -delete

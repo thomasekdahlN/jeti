@@ -8,3 +8,5 @@ pack_for_jeti_appstore.sh
 speedwar.lua
 speedwar.lc
 speedwar/docs/
+ecu.lc
+ecu_16.lc
