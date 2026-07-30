@@ -54,6 +54,39 @@ If you want the shortest path to a working setup:
 
 The root entrypoints above are the active scripts.
 
+## Supported Jeti transmitters
+
+The `HARDWARE` column in `Apps.csv` controls which transmitters are offered the ECU app in the Jeti App Store. The table below lists all known Jeti transmitter hardware codes and whether the ECU script is currently offered to them.
+
+| Transmitter | Code | Supported |
+| --- | --- | --- |
+| DC-16 II (V2) | 652 | ✅ |
+| DS-16 II (V2) | 653 | ✅ |
+| DC-16 | 674 | — |
+| DS-16 | 675 | — |
+| DS-14 | 676 | — |
+| DC-14 | 677 | — |
+| DC-24 | 678 | ✅ |
+| DS-24 | 679 | ✅ |
+| DS-12 | 680 | — |
+| DC-14 II (V2) | 3857 | ✅ |
+| DS-14 II (V2) | 3858 | ✅ |
+| DC-24 (II) | 3859 | ✅ |
+| DS-24 (II) | 3860 | ✅ |
+| DC-16 II (V2) | 3861 | ✅ |
+| DS-16 II (V2) | 3862 | ✅ |
+| DC-14 II (V2) | 3863 | ✅ |
+| DS-14 II (V2) | 3864 | ✅ |
+| DS-12 II | 3865 | ✅ |
+| DC-24 II (V2) | 3866 | ✅ |
+
+Notes:
+
+- `✅` means the code is listed in `Apps.csv` `HARDWARE`, so the app is offered to that transmitter in the App Store.
+- `—` means the code is a known Jeti transmitter but is not currently offered the app.
+- Some models share more than one hardware code across firmware generations, which is why several II/V2 radios appear more than once.
+- Hardware codes are sourced from the [jemoview](https://github.com/werinza/jemoview) transmitter type-code table.
+
 ### Differences between `ecu.lua` and `ecu_16.lua`
 
 | Capability | `ecu.lua` | `ecu_16.lua` |
