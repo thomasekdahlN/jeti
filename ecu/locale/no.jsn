@@ -1,0 +1,15 @@
+{
+    "appName":"ECU Dashboard",
+    "window1":"ECU: Drivstoff, status, volt",
+    "window2":"ECU: Batteri, RPM, EGT",
+    "selectConverterType":"ECU-telemetrikonverter",
+    "selectTurbineType":"ECU-type",
+    "selectTurbineConfig":"Turbinkonfig",
+    "selectBatteryConfig":"Batteritype",
+    "selectTurbineSensor":"ECU-konvertersensor",
+    "selectLeftTurbineSensor":"ECU-sensor turbin venstre",
+    "alarmOffSwitch": "Alarm-av-bryter",
+    "AudioOffSwitch": "Lyd-av-bryter",
+    "HapticOffSwitch": "Vibrasjon-av-bryter",
+    "MessageOffSwitch": "Melding-av-bryter"
+}
