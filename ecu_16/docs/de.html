@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="de-DE">
+<head>
+<title>Turbine ECU Lua</title>
+</head>
+<body>
+
+<h1>Turbinen-ECU-LUA-Skript - Unterstützung vieler Turbinenhersteller</h1>
+ Silent-/Black-Cockpit-Alarme (Ton/Warnung/Log), die still bleiben, bis sie gebraucht werden - für Turbinenstatus, RPM, RPM2, PUMPV, BATT, FUEL, EGT, Flammabriss. Dashboard-Darstellung aller Turbinenparameter mit visualisiertem Kraftstoff und Akku. Die Idee: keine Alarme am Boden, nur Alarme, wenn es ernst wird, um Ihr teures Modell zu retten. Schnelle Einrichtung durch Auswahl von Best-Practice-Konfigurationsdateien. Dies ist die speicherarme -16-Version für ältere Sender.
+<p>
+Diese eine Lua-App ersetzt mindestens 20 separate Sender-Alarmkonfigurationen (Hoch-/Tief-Alarme pro Sensor für RPM, Wellendrehzahl, EGT, ECU-Spannung und Pumpenspannung, die Kraftstoffschwellen, den Kraftstoffsensor-Fehler, den ECU-Offline-Wächter und jeden benannten Turbinenstatus) durch eine einzige konfigurierbare App mit grafischer Oberfläche. Jeder Alarm wird zusätzlich in der normalen Jeti-Flugprotokoll-Zeitleiste des verwendeten Modells protokolliert, was die Nachflug-Analyse der Alarme deutlich erleichtert.
+<p>
+<img src="alarm - shaft rpm low.jpg">
+<img src="Alarm ECU battery high.png">
+<img src="Alarm low turbine rpm.png">
+<img src="FlightLogg - RunReg.jpg">
+<img src="Normal - RunReg5.jpg">
+<img src="Status - preheat1.jpg">
+<p>
+HINWEIS: Sie müssen keine Konfigurationsdateien bearbeiten. Die Standard-Konfigurationsdateien für Ihre Turbine sind ab Werk nach Best Practice eingerichtet - wählen Sie einfach ECU-Konverter, Turbinentyp, Akkupack, ECU-Sensor und Gas-Kill-Schalter, und Sie haben die fortschrittlichste Turbinenüberwachung, die heute für RC-Turbinenmodelle verfügbar ist.
+<p>
+Unterstützt den Vspeak-ECU-Konverter (mein persönlicher Favorit unter den ECU-Konvertern), den Digitech-ECU-Konverter, den JetCat-ECU-Konverter sowie experimentelle Unterstützung für CB-Electroniks- und Xicoy-Konverter (Tester gesucht). Hersteller von Turbinen-ECU-Konvertern sind eingeladen, mich zu kontaktieren, um Unterstützung für ihre Geräte hinzuzufügen. Ziel ist es, alle existierenden Turbinen und Turbinen-ECU-Konverter zu unterstützen - mit
+<p>
+Alarm - ECU offline GUI - Konfiguration Alarm - RC aus Alarm - Wellendrehzahl niedrig Anzeige - ECU-Akku- und Kraftstoffanzeigen Anzeige - ECU offline
+<p>
+Alarm Wellendrehzahl niedrig Flugprotokoll - Keros voll normal - runreg4 Status - Keros voll
+<p>
+
+<h2>Unterstützung der folgenden ECU-Konverter und Turbinen:</h2>
+<ul>
+<li>Vspeak - FW 1.0 - AMT</li>
+<li>Vspeak - FW 1.0 - JetCat</li>
+<li>Vspeak - FW 2.2 - Hornet</li>
+<li>Vspeak - FW 2.1 - Jakadofsky</li>
+<li>Vspeak - FW 2.1 - evoJet / Pahl</li>
+<li>Vspeak - FW 1.1 - PBS</li>
+<li>Digitech - FW 1.2 - Evojet</li>
+<li>Digitech - FW 1.2 - Graupner G-Booster</li>
+<li>Digitech - FW 1.2 - Hammer</li>
+<li>Digitech - FW 1.2 - Hornet</li>
+<li>Digitech - FW 1.2 - JetCat</li>
+<li>Digitech - FW 1.2 - Kingtech g1</li>
+<li>Digitech - FW 1.2 - Kingtech g2</li>
+<li>Digitech - FW 1.2 - Lambert</li>
+<li>Digitech - FW 1.2 - Xicoy v6</li>
+<li>Digitech - FW 1.2 - Xicoy v10</li>
+<li>JetCat ECU - JetCat</li>
+<li>Kingtech ECU - Kingtech g1</li>
+<li>Kingtech ECU - Kingtech g2</li>
+<li>Kingtech ECU - Kingtech g3</li>
+<li>Kingtech ECU - Kingtech g4</li>
+<li>Kingtech ECU - Kingtech g5</li>
+<li>CB-Electroniks - FW ?? - Xicoy v10 (Experimentell)</li>
+<li>CB-Electroniks - FW ?? - Xicoy v6 (Experimentell)</li>
+<li>CB-Electroniks - FW ?? - JetCat (Experimentell)</li>
+<li>Xicoy - FW ?? - Xicoy v6 (Experimentell)</li>
+<li>Xicoy - FW ?? - Xicoy v10 (Experimentell)</li>
+<li>Xicoy - FW ?? - Xicoy vX (Experimentell)</li>
+<li>ECU-Simulator (Software-Testquelle - keine Hardware nötig) - AMT, evoJet, Hornet, Jakadofsky, JetCat, PBS</li>
+</ul>
+Turbinenprofile für Behotec, Colibri und Orbit sind ebenfalls enthalten und können zu Konverter-Zuordnungen erweitert werden.
+
+<h2>Turbinenstatus-Funktionen:</h2>
+
+<ul>
+<li>Wartet, bis alle Sensoren online sind, und hält dann eine 30-Sekunden-Karenzzeit, um alle Telemetrie-Eingänge zu stabilisieren, bevor Alarme aktiviert werden</li>
+<li>Konfigurationsdateien dafür, welche ECU-Status per Sprache angesagt, auf dem Display gezeigt, ins Flugprotokoll geschrieben und per Vibration signalisiert werden (nicht für -16)</li>
+<li>Alarme Audio/Haptik/Warnung mit separaten Schaltern abschaltbar (empfohlen: derselbe Schalter wie Gas-Aus der Turbine, dann sind Alarme aktiv, wenn die Turbine scharf ist)</li>
+<li>Status-Alarme nur bei Statuswechsel</li>
+<li>Konfigurierbar, welcher Turbinenstatus Audio-Alarme, Haptik-Alarme (nicht für -16) oder Meldungs-Alarme hat.</li>
+<li>Status - Individuell konfigurierbare Parameter in Konfigurationsdateien für JEDEN Turbinenstatus (nicht für -16)</li>
+<li>Status - Audio-Alarm, Audiodatei änderbar. Konfigurierbar (nicht für -16)</li>
+<li>Status - Haptisches Feedback: welcher Knüppel, welches Vibrationsprofil, ein/aus. Konfigurierbar (nicht für -16).</li>
+<li>Status - Display-Warnung ein/aus - zeigt den Statustext als Warnung an. Protokolliert den Turbinenstatus zusätzlich in der normalen Jeti-Flugprotokoll-Zeitleiste, sodass Sie nach dem Flug genau nachvollziehen können, welche Status und Alarme aufgetreten sind (das ist super praktisch). Konfigurierbar (nicht für -16).</li>
+<li>168 Audiodateien enthalten für alle Status und Alarme.</li>
+</ul>
+
+<h2>Die üblichen Alarme (RPM, RPM2, EGT, ECUV, Füllstand), aber einfacher einzurichten</h2>
+
+Einige Alarme wie niedrige RPM, niedrige RPM2, niedrige Pumpenspannung, niedrige Temperatur werden erst aktiviert, wenn die Tief-Schwelle einmal überschritten wurde. So gibt es keine störenden Tief-Alarme, bevor die Turbine läuft; sie werden aber ebenfalls durch den globalen Schalter abgeschaltet.
+
+<ul>
+<li>Turbinen-RPM hoch
+<li>Turbinen-RPM niedrig - erst aktiv, nachdem die RPM die Schwelle "Turbinen-RPM niedrig" überschritten hat
+<li>Wellendrehzahl hoch
+<li>Wellendrehzahl niedrig - erst aktiv, nachdem die Wellendrehzahl die Schwelle "Wellendrehzahl niedrig" überschritten hat
+<li>ECU-Spannung hoch
+<li>ECU-Spannung niedrig - erst aktiv, nachdem die ECU-Spannung die Schwelle "ECU-Spannung niedrig" überschritten hat
+<li>EGT hoch
+<li>EGT niedrig - erst aktiv, nachdem die EGT die Schwelle "EGT niedrig" überschritten hat
+<li>Pumpenspannung hoch
+<li>Pumpenspannung niedrig - erst aktiv, nachdem die Pumpenspannung die Schwelle "Pumpenspannung niedrig" überschritten hat
+<li>Kraftstoff-Alarme Standardeinstellung: 75% (Audio), 50% (Audio), 30% (Audio), 20% (Audio und Haptik), 10% (Audio und Haptik), 5% (Audio und Haptik)
+<li>Kraftstoff-Alarme in der Konfigurationsdatei anpassbar: bei welchem Füllstand-% ein Alarm erfolgt, Audiodatei, Haptikprofil und anzuzeigende bzw. zu protokollierende Meldung.
+<li>Kraftstoff - Automatisches Auslesen der Tankgröße aus der ECU (im Telemetriefenster angezeigt)
+<li>Kraftstoffsensor-Warnung, wenn der Kraftstoffsensor unter 0 fällt
+= Kraftstoff = Keine Konfiguration nötig bei Vspeak mit JetCat, Hornet und allen Digitech - beim Rest muss die TankSize eingegeben werden
+<li>Berechnet Prozentwerte aus dem Intervall zwischen Hoch- und Tief-Konfigwerten. Alarme werden nur alle 30 Sekunden wiederholt, wenn der Fehlerzustand anhält
+</ul>
+
+<h2>Weitere Alarme</h2>
+
+Überwacht, dass alle Sensoren online sind, und gibt einen Offline-Alarm (weil Konverter nicht funktioniert, ECU nicht funktioniert oder ECU ohne Strom).
+Konfigurationsmöglichkeiten
+
+<ul>
+<li>Separate anpassbare Datei für jeden ECU-Konvertertyp (Sensor- und Status-Zuordnung auf ein gemeinsames Format)</li>
+<li>Separate anpassbare Datei für jeden Turbinentyp mit Best-Practice-Konfiguration.</li>
+<li>Separate anpassbare Datei für die Status jedes Turbinentyps mit Best-Practice-Konfiguration. (nicht für -16)</li>
+<li>Separate anpassbare Datei für jeden Akkupack-Typ mit Best-Practice-Konfiguration. (LiPo 1s-6s, LiFe 1s-6s, A123 1s-6s, NiCd 6s-12s; die -16-Version liefert eine reduzierte Auswahl aus) (nicht für -16)</li>
+<li>Separate Konfigurationsdatei für die Füllstand-Einrichtung mit Best-Practice-Konfiguration.</li>
+<li>Visuelle Telemetrieanzeige</li>
+</ul>
+
+<h2>Sonstiges</h2>
+Kraftstoffanzeige, Pumpenspannung, ECU-Spannung und Status im Doppelfenster, basierend auf Code von "ECU data display" für Orbit von Bernd Woköck</br>
+Akkuanzeige, RPM, RPM2, EGT und Status im Doppelfenster, basierend auf Code von "ECU data display" für Orbit von Bernd Woköck (nicht für -16)</br>
+Experimentelle RPM- und TEMP-Rundanzeige (sehr cool, aber ungetestet) (nicht für -16)</br>
+Experimentelle Vollbild-GUI (nur für -24)</br>
+
+<h2>Versionshinweise</h2>
+<ul>
+<li>3.0 - Der native Kingtech-ECU-Konverter deckt jetzt Kingtech g1-g5 ab, Unterstützung für Xicoy vX und den nativen JetCat-Konverter hinzugefügt, erweiterte Akkupacks (LiPo/LiFe/A123 1s-6s und NiCd 6s-12s), vollständig lokalisierte Benutzeroberfläche in Englisch, Deutsch, Französisch, Spanisch, Italienisch und Norwegisch (en, de, es, fr, it, no), mehr Audiodateien (168) und Härtung gegen Fehlalarme (Tief-Alarme werden erst nach einem echten Sensorwert scharf, 30 s Startkarenz, 30 s Wiederholabstand).</li>
+<li>2.6 - Unterstützung für Vspeak-Kingtech-Konverter und Kingtech-Konverter, der ECU-Konverter-Offline-Alarm respektiert jetzt die Setup-Schalter (kein Alarm bei Nutzung desselben Schalters wie Turbine-Aus), viele neue Sounds und einige Anpassungen an den Standard-Konfigurationsdateien</li>
+</ul>
+</body>
+</html>

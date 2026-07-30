@@ -6,15 +6,16 @@
 <body>
 
 <h1>Turbine ECU LUA Script - supporting many turbine manufacturers</h1>
- Silent/Black-Cockpit alarms (sound/alert/haptic/logg) that are silent until needed on Turbine Status, RPM, RPM2, PUMPV, BATT, FUEL, EGT, Flameout. Dashboard presentation of all turbine parameters and visualised fuel and battery. The idea is no alarms on the ground, only alarms when the shit hits the fan to help to save your costly model. Fast setup based on choice of best practie configuration files.
+ Silent/Black-Cockpit alarms (sound/alert/logg) that are silent until needed on Turbine Status, RPM, RPM2, PUMPV, BATT, FUEL, EGT, Flameout. Dashboard presentation of all turbine parameters and visualised fuel and battery. The idea is no alarms on the ground, only alarms when the shit hits the fan to help to save your costly model. Fast setup based on choice of best practie configuration files. This is the -16 low-memory build for older transmitters.
 <p>
 This one Lua app replaces at least 20 separate transmitter alarm setups (per-sensor high/low alarms for RPM, shaft RPM, EGT, ECU voltage and pump voltage, the fuel-level thresholds, the fuel-sensor fault, the ECU-offline watchdog, and every named turbine status) with a single configurable app that has a graphical interface. Every alarm is also logged to the normal Jeti flight log timeline on the model you use it on, which makes post-flight analysis of alarms much easier.
 <p>
-<img src="normal.jpg">
 <img src="alarm - shaft rpm low.jpg">
-<img src="alarm - turbine rpm low.jpg">
-<img src="configuration.jpg">
-<img src="logging.jpg">
+<img src="Alarm ECU battery high.png">
+<img src="Alarm low turbine rpm.png">
+<img src="FlightLogg - RunReg.jpg">
+<img src="Normal - RunReg5.jpg">
+<img src="Status - preheat1.jpg">
 <p>
 NOTE: You do not have to edit configuration files, standard config files for your turbine has best practise set up right out of the box, just choose ecu converter, turbine type, battery pack, ecu sensor and throttle kill switch - and you will have the most advanced turbine surveilance available to RC turbine models today.
 <p>
@@ -27,7 +28,6 @@ alarm shaft rpm low flightogg - keros full normal - runreg4 status - keros full
 
 <h2>Supporting the following ecu converters and turbines:</h2>
 <ul>
-<li>Vspeak - FW 1.0 - Kingtech</li>
 <li>Vspeak - FW 1.0 - AMT</li>
 <li>Vspeak - FW 1.0 - JetCat</li>
 <li>Vspeak - FW 2.2 - Hornet</li>
@@ -107,7 +107,7 @@ Configuration possibilities
 <li>Separate customizable file for each ECU converter type (sensor mapping and status mapping to common format)</li>
 <li>Separate customizable file for each Turbine type with best practise configuration.</li>
 <li>Separate customizable file for each Turbine types statuses with best practise configuration. (not for -16)</li>
-<li>Separate customizable file for each BatteryPack type with best practise configuration. (LiPo 1s-6s, LiFe 1s-6s, A123 1s-6s, NiCd 6s-12s) (not for -16)</li>
+<li>Separate customizable file for each BatteryPack type with best practise configuration. (LiPo 1s-6s, LiFe 1s-6s, A123 1s-6s, NiCd 6s-12s; the -16 build ships a reduced subset) (not for -16)</li>
 <li>Separate configuration file for fuellevel setup with best practise configuration.</li>
 <li>Telemetry display visual</li>
 </ul>
@@ -123,6 +123,5 @@ Experimental full screen GUI (Only for -24)</br>
 <li>3.0 - Native Kingtech ECU converter now covers Kingtech g1-g5, added Xicoy vX and JetCat native converter support, expanded battery packs (LiPo/LiFe/A123 1s-6s and NiCd 6s-12s), fully localized user interface in English, German, French, Spanish, Italian and Norwegian (en, de, es, fr, it, no), more audio files (168), and false-alarm hardening (low alarms only arm after a real sensor reading, 30 s startup grace, 30 s repeat spacing).</li>
 <li>2.6 - Support for vspeak kingtech converter, kingtech converter and ecu converter offline alarm now respects setup switches (no alarm if used on same switch as turbine off), lots of new sounds, and a few tweeks on default config files</li>
 </ul>
-
 </body>
 </html>

@@ -2,7 +2,19 @@
 
 Jeti Lua application for turbine ECU monitoring, alarm handling, and telemetry presentation on Jeti transmitters.
 
-The project provides a configurable dashboard for turbine status, RPM, EGT, ECU voltage, pump voltage, and fuel, with support for voice alerts, message popups, haptic feedback where available, and centralized debug logging.
+The project provides a configurable dashboard for turbine status, RPM, RPM2/shaft RPM, EGT, ECU voltage, pump voltage, and fuel, with support for voice alerts, message popups, haptic feedback where available, and centralized debug logging.
+
+## Design philosophy: silent (black) cockpit
+
+This app is built around a **silent cockpit** (also called a black cockpit) principle:
+
+- when everything is normal, the system stays **completely silent** — no sounds, no vibration, no popups
+- it only asks for your attention when an actual **alarm condition** is detected, so a warning always means something real
+- this keeps you focused on flying and makes every alert meaningful instead of background noise
+
+On top of that, the app is designed to **replace at least 20 separate transmitter alarm setups** (per-sensor high/low alarms for RPM, shaft RPM, EGT, ECU voltage, pump voltage, the fuel-level thresholds, the fuel-sensor fault, the ECU-offline watchdog, and every named turbine status) with a single, configurable Lua app that has a **graphical dashboard**.
+
+Every alarm is also written to the **Jeti flight log timeline** on the model it runs on, so you can do proper **post-flight analysis** of exactly which alarms fired and when.
 
 ## Quick start
 
@@ -17,15 +29,18 @@ If you want the shortest path to a working setup:
 
 ## Features
 
+- silent-cockpit behavior: stays quiet in normal operation and only alerts on real alarm conditions
 - reads telemetry from a selected ECU sensor source
 - maps converter-specific parameters into a common runtime format
 - applies turbine-specific alarm and status rules from JSON configuration files
 - renders dedicated telemetry windows for live turbine monitoring
-- delays alarm activation during startup stabilization
+- delays alarm activation during startup stabilization (30 s grace after the first full telemetry read)
 - supports status-driven voice, message, and haptic alerts where available
-- suppresses repeated alarms with timed cooldown behavior
+- suppresses repeated alarms with timed cooldown behavior (30 s between repeats)
+- arms low-value alarms only after a sensor has reported a real reading, so 0.0 startup values never trigger false alarms
 - handles fuel threshold warnings and critical alerts
 - detects ECU offline conditions after signal loss
+- logs every alarm and status change to the Jeti flight log timeline for post-flight analysis
 - reports important faults through a shared logger to make debugging easier
 
 ## Feature sets
@@ -122,7 +137,7 @@ The repository currently contains configuration folders for these converter fami
 - `cbelectroniks`
 - `ecusimulator`
 
-The turbine profile folders currently include families such as:
+The turbine profile folders (`ecu/turbine/` and `ecu/turbine_16/`) currently include:
 
 - `amt`
 - `behotec`
@@ -133,32 +148,40 @@ The turbine profile folders currently include families such as:
 - `hornet`
 - `jakadofsky`
 - `jetcat`
-- `kingtech*`
+- `kingtech`
+- `kingtechg1`
+- `kingtechg2`
+- `kingtechg3`
+- `kingtechg4`
+- `kingtechg5`
 - `lambert`
 - `orbit`
 - `pbs`
-- `xicoy*`
+- `xicoyv6`
+- `xicoyv10`
+- `xicoyvx`
 
 ## Supported combinations grid
 
 This grid reflects the current converter-to-turbine combinations present in the repository configuration folders.
 
-| Converter \ Turbine | `amt` | `evojet` | `graupner` | `hammer` | `hornet` | `jakadofsky` | `jetcat` | `kingtech` | `kingtechg1` | `kingtechg2` | `lambert` | `pbs` | `xicoyv6` | `xicoyv10` | `xicoyvx` |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `cbelectroniks` | — | — | — | — | — | — | ✅ | — | — | — | — | — | ✅ | ✅ | — |
-| `digitech` | — | ✅ | ✅ | ✅ | ✅ | — | ✅ | — | ✅ | ✅ | ✅ | — | ✅ | ✅ | — |
-| `ecusimulator` | ✅ | ✅ | — | — | ✅ | ✅ | ✅ | — | — | — | — | ✅ | — | — | — |
-| `jetcat` | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — |
-| `kingtech` | — | — | — | — | — | — | — | — | ✅ | ✅ | — | — | — | — | — |
-| `vspeak` | ✅ | ✅ | — | — | ✅ | ✅ | ✅ | ✅ | — | — | — | ✅ | — | — | — |
-| `xicoy` | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | ✅ | ✅ |
+| Converter \ Turbine | `amt` | `evojet` | `graupner` | `hammer` | `hornet` | `jakadofsky` | `jetcat` | `kingtech` | `kingtechg1` | `kingtechg2` | `kingtechg3` | `kingtechg4` | `kingtechg5` | `lambert` | `pbs` | `xicoyv6` | `xicoyv10` | `xicoyvx` |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| `cbelectroniks` | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — | ✅ | ✅ | — |
+| `digitech` | — | ✅ | ✅ | ✅ | ✅ | — | ✅ | — | ✅ | ✅ | — | — | — | ✅ | — | ✅ | ✅ | — |
+| `ecusimulator` | ✅ | ✅ | — | — | ✅ | ✅ | ✅ | — | — | — | — | — | — | — | ✅ | — | — | — |
+| `jetcat` | — | — | — | — | — | — | ✅ | — | — | — | — | — | — | — | — | — | — | — |
+| `kingtech` | — | — | — | — | — | — | — | — | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | — | — | — |
+| `vspeak` | ✅ | ✅ | — | — | ✅ | ✅ | ✅ | ✅ | — | — | — | — | — | — | ✅ | — | — | — |
+| `xicoy` | — | — | — | — | — | — | — | — | — | — | — | — | — | — | — | ✅ | ✅ | ✅ |
 
 Notes:
 
 - `✅` means a matching converter/turbine folder combination exists in the repo
 - `—` means there is no matching converter mapping folder currently in the repo
-- turbine profile folders such as `behotec`, `colibri`, `orbit`, `kingtechg3`, `kingtechg4`, and `kingtechg5` exist, but they do not currently appear in converter-family mapping folders
-- some names intentionally differ between converter and turbine families, for example `vspeak -> kingtech` and `kingtech -> kingtechg1` / `kingtechg2`
+- turbine profile folders `behotec`, `colibri`, and `orbit` exist (with matching status files), but they do not currently appear in any converter-family mapping folder
+- some names intentionally differ between converter and turbine families, for example `vspeak -> kingtech` and `kingtech -> kingtechg1`…`kingtechg5`
+- the `ecusimulator` converter is a software test source that lets you exercise the app and its alarms without connected ECU hardware
 - this grid describes configuration presence in the repo, not a guarantee that every combination has been equally flight-tested
 
 ## Installation on a transmitter
@@ -218,7 +241,15 @@ Assigning a switch is optional. If no switch is assigned, alarms are always enab
 
 ## Logging and debugging
 
-The codebase now includes centralized logging through `ecu/lib/loghelper.lua`.
+### Alarm and status logging to the Jeti flight log timeline
+
+Every alarm and status message the app raises is shown as a Jeti message box, which Jeti also records to the **flight log timeline** of the model the app runs on. Because the app follows the silent-cockpit principle, the timeline stays clean during normal operation and only fills with entries when something actually happened.
+
+This makes **post-flight analysis** straightforward: you can scroll the model's log timeline after a flight and see exactly which turbine statuses and alarms occurred, and when, alongside the rest of your recorded telemetry.
+
+### Centralized debug logging
+
+The codebase also includes centralized logging through `ecu/lib/loghelper.lua`.
 
 That means important faults such as these are logged consistently:
 
@@ -568,17 +599,28 @@ Purpose:
 
 - defines ECU battery alarm thresholds and actions for the full app
 
+Available presets cover several chemistries and cell counts:
+
+- `lipo-1s` … `lipo-6s`
+- `life-1s` … `life-6s`
+- `a123-1s` … `a123-6s`
+- `nicd-06s` … `nicd-12s`
+
 Schema:
 
 - same general alarm-block structure as the full turbine sensor files
 - `sensorname` is normally `ecuv`
 - includes metadata such as `type` and `cells`
 
+The `ecu/batterytype/` folder holds per-chemistry voltage-to-percentage reference data (`a123`, `life`, `lipo`, `nicd`, `nimh`).
+
 #### `ecu/batterypack_16/*.jsn`
 
 Purpose:
 
 - defines simplified ECU battery thresholds for the low-memory app
+
+Ships a reduced subset of presets (for example `lipo-2s`…`lipo-4s`, `life-2s`…`life-4s`, `a123-2s`…`a123-4s`, and `nicd-10s`) to save memory.
 
 Schema:
 
@@ -651,6 +693,32 @@ Used for:
 
 The app first tries `system.getLocale()` and then falls back to `ecu/locale/en.jsn`.
 
+Supported languages:
+
+| File     | Language          |
+| -------- | ----------------- |
+| `en.jsn` | English (default) |
+| `de.jsn` | German            |
+| `es.jsn` | Spanish           |
+| `fr.jsn` | French            |
+| `it.jsn` | Italian           |
+| `no.jsn` | Norwegian         |
+
+Each locale file is a flat JSON object with the same 13 keys:
+
+- `appName` - application name shown in the transmitter menu
+- `window1`, `window2` - telemetry window titles
+- `selectConverterType`, `selectTurbineType`, `selectTurbineConfig`, `selectBatteryConfig`, `selectTurbineSensor`, `selectLeftTurbineSensor` - setup menu labels
+- `alarmOffSwitch`, `AudioOffSwitch`, `HapticOffSwitch`, `MessageOffSwitch` - switch labels
+
+Technical tokens (`ECU`, `RPM`, `EGT`, `volt`) and the product name `ECU Dashboard` are kept consistent across all languages.
+
+To add a new language:
+
+1. Copy `ecu/locale/en.jsn` to `ecu/locale/<code>.jsn`, where `<code>` is the two-letter code returned by `system.getLocale()` on your transmitter.
+2. Translate the values only; do not rename, add, or remove keys.
+3. Keep every file at the same 13 keys so the interface stays complete in all languages.
+
 ### Minimal file set when adding support
 
 For a new full-version converter/turbine combination, the usual minimum is:
@@ -678,14 +746,15 @@ If you want the same turbine family to be selectable in both active entrypoints,
 ├── senslist.lua           # Sensor discovery utility (temporary app)
 ├── docs/                  # Jeti Lua API documentation
 ├── ecu/
-│   ├── audio/             # Alarm/status audio files
+│   ├── audio/             # Alarm/status audio files (168 .wav files)
 │   ├── batterypack/       # Battery config for full app
 │   ├── batterypack_16/    # Battery config for low-memory app
+│   ├── batterytype/       # Battery chemistry voltage/percentage reference data
 │   ├── converter/         # Converter-specific sensor/status mapping
 │   ├── fuel/              # Fuel config for full app
 │   ├── fuel_16/           # Fuel config for low-memory app
 │   ├── lib/               # Shared helpers used by entrypoints
-│   ├── locale/            # Language files
+│   ├── locale/            # Language files (de, en, es, fr, it, no)
 │   ├── status/            # Turbine status definitions
 │   ├── turbine/           # Turbine profiles for full app
 │   └── turbine_16/        # Turbine profiles for low-memory app
@@ -704,6 +773,9 @@ Important helpers under `ecu/lib/`:
 - `sensorhelper.lua` - sensor discovery/menu helpers
 - `tablehelper.lua` - directory/file-backed selection list helpers
 - `window1.lua` and `window2.lua` - active telemetry window renderers
+- `window3.lua` and `window4.lua` - experimental/full-screen window renderers, not registered by default
+- `ecuvhelper.lua` - placeholder module reserved for future ECU-voltage helpers
+- `fakesensor.lua` - development-only fake sensor source for testing without live telemetry (its `require` is commented out in the entrypoints)
 
 ### Local development
 
