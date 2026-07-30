@@ -617,4 +617,4 @@ local function loop()
     end
 end
 lang = fileJson(string.format("Apps/ecu/locale/%s.jsn", system.getLocale()))
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='1.0', name=string.format("%s -16", lang.appName)}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='3.0', name=string.format("%s -16", lang.appName)}

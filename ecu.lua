@@ -10,7 +10,7 @@
 -- # Can be used and changed non commercial, but feel free to send us changes back to be incorporated in the main code.
 -- # If using parts of this project elsewhere, please give me credit for it
 -- #                       
--- # Version: 2.7
+-- # Version: 3.0
 -- ############################################################################# 
 
 local loadh      = require "ecu/lib/loadhelper"
@@ -821,4 +821,4 @@ lang = loadh.fileJson(string.format("%s/locale/%s.jsn", APP_ROOT, system.getLoca
     or loadh.fileJson(string.format("%s/locale/en.jsn", APP_ROOT))
     or {appName = "ECU", window1 = "ECU", window2 = "ECU"}
 
-return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='2.6', name=lang.appName}
+return {init=init, loop=loop, author="Thomas Ekdahl - thomas@ekdahl.no", version='3.0', name=lang.appName}
